@@ -1,0 +1,33 @@
+﻿<!doctype html>
+<html id="htmlRoot" lang="en" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg" data-sidebar-image="none" data-preloader="disable" data-theme="default" data-theme-colors="default" data-layout-position="fixed" data-sidebar-user-show>
+<head>
+    @Html.Partial("~/Pages/Shared/Partials/_title_meta.cshtml")
+    @RenderSection("styles", required: false)
+    @Html.Partial("~/Pages/Shared/Partials/_head_css.cshtml")
+   
+</head>
+<body>
+
+    @RenderBody()
+  @*   <!-- Begin page -->
+    <div id="layout-wrapper">
+        @Html.Partial("~/Pages/Shared/Partials/_menu.cshtml")
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    @Html.Partial("~/Pages/Shared/Partials/_page_title.cshtml")
+                    @RenderBody()
+                </div>
+            </div>
+            @RenderSection("externalhtml", required: false)
+            @Html.Partial("~/Pages/Shared/Partials/_footer.cshtml")
+        </div>
+    </div>
+    <!-- END layout-wrapper -->
+    @Html.Partial("~/Pages/Shared/Partials/_customizer.cshtml")
+    @Html.Partial("~/Pages/Shared/Partials/_vendor_scripts.cshtml")
+    @RenderSection("scripts", required: false) *@
+        @RenderSection("scripts", required: false) 
+
+</body>
+</html>

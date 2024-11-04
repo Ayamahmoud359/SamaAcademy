@@ -1,0 +1,98 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewBag.Title = "Register ";
+    ViewBag.pTitle = "Register ";
+    ViewBag.pageTitle = "Register";
+  //  Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Register</h4>
+               
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <form method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Input.Email" class="form-label">Email</label>
+                            <input asp-for="@Model.Input.Email" class="form-control" />
+                            <span asp-validation-for="@Model.Input.Email" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+
+                            <label class="form-label" asp-for="@Model.Input.Password">Password</label>
+                            <div class="position-relative auth-pass-inputgroup mb-3">
+                                <input type="password" asp-for="@Model.Input.Password" class="form-control pe-5 password-input" placeholder="Enter password" id="password-input">
+                                <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+
+                            </div>
+                            <span asp-validation-for="@Model.Input.Password" class="text-danger"></span>
+
+                        </div>
+
+                        <div class="mb-3">
+
+                            <label class="form-label" asp-for="@Model.Input.ConfirmPassword">Confirm Password</label>
+                            <div class="position-relative auth-pass-inputgroup mb-3">
+                                <input type="password" asp-for="@Model.Input.ConfirmPassword" class="form-control pe-5 password-input" placeholder="Enter password" id="password-input">
+                                <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
+
+                            </div>
+                            <span asp-validation-for="@Model.Input.ConfirmPassword" class="text-danger"></span>
+
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Add User</button>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="d-none code-view">
+<pre class="language-markup" style="height: 375px;">
+<code>&lt;form action=&quot;&quot;&gt;
+    &lt;div class=&quot;mb-3&quot;&gt;
+        &lt;label for=&quot;employeeName&quot; class=&quot;form-label&quot;&gt;Employee Name&lt;/label&gt;
+        &lt;input type=&quot;text&quot; class=&quot;form-control&quot; id=&quot;employeeName&quot; placeholder=&quot;Enter emploree name&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mb-3&quot;&gt;
+        &lt;label for=&quot;employeeUrl&quot; class=&quot;form-label&quot;&gt;Employee Department URL&lt;/label&gt;
+        &lt;input type=&quot;url&quot; class=&quot;form-control&quot; id=&quot;employeeUrl&quot; placeholder=&quot;Enter emploree url&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mb-3&quot;&gt;
+        &lt;label for=&quot;StartleaveDate&quot; class=&quot;form-label&quot;&gt;Start Leave Date&lt;/label&gt;
+        &lt;input type=&quot;date&quot; class=&quot;form-control&quot; id=&quot;StartleaveDate&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mb-3&quot;&gt;
+        &lt;label for=&quot;EndleaveDate&quot; class=&quot;form-label&quot;&gt;End Leave Date&lt;/label&gt;
+        &lt;input type=&quot;date&quot; class=&quot;form-control&quot; id=&quot;EndleaveDate&quot;&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;mb-3&quot;&gt;
+        &lt;label for=&quot;VertimeassageInput&quot; class=&quot;form-label&quot;&gt;Message&lt;/label&gt;
+        &lt;textarea class=&quot;form-control&quot; id=&quot;VertimeassageInput&quot; rows=&quot;3&quot; placeholder=&quot;Enter your message&quot;&gt;&lt;/textarea&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;text-end&quot;&gt;
+        &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Add Leave&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/form&gt;</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div><!--end row-->
+
+
+
+
+
+    <!-- prismjs plugin -->
+    <script src="~/assets/libs/prismjs/prism.js"></script>
+
+    <script src="~/assets/js/app.js"></script>
+ 

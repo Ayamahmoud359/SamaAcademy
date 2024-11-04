@@ -1,0 +1,4 @@
+﻿@using Albaheth.Admin
+@using DevExtreme.AspNet.Data
+@namespace Albaheth.Admin.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
