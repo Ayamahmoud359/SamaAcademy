@@ -9,8 +9,8 @@ namespace Academy.Areas.Admin.Pages.Departments
     public class AddModel : PageModel
     {
         [BindProperty]
-        public Department Dept { get; set; }
-        public List<Branch> Branches  { get; set; }
+        public DepartmentVM Dept { get; set; } = new DepartmentVM();
+        public List<Branch> Branches { get; set; } = new List<Branch>();
 
         private readonly AcademyContext _context;
         public AddModel(AcademyContext context)
@@ -22,23 +22,29 @@ namespace Academy.Areas.Admin.Pages.Departments
             Branches = _context.Branches.ToList();
         }
         public async Task<IActionResult> OnPostAsync()
+
         {
+            Branches = _context.Branches.ToList();
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
             Department department = new Department()
             {
            
                 IsActive = true,
-                DepartmentNameAR=Dept.DepartmentNameAR,
-                DepartmentNameEN=Dept.DepartmentNameAR,
-                DepartmentDescriptionAR=Dept.DepartmentDescriptionAR,
-                DepartmentDescriptionEN=Dept.DepartmentDescriptionAR,
+                DepartmentName=Dept.DepartmentName,
+       
+                DepartmentDescription=Dept.DepartmentDescription,
                 BranchId=Dept.BranchId
 
             };
+         
             try
             {
                 _context.Departments.Add(department);
                 _context.SaveChanges();
-                return RedirectToPage("/Admin/Index");
+                return RedirectToPage("Index");
             }
             catch (Exception exc)
             {

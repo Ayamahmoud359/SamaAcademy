@@ -5,6 +5,84 @@
 <!doctype html>
 <html lang="en" id="htmlRoot" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg">
 <head>
+   
+    <style>
+        .password-input {
+            padding-right: 40px; /* Add space for the eye icon */
+        }
+
+        /* Style for the position of the icon */
+        .auth-pass-inputgroup .input-group-text {
+            position: absolute;
+            right: 10px; /* Position icon on the right */
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        /* Custom style for the select box */
+        .custom-select {
+            background-color: #f8f9fa; /* Light background color */
+            border: 1px solid #ced4da; /* Light border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 10px 12px; /* Padding inside the select box */
+            font-size: 1rem; /* Font size */
+            color: #495057; /* Text color */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transition effects for focus */
+        }
+
+            /* When the select box is focused */
+            .custom-select:focus {
+                border-color: #007bff; /* Change border color on focus */
+                box-shadow: 0 0 5px rgba(38, 143, 255, 0.5); /* Add subtle box shadow */
+                outline: none; /* Remove default focus outline */
+            }
+
+            /* Style for selected option items */
+            .custom-select option {
+                padding: 8px 12px; /* Add padding to option items */
+                font-size: 1rem; /* Font size for options */
+                color: #495057; /* Option text color */
+            }
+
+                /* Style for the disabled option */
+                .custom-select option:disabled {
+                    color: #6c757d; /* Lighter color for disabled options */
+                }
+
+                /* Hover effect on options */
+                .custom-select option:hover {
+                    background-color: #e2e6ea; /* Light background on hover */
+                }
+
+            /* Style for the select box when it is in multiple select mode */
+            .custom-select[multiple] {
+                height: auto;
+                padding-right: 30px; /* Make space for the scrollbar */
+            }
+            /* Adding custom scrollbar style */
+            .custom-select[multiple] {
+                max-height: 200px; /* Set a max height for the multiple select box */
+                overflow-y: auto; /* Enable vertical scrolling */
+            }
+
+                .custom-select[multiple]::-webkit-scrollbar {
+                    width: 8px; /* Custom scrollbar width */
+                }
+
+                .custom-select[multiple]::-webkit-scrollbar-thumb {
+                    background-color: #007bff; /* Thumb color */
+                    border-radius: 4px; /* Rounded corners for the scrollbar */
+                }
+
+                .custom-select[multiple]::-webkit-scrollbar-track {
+                    background: #f1f1f1; /* Track color */
+                }
+
+    </style>
   @*   @{
         if (!(User.Identity.IsAuthenticated && (User.IsInRole("Admin"))))
         {
@@ -63,6 +141,8 @@
 
  
     @Html.Partial("~/Pages/Shared/Partials/_head_css.cshtml")
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
 
 </head>
 <body id="masterbodyid">
@@ -101,6 +181,14 @@
     @Html.Partial("~/Pages/Shared/_ValidationScriptsPartial.cshtml")
 @*     @await Component.InvokeAsync("NToastNotify")
  *@
+ <script>
+             $(document).ready(function() {
+            $('.form-select').select2({
+              //  placeholder: "Choose...",
+              //  allowClear:false
+            });
+        });
+ </script>
 </body>
 </html>
 

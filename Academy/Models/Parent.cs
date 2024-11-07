@@ -12,7 +12,7 @@ namespace Academy.Models
         public string? Image { get; set; }
         public bool? IsActive { get; set; }
         //list of children
-        public ICollection<Child> Children { get; set; } = new List<Child>();
+        public ICollection<Trainee> Children { get; set; } = new List<Trainee>();
         ///Branch Id
         [ForeignKey("Branch")]
         public int BranchId { get; set; }

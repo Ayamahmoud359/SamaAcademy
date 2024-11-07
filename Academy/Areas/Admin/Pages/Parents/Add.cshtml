@@ -28,9 +28,9 @@
                             <span asp-validation-for="@Model.ParentVM.ParentName" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="@Model.ParentVM.Email" class="form-label">Parent Email</label>
-                            <input asp-for="@Model.ParentVM.Email" class="form-control" />
-                            <span asp-validation-for="@Model.ParentVM.Email" class="text-danger"></span>
+                            <label asp-for="@Model.Email" class="form-label">Parent Email</label>
+                            <input asp-for="@Model.Email" class="form-control" />
+                            <span asp-validation-for="@Model.Email" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
@@ -46,7 +46,7 @@
                         </div>
                         <div class="mb-3">
                             <label class= "form-label" asp-for="@Model.ParentVM.BranchId">Branch</label>
-                            <select asp-for="@Model.ParentVM.BranchId" asp-items="@(new SelectList(Model.Branches, "BranchId", "BranchNameEN"))" class="form-select" data-choices data-choices-sorting="true" id="inlineFormSelectPref">
+                            <select asp-for="@Model.ParentVM.BranchId" asp-items="@(new SelectList(Model.Branches, "BranchId", "BranchName"))" class="form-control form-select" >
                                 <option selected disabled>Choose...</option>
 
                             </select>
@@ -56,27 +56,25 @@
 
                         
                         <div class="mb-3">
-
                             <label class="form-label" asp-for="@Model.ParentVM.Password">Password</label>
                             <div class="position-relative auth-pass-inputgroup mb-3">
-                                <input type="password" asp-for="@Model.ParentVM.Password" class="form-control pe-5 password-input" placeholder="Enter password" id="password-input">
-                                <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
-
+                                <input asp-for="@Model.ParentVM.Password" class="form-control pe-5 password-input" id="passwordInput">
+                                <span class="input-group-text" id="togglePassword" onclick="togglePassword('passwordInput', 'togglePassword')">
+                                    <i class="fa fa-eye"></i> <!-- Font Awesome Eye Icon -->
+                                </span>
                             </div>
                             <span asp-validation-for="@Model.ParentVM.Password" class="text-danger"></span>
-
                         </div>
 
                         <div class="mb-3">
-
                             <label class="form-label" asp-for="@Model.ParentVM.ConfirmPassword">Confirm Password</label>
                             <div class="position-relative auth-pass-inputgroup mb-3">
-                                <input type="password" asp-for="@Model.ParentVM.ConfirmPassword" class="form-control pe-5 password-input" placeholder="Enter password" id="password-input">
-                                <button class="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted password-addon" type="button" id="password-addon"><i class="ri-eye-fill align-middle"></i></button>
-
+                                <input type="password" asp-for="@Model.ParentVM.ConfirmPassword" class="form-control pe-5 password-input" id="confirmPasswordInput">
+                                <span class="input-group-text" id="toggleConfirmPassword" onclick="togglePassword('confirmPasswordInput', 'toggleConfirmPassword')">
+                                    <i class="fa fa-eye"></i> <!-- Font Awesome Eye Icon -->
+                                </span>
                             </div>
                             <span asp-validation-for="@Model.ParentVM.ConfirmPassword" class="text-danger"></span>
-
                         </div>
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">Add Parent</button>
@@ -89,15 +87,23 @@
     </div>
 
 </div><!--end row-->
-<!-- prismjs plugin -->
-<script src="~/assets/libs/prismjs/prism.js"></script>
+<script>
+  
 
-<script src="~/assets/js/app.js"></script>
+    function togglePassword(inputId, iconId) {
+        var passwordField = document.getElementById(inputId);
+        var eyeIcon = document.getElementById(iconId).getElementsByTagName("i")[0];
 
-<!-- particles js -->
-<script src="~/assets/libs/particles.js/particles.js"></script>
-<!-- particles app js -->
-<script src="~/assets/js/pages/particles.app.js"></script>
-<!-- password-addon init -->
-<script src="~/assets/js/pages/password-addon.init.js"></script>
+        // Toggle the type between 'password' and 'text'
+        if (passwordField.type === "password") {
+            passwordField.type = "text"; // Show password
+            eyeIcon.classList.remove("fa-eye");
+            eyeIcon.classList.add("fa-eye-slash"); // Change icon to eye-slash
+        } else {
+            passwordField.type = "password"; // Hide password
+            eyeIcon.classList.remove("fa-eye-slash");
+            eyeIcon.classList.add("fa-eye"); // Change icon back to eye
+        }
+    }
+</script>
 

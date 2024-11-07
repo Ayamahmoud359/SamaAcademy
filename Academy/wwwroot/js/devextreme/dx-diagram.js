@@ -1,9 +1,9 @@
 /*!
  * DevExpress Diagram (dx-diagram)
- * Version: 2.2.2
- * Build date: Wed Sep 13 2023
+ * Version: 2.2.12
+ * Build date: Thu Oct 10 2024
  *
- * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
+ * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -25,6 +25,7 @@ return /******/ (() => { // webpackBootstrap
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Browser = void 0;
 var Browser = (function () {
     function Browser() {
     }
@@ -248,6 +249,7 @@ exports.Browser = Browser;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EmptyBatchUpdatableObject = exports.BatchUpdatableObject = void 0;
 var BatchUpdatableObject = (function () {
     function BatchUpdatableObject() {
         this.suspendUpdateCount = 0;
@@ -317,6 +319,7 @@ exports.EmptyBatchUpdatableObject = EmptyBatchUpdatableObject;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Flag = void 0;
 var Flag = (function () {
     function Flag(initValue) {
         if (initValue === void 0) { initValue = 0; }
@@ -368,6 +371,7 @@ exports.Flag = Flag;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ExtendedMinMax = exports.ExtendedMax = exports.ExtendedMin = exports.MinMaxNumber = exports.MinMax = void 0;
 var tslib_1 = __webpack_require__(655);
 var MinMax = (function () {
     function MinMax(minElement, maxElement) {
@@ -386,7 +390,7 @@ var MinMaxNumber = (function (_super) {
         get: function () {
             return this.maxElement - this.minElement;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     return MinMaxNumber;
@@ -428,6 +432,7 @@ exports.ExtendedMinMax = ExtendedMinMax;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.UnitConverter = void 0;
 var UnitConverter = (function () {
     function UnitConverter() {
     }
@@ -572,6 +577,7 @@ exports.UnitConverter = UnitConverter;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Metrics = void 0;
 var Metrics = (function () {
     function Metrics() {
     }
@@ -595,6 +601,7 @@ exports.Metrics = Metrics;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Offsets = void 0;
 var Offsets = (function () {
     function Offsets(left, right, top, bottom) {
         this.left = left;
@@ -609,14 +616,14 @@ var Offsets = (function () {
         get: function () {
             return this.left + this.right;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Offsets.prototype, "vertical", {
         get: function () {
             return this.top + this.bottom;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Offsets.fromNumber = function (offset) {
@@ -708,6 +715,7 @@ exports.Offsets = Offsets;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Point = void 0;
 var Point = (function () {
     function Point(x, y) {
         this.x = x;
@@ -787,6 +795,7 @@ exports.Point = Point;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RectangleDeviation = exports.HitTestDeviation = exports.Rectangle = void 0;
 var flag_1 = __webpack_require__(7820);
 var algorithms_1 = __webpack_require__(1104);
 var fixed_1 = __webpack_require__(8860);
@@ -803,21 +812,21 @@ var Rectangle = (function () {
         get: function () {
             return this.x + this.width;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Rectangle.prototype, "bottom", {
         get: function () {
             return this.y + this.height;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Rectangle.prototype, "center", {
         get: function () {
             return Rectangle.center(this);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Rectangle.prototype.createRectangle = function () {
@@ -1106,6 +1115,7 @@ exports.RectangleDeviation = RectangleDeviation;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Segment = void 0;
 var math_1 = __webpack_require__(8679);
 var metrics_1 = __webpack_require__(5596);
 var point_1 = __webpack_require__(8900);
@@ -1119,28 +1129,28 @@ var Segment = (function () {
         get: function () {
             return metrics_1.Metrics.euclideanDistance(this.startPoint, this.endPoint);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Segment.prototype, "xLength", {
         get: function () {
             return Math.abs(this.endPoint.x - this.startPoint.x);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Segment.prototype, "yLength", {
         get: function () {
             return Math.abs(this.endPoint.y - this.startPoint.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Segment.prototype, "center", {
         get: function () {
             return new point_1.Point(this.startPoint.x + (this.endPoint.x - this.startPoint.x) / 2, this.startPoint.y + (this.endPoint.y - this.startPoint.y) / 2);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Segment.prototype.isIntersected = function (segment) {
@@ -1201,6 +1211,7 @@ exports.Segment = Segment;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Size = void 0;
 var Size = (function () {
     function Size(width, height) {
         this.width = width;
@@ -1270,6 +1281,7 @@ exports.Size = Size;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Vector = void 0;
 var Vector = (function () {
     function Vector(x, y) {
         if (x === void 0) { x = 0; }
@@ -1281,7 +1293,7 @@ var Vector = (function () {
         get: function () {
             return Math.sqrt(this.x * this.x + this.y * this.y);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Vector.fromPoints = function (begin, end) {
@@ -1307,14 +1319,14 @@ var Vector = (function () {
         get: function () {
             return new Vector(1, 0);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(Vector, "axisY", {
         get: function () {
             return new Vector(0, 1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Vector.angleBetween = function (a, b) {
@@ -1336,6 +1348,7 @@ exports.Vector = Vector;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.IntervalAlgorithms = void 0;
 var list_1 = __webpack_require__(2940);
 var search_1 = __webpack_require__(2400);
 var fixed_1 = __webpack_require__(8860);
@@ -1504,6 +1517,7 @@ exports.IntervalAlgorithms = IntervalAlgorithms;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ConstInterval = void 0;
 var ConstInterval = (function () {
     function ConstInterval() {
     }
@@ -1511,7 +1525,7 @@ var ConstInterval = (function () {
         get: function () {
             return this.start + (this.length / 2);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     ConstInterval.prototype.isNormalized = function () {
@@ -1553,6 +1567,7 @@ exports.ConstInterval = ConstInterval;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FixedInterval = void 0;
 var tslib_1 = __webpack_require__(655);
 var mutable_1 = __webpack_require__(8678);
 var FixedInterval = (function (_super) {
@@ -1570,14 +1585,14 @@ var FixedInterval = (function (_super) {
         set: function (newEnd) {
             this.length = newEnd - this.start;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(FixedInterval.prototype, "center", {
         get: function () {
             return this.start + this.length / 2;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     FixedInterval.prototype.copyFrom = function (obj) {
@@ -1623,6 +1638,7 @@ exports.FixedInterval = FixedInterval;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MutableInterval = void 0;
 var tslib_1 = __webpack_require__(655);
 var const_1 = __webpack_require__(7814);
 var MutableInterval = (function (_super) {
@@ -1647,6 +1663,7 @@ exports.MutableInterval = MutableInterval;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SparseIntervalsCollector = void 0;
 var intervals_1 = __webpack_require__(448);
 var SparseIntervalsCollector = (function () {
     function SparseIntervalsCollector(template) {
@@ -1676,6 +1693,7 @@ exports.SparseIntervalsCollector = SparseIntervalsCollector;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SparseIntervals = void 0;
 var iterator_1 = __webpack_require__(8094);
 var objects_iterator_1 = __webpack_require__(510);
 var SparseIntervals = (function () {
@@ -1694,14 +1712,14 @@ var SparseIntervals = (function () {
         get: function () {
             return this._count;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(SparseIntervals.prototype, "numIntervals", {
         get: function () {
             return this._numIntervals;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     SparseIntervals.prototype.getInterval = function (index) {
@@ -1725,6 +1743,7 @@ exports.SparseIntervals = SparseIntervals;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SparseIntervalsIterator = void 0;
 var SparseIntervalsIterator = (function () {
     function SparseIntervalsIterator(sparseIntervals) {
         this.sparseIntervals = sparseIntervals;
@@ -1734,7 +1753,7 @@ var SparseIntervalsIterator = (function () {
         get: function () {
             return !!this.curr;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     SparseIntervalsIterator.prototype.moveNext = function () {
@@ -1788,6 +1807,7 @@ exports.SparseIntervalsIterator = SparseIntervalsIterator;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SparseObjectsIterator = void 0;
 var tslib_1 = __webpack_require__(655);
 var iterator_1 = __webpack_require__(8094);
 var SparseObjectsIterator = (function (_super) {
@@ -1812,6 +1832,7 @@ exports.SparseObjectsIterator = SparseObjectsIterator;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Base64Utils = void 0;
 var file_1 = __webpack_require__(2674);
 var mime_type_1 = __webpack_require__(4633);
 var Base64Utils = (function () {
@@ -1883,6 +1904,7 @@ exports.Base64Utils = Base64Utils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ColorUtils = void 0;
 var string_1 = __webpack_require__(49);
 var ColorUtils = (function () {
     function ColorUtils() {
@@ -2041,6 +2063,7 @@ exports.ColorUtils = ColorUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.numberToStringHex = exports.numberToStringBin = exports.isOdd = exports.isEven = exports.isNonNullString = exports.isString = exports.isNumber = exports.boolToString = exports.boolToInt = exports.isDefined = void 0;
 var string_1 = __webpack_require__(49);
 function isDefined(value) {
     return value !== undefined && value !== null;
@@ -2093,6 +2116,7 @@ exports.numberToStringHex = numberToStringHex;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Equals = exports.Comparers = void 0;
 var Comparers = (function () {
     function Comparers() {
     }
@@ -2131,6 +2155,7 @@ exports.Equals = Equals;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DomUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var common_1 = __webpack_require__(2491);
 var math_1 = __webpack_require__(8679);
@@ -2324,21 +2349,6 @@ var DomUtils = (function () {
         function getAbsolutePositionY_FF3(element) {
             return Math.round(element.getBoundingClientRect().top + DomUtils.getDocumentScrollTop());
         }
-        function getAbsolutePositionY_Opera(curEl) {
-            var isFirstCycle = true;
-            if (curEl && DomUtils.isHTMLTableRowElement(curEl) && curEl.cells.length > 0)
-                curEl = curEl.cells[0];
-            var pos = getAbsoluteScrollOffset_OperaFF(curEl, false);
-            while (curEl != null) {
-                pos += curEl.offsetTop;
-                if (!isFirstCycle)
-                    pos -= curEl.scrollTop;
-                curEl = curEl.offsetParent;
-                isFirstCycle = false;
-            }
-            pos += document.body.scrollTop;
-            return pos;
-        }
         function getAbsolutePositionY_NS(curEl) {
             var pos = getAbsoluteScrollOffset_OperaFF(curEl, false);
             var isFirstCycle = true;
@@ -2374,8 +2384,6 @@ var DomUtils = (function () {
             return getAbsolutePositionY_IE(element);
         else if (browser_1.Browser.Firefox && browser_1.Browser.Version >= 3)
             return getAbsolutePositionY_FF3(element);
-        else if (browser_1.Browser.Opera)
-            return getAbsolutePositionY_Opera(element);
         else if (browser_1.Browser.NetscapeFamily && (!browser_1.Browser.Firefox || browser_1.Browser.Version < 3))
             return getAbsolutePositionY_NS(element);
         else if (browser_1.Browser.WebKitFamily || browser_1.Browser.Edge)
@@ -2624,6 +2632,7 @@ function getAbsoluteScrollOffset_OperaFF(curEl, isX) {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EncodeUtils = void 0;
 var EncodeUtils = (function () {
     function EncodeUtils() {
     }
@@ -2672,6 +2681,7 @@ exports.EncodeUtils = EncodeUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.EvtUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var common_1 = __webpack_require__(2491);
 var dom_1 = __webpack_require__(6907);
@@ -2779,6 +2789,7 @@ exports.EvtUtils = EvtUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.FileUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var base64_1 = __webpack_require__(6477);
 var common_1 = __webpack_require__(2491);
@@ -2848,6 +2859,7 @@ exports.FileUtils = FileUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.KeyCode = exports.ModifierKey = exports.KeyUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var encode_1 = __webpack_require__(9712);
 var string_1 = __webpack_require__(49);
@@ -3128,6 +3140,7 @@ var KeyCode;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ListUtils = void 0;
 var min_max_1 = __webpack_require__(6799);
 var comparers_1 = __webpack_require__(4170);
 var ListUtils = (function () {
@@ -3582,6 +3595,7 @@ exports.ListUtils = ListUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MathUtils = void 0;
 var list_1 = __webpack_require__(2940);
 var MathUtils = (function () {
     function MathUtils() {
@@ -3643,9 +3657,11 @@ exports.MathUtils = MathUtils;
 
 var _a, _b, _c;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MimeTypeUtils = exports.DxMimeType = exports.ImageWebpMimeType = exports.ImageWbmpMimeType = exports.ImageIcoMimeType = exports.ImageTiffMimeType = exports.ImageSvgMimeType = exports.ImagePjpegMimeType = exports.ImageJpegMimeType = exports.ImageGifMimeType = exports.ImagePngMimeType = exports.DocmMimeType = exports.HtmlMimeType = exports.PlainTextMimeType = exports.RtfMimeType = exports.OpenXmlMimeType = void 0;
 exports.OpenXmlMimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 exports.RtfMimeType = 'application/rtf';
 exports.PlainTextMimeType = 'text/plain';
+exports.HtmlMimeType = 'text/html';
 exports.DocmMimeType = 'application/vnd.ms-word.document.macroEnabled.12';
 exports.ImagePngMimeType = 'image/png';
 exports.ImageGifMimeType = 'image/gif';
@@ -3672,6 +3688,7 @@ var DxMimeType;
     DxMimeType[DxMimeType["Ico"] = 11] = "Ico";
     DxMimeType[DxMimeType["Wbmp"] = 12] = "Wbmp";
     DxMimeType[DxMimeType["Webp"] = 13] = "Webp";
+    DxMimeType[DxMimeType["Html"] = 14] = "Html";
 })(DxMimeType = exports.DxMimeType || (exports.DxMimeType = {}));
 var MimeTypeUtils = (function () {
     function MimeTypeUtils() {
@@ -3704,6 +3721,7 @@ var MimeTypeUtils = (function () {
         _a[exports.RtfMimeType] = DxMimeType.Rtf,
         _a[exports.PlainTextMimeType] = DxMimeType.PlainText,
         _a[exports.DocmMimeType] = DxMimeType.Docm,
+        _a[exports.HtmlMimeType] = DxMimeType.Html,
         _a[exports.ImagePngMimeType] = DxMimeType.Png,
         _a[exports.ImageGifMimeType] = DxMimeType.Gif,
         _a[exports.ImageJpegMimeType] = DxMimeType.Jpeg,
@@ -3720,6 +3738,7 @@ var MimeTypeUtils = (function () {
         _b[DxMimeType.Rtf] = exports.RtfMimeType,
         _b[DxMimeType.PlainText] = exports.PlainTextMimeType,
         _b[DxMimeType.Docm] = exports.DocmMimeType,
+        _b[DxMimeType.Html] = exports.HtmlMimeType,
         _b[DxMimeType.Png] = exports.ImagePngMimeType,
         _b[DxMimeType.Gif] = exports.ImageGifMimeType,
         _b[DxMimeType.Jpeg] = exports.ImageJpegMimeType,
@@ -3736,6 +3755,7 @@ var MimeTypeUtils = (function () {
         _c[DxMimeType.Rtf] = '.rtf',
         _c[DxMimeType.PlainText] = '.txt',
         _c[DxMimeType.Docm] = '.docm',
+        _c[DxMimeType.Html] = '.html',
         _c[DxMimeType.Png] = '.png',
         _c[DxMimeType.Gif] = '.gif',
         _c[DxMimeType.Jpeg] = '.jpeg',
@@ -3751,6 +3771,8 @@ var MimeTypeUtils = (function () {
         '.rtf': DxMimeType.Rtf,
         '.txt': DxMimeType.PlainText,
         '.docm': DxMimeType.Docm,
+        '.html': DxMimeType.Html,
+        '.htm': DxMimeType.Html,
         '.png': DxMimeType.Png,
         '.gif': DxMimeType.Gif,
         '.jpeg': DxMimeType.Jpeg,
@@ -3773,6 +3795,7 @@ exports.MimeTypeUtils = MimeTypeUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SearchUtils = void 0;
 var SearchUtils = (function () {
     function SearchUtils() {
     }
@@ -3846,6 +3869,7 @@ exports.SearchUtils = SearchUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.StringUtils = void 0;
 var StringUtils = (function () {
     function StringUtils() {
     }
@@ -3970,6 +3994,7 @@ exports.StringUtils = StringUtils;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.TouchUtils = void 0;
 var browser_1 = __webpack_require__(9279);
 var common_1 = __webpack_require__(2491);
 var TouchUtils = (function () {
@@ -4901,8 +4926,10 @@ var PasteSelectionCommandBase = (function (_super) {
             var item = items[i];
             if (item instanceof Shape_1.Shape)
                 item.position.offsetByPoint(offset);
-            else if (item instanceof Connector_1.Connector)
+            else if (item instanceof Connector_1.Connector) {
                 item.points.forEach(function (p) { return p.offsetByPoint(offset); });
+                item.clearRenderPoints();
+            }
         }
         return items;
     };
@@ -4933,12 +4960,12 @@ var PasteSelectionCommandBase = (function (_super) {
     PasteSelectionCommandBase.prototype.executeCore = function (state, parameter) {
         var _this = this;
         var ret = true;
-        if (parameter)
-            this.performPaste(parameter);
-        else
+        if (parameter === undefined)
             this.getClipboardData(function (data) {
                 ret = _this.execute(data);
             });
+        else
+            this.performPaste(parameter);
         return ret;
     };
     PasteSelectionCommandBase.prototype.addItemForSortingRecursive = function (itemsHashtable, item) {
@@ -6319,7 +6346,7 @@ var point_1 = __webpack_require__(8900);
 var ModelUtils_1 = __webpack_require__(4867);
 var unit_converter_1 = __webpack_require__(9291);
 var SimpleCommandBase_1 = __webpack_require__(9741);
-var __1 = __webpack_require__(3607);
+var DragHelper_1 = __webpack_require__(4742);
 var MoveCommand = (function (_super) {
     __extends(MoveCommand, _super);
     function MoveCommand() {
@@ -6332,34 +6359,12 @@ var MoveCommand = (function (_super) {
         var _this = this;
         this.control.history.beginTransaction();
         var selection = this.control.selection;
-        var selectedShapes = selection.getSelectedShapes();
-        var selectedShapesWithoutDuplicates = selectedShapes.filter(function (shape) {
-            while (shape.container) {
-                if (selectedShapes.indexOf(shape.container) !== -1)
-                    return false;
-                shape = shape.container;
-            }
-            return true;
-        });
-        selectedShapesWithoutDuplicates.forEach(function (shape) {
-            _this.permissionsProvider.addInteractingItem(shape, __1.DiagramModelOperation.MoveShape);
-            var pos = _this.getPosition(shape.position);
-            ModelUtils_1.ModelUtils.setShapePosition(_this.control.history, _this.control.model, shape, pos);
-            ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(_this.control.history, _this.control.model, shape);
-            _this.permissionsProvider.clearInteractingItems();
-        });
-        var selectedItems = ModelUtils_1.ModelUtils.createSelectedItems(selection);
-        selection.getSelectedConnectors().forEach(function (connector) {
-            if (ModelUtils_1.ModelUtils.canMoveConnector(selectedItems, connector)) {
-                var startPtIndex = connector.beginItem ? 1 : 0;
-                var endPtIndex = connector.endItem ? (connector.points.length - 2) : (connector.points.length - 1);
-                for (var i = startPtIndex; i <= endPtIndex; i++) {
-                    var pos = _this.getPosition(connector.points[i]);
-                    ModelUtils_1.ModelUtils.moveConnectorPoint(_this.control.history, connector, i, pos);
-                }
-            }
-        });
-        ModelUtils_1.ModelUtils.tryUpdateModelRectangle(this.control.history);
+        var helper = new DragHelper_1.SelectionDragHelper(this.control.history, this.control.model, this.permissionsProvider, new point_1.Point(0, 0), selection.getSelectedItems(true));
+        helper.initDraggingShapes(selection.getSelectedShapes(false, true), false);
+        helper.initDraggingConnectors(selection.getSelectedConnectors(false, true), false);
+        helper.move(false, function (p) { return _this.getPosition(p); }, function () { }, function () { });
+        helper.finish();
+        ModelUtils_1.ModelUtils.tryUpdateModelRectangle(this.control.history, function (offsetLeft, offsetTop) { return helper.onTryUpdateModelSize(offsetLeft, offsetTop); });
         this.control.history.endTransaction();
         return true;
     };
@@ -9513,20 +9518,22 @@ var DataSource = (function () {
         return shape;
     };
     DataSource.prototype.changeShapeByDataItem = function (history, model, shape, node, point) {
+        var updated = false;
         if (node.left !== undefined)
             point.x = ModelUtils_1.ModelUtils.getTwipsValue(model.units, node.left);
         if (node.top !== undefined)
             point.y = ModelUtils_1.ModelUtils.getTwipsValue(model.units, node.top);
-        ModelUtils_1.ModelUtils.setShapePosition(history, model, shape, point, false);
+        updated = ModelUtils_1.ModelUtils.setShapePosition(history, model, shape, point, false) || updated;
         if (node.type !== undefined)
-            ModelUtils_1.ModelUtils.changeShapeType(history, model, shape, node.type);
+            updated = ModelUtils_1.ModelUtils.changeShapeType(history, model, shape, node.type) || updated;
         var size = shape.size.clone();
         if (node.width !== undefined)
             size.width = ModelUtils_1.ModelUtils.getTwipsValue(model.units, node.width);
         if (node.height !== undefined)
             size.height = ModelUtils_1.ModelUtils.getTwipsValue(model.units, node.height);
-        ModelUtils_1.ModelUtils.setShapeSize(history, model, shape, point, size);
-        ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(history, model, shape);
+        updated = ModelUtils_1.ModelUtils.setShapeSize(history, model, shape, point, size) || updated;
+        if (updated)
+            ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(history, model, shape);
         if (node.text !== undefined && node.text !== shape.text)
             history.addAndRedo(new ChangeShapeTextHistoryItem_1.ChangeShapeTextHistoryItem(shape, node.text));
         if (node.image !== undefined && node.image !== shape.image.actualUrl)
@@ -9790,6 +9797,8 @@ var DocumentDataSource = (function (_super) {
         model.items.forEach(function (item) {
             if (item instanceof Shape_1.Shape)
                 _this.updateNode(model, item);
+        });
+        model.items.forEach(function (item) {
             if (item instanceof Connector_1.Connector)
                 _this.updateEdge(model, item);
         });
@@ -12876,14 +12885,11 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MouseHandlerDragDiagramItemStateBase = exports.DraggingConnector = void 0;
-var vector_1 = __webpack_require__(9716);
-var ChangeConnectorPointsHistoryItem_1 = __webpack_require__(58);
-var ConnectorRenderPoint_1 = __webpack_require__(4717);
-var ConnectorRenderPointsContext_1 = __webpack_require__(1510);
 var ModelUtils_1 = __webpack_require__(4867);
 var ModelOperationSettings_1 = __webpack_require__(6879);
 var Event_1 = __webpack_require__(6031);
 var MouseHandlerDraggingState_1 = __webpack_require__(8816);
+var DragHelper_1 = __webpack_require__(4742);
 var DraggingConnector = (function () {
     function DraggingConnector(connector) {
         this.connector = connector;
@@ -12893,13 +12899,6 @@ var DraggingConnector = (function () {
     return DraggingConnector;
 }());
 exports.DraggingConnector = DraggingConnector;
-var DraggingShape = (function () {
-    function DraggingShape(shape) {
-        this.shape = shape;
-        this.startPosition = shape.position.clone();
-    }
-    return DraggingShape;
-}());
 var MouseHandlerDragDiagramItemStateBase = (function (_super) {
     __extends(MouseHandlerDragDiagramItemStateBase, _super);
     function MouseHandlerDragDiagramItemStateBase(handler, history, model, selection, visualizerManager) {
@@ -12912,6 +12911,8 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
         return _this;
     }
     MouseHandlerDragDiagramItemStateBase.prototype.finish = function () {
+        var _a;
+        (_a = this.dragHelper) === null || _a === void 0 ? void 0 : _a.finish();
         this.visualizerManager.resetExtensionLines();
         this.visualizerManager.resetContainerTarget();
         this.visualizerManager.resetConnectionTarget();
@@ -12919,14 +12920,11 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
         _super.prototype.finish.call(this);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.onMouseDown = function (evt) {
-        var _this = this;
         this.handler.addDiagramItemToSelection(evt);
         this.shouldClone = this.handler.canCopySelectedItems(evt);
         this.startPoint = evt.modelPoint;
         this.initDrag();
         this.lockInitDrag = false;
-        if (!this.shouldClone)
-            this.draggingShapes.forEach(function (draggingShape) { return _this.handler.addInteractingItem(draggingShape.shape, ModelOperationSettings_1.DiagramModelOperation.MoveShape); });
         _super.prototype.onMouseDown.call(this, evt);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.onMouseMove = function (evt) {
@@ -12966,48 +12964,28 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
     MouseHandlerDragDiagramItemStateBase.prototype.onApplyChanges = function (evt) {
         var _this = this;
         this.calculateFixedPosition(evt);
-        if (this.draggingShapes.length) {
-            var selectedShapes_1 = this.draggingShapes.map(function (ds) { return ds.shape; });
-            this.draggingShapes.forEach(function (ds) {
-                var shape = ds.shape;
-                while (shape.container) {
-                    if (selectedShapes_1.indexOf(shape.container) !== -1)
-                        return false;
-                    shape = shape.container;
-                }
-                _this.moveShape(ds, evt);
-            });
-            var firstDraggingShape = this.draggingShapes[0];
-            var offset_1 = vector_1.Vector.fromPoints(firstDraggingShape.startPosition.clone(), firstDraggingShape.shape.position.clone());
-            if (offset_1.x || offset_1.y)
-                this.draggingConnectors.forEach(function (dc) { return _this.moveConnectorCore(dc.connector, dc.startPoints, dc.startRenderContext, offset_1); });
-        }
-        else
-            this.draggingConnectors.forEach(function (x) { return _this.moveConnector(x, evt); });
+        this.dragHelper.move(this.shouldClone, function (pt) { return _this.getSnappedPoint(evt, pt); }, function () {
+            _this.visualizerManager.resetConnectionTarget();
+            _this.visualizerManager.resetConnectionPoints();
+        }, function (shape, connectionPointIndex) {
+            _this.visualizerManager.setConnectionTarget(shape, Event_1.MouseEventElementType.Shape);
+            _this.visualizerManager.setConnectionPoints(shape, Event_1.MouseEventElementType.Shape, connectionPointIndex, true);
+        });
         var container = ModelUtils_1.ModelUtils.findContainerByEventKey(this.model, this.selection, evt.source.key);
         if (container && this.allowInsertToContainer(evt, container))
             ModelUtils_1.ModelUtils.insertSelectionToContainer(this.history, this.model, this.selection, container);
         else
             ModelUtils_1.ModelUtils.removeSelectionFromContainer(this.history, this.model, this.selection);
-        this.handler.tryUpdateModelSize(function (offsetLeft, offsetTop) {
-            _this.modelConnectorsWithoutBeginItemInfo.forEach(function (pi) {
-                pi.point.x += offsetLeft;
-                pi.point.y += offsetTop;
-            });
-            _this.modelConnectorsWithoutEndItemInfo.forEach(function (pi) {
-                pi.point.x += offsetLeft;
-                pi.point.y += offsetTop;
-            });
-        });
+        this.handler.tryUpdateModelSize(function (offsetLeft, offsetTop) { return _this.dragHelper.onTryUpdateModelSize(offsetLeft, offsetTop); });
     };
     MouseHandlerDragDiagramItemStateBase.prototype.getDraggingElementKeys = function () {
-        return this.draggingShapes.map(function (x) { return x.shape.key; }).concat(this.draggingConnectors.map(function (x) { return x.connector.key; }));
+        return this.dragHelper.draggingShapes.map(function (x) { return x.shape.key; }).concat(this.dragHelper.draggingConnectors.map(function (x) { return x.connector.key; }));
     };
     MouseHandlerDragDiagramItemStateBase.prototype.getSnappedPoint = function (evt, point) {
         return this.handler.getSnappedPointOnDragDiagramItem(evt, point, this.fixedX, this.fixedY, this.startPoint);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.initDrag = function () {
-        this.selectedItems = ModelUtils_1.ModelUtils.createSelectedItems(this.selection);
+        this.dragHelper = new DragHelper_1.SelectionDragHelper(this.history, this.model, this.handler.permissionsProvider, this.startPoint, this.selection.getSelectedItems(true));
         this.initDraggingShapes();
         if (!this.areValidDraggingShapes) {
             this.handler.switchToDefaultState();
@@ -13018,27 +12996,12 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
             this.handler.switchToDefaultState();
             return;
         }
-        this.modelConnectorsWithoutBeginItemInfo = this.createModelConnectorsWithoutBeginItemInfo();
-        this.modelConnectorsWithoutEndItemInfo = this.createModelConnectorsWithoutEndItemInfo();
     };
     MouseHandlerDragDiagramItemStateBase.prototype.initDraggingShapes = function () {
-        this.draggingShapes = this.selection.getSelectedShapes(false, true).map(function (s) { return new DraggingShape(s); });
+        this.dragHelper.initDraggingShapes(this.selection.getSelectedShapes(false, true), this.shouldClone);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.initDraggingConnectors = function () {
-        var _this = this;
-        this.draggingConnectors = [];
-        this.draggingConnectorsIndexByKey = {};
-        this.selection.getSelectedConnectors(false, true).forEach(function (c) { return _this.registerConnector(c); });
-        if (this.shouldClone)
-            return;
-        this.draggingShapes.forEach(function (x) {
-            var attachedConnectors = x.shape.attachedConnectors;
-            if (attachedConnectors)
-                attachedConnectors.forEach(function (c) {
-                    if (!_this.containsDraggingConnectorByKey(c.key))
-                        _this.registerConnector(c);
-                });
-        });
+        this.dragHelper.initDraggingConnectors(this.selection.getSelectedConnectors(false, true), this.shouldClone);
     };
     MouseHandlerDragDiagramItemStateBase.prototype.copySelection = function () {
         var _this = this;
@@ -13060,86 +13023,10 @@ var MouseHandlerDragDiagramItemStateBase = (function (_super) {
                 this.fixedY = true;
         }
     };
-    MouseHandlerDragDiagramItemStateBase.prototype.containsDraggingConnectorByKey = function (key) {
-        return this.draggingConnectorsIndexByKey[key] !== undefined;
-    };
     MouseHandlerDragDiagramItemStateBase.prototype.allowInsertToContainer = function (evt, container) {
         if (this.handler.canMultipleSelection(evt))
             return false;
         return container && container.expanded && ModelUtils_1.ModelUtils.canInsertSelectionToContainer(this.model, this.selection, container);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.registerConnector = function (connector) {
-        this.draggingConnectorsIndexByKey[connector.key] = this.draggingConnectors.push(new DraggingConnector(connector)) - 1;
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.createModelConnectorsWithoutBeginItemInfo = function () {
-        var _this = this;
-        var connectors = this.model.findConnectorsCore(function (c) { return !c.beginItem && !_this.containsDraggingConnectorByKey(c.key); });
-        return connectors.map(function (c) {
-            return {
-                connector: c,
-                point: c.points[0].clone()
-            };
-        });
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.createModelConnectorsWithoutEndItemInfo = function () {
-        var _this = this;
-        var connectors = this.model.findConnectorsCore(function (c) { return !c.endItem && !_this.containsDraggingConnectorByKey(c.key); });
-        return connectors.map(function (c) {
-            return {
-                connector: c,
-                point: c.points[c.points.length - 1].clone()
-            };
-        });
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.moveConnector = function (dc, evt) {
-        var startPoints = dc.startPoints;
-        var offset = vector_1.Vector.fromPoints(startPoints[0].clone(), this.getSnappedPoint(evt, startPoints[0]).clone());
-        if (offset.x || offset.y)
-            this.moveConnectorCore(dc.connector, startPoints, dc.startRenderContext, offset);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.moveConnectorCore = function (connector, startPoints, startRenderContext, offset) {
-        if (this.shouldClone || ModelUtils_1.ModelUtils.canMoveConnector(this.selectedItems, connector))
-            this.offsetConnector(connector, startPoints, startRenderContext, offset);
-        else
-            this.changeConnector(connector);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.moveShape = function (ds, evt) {
-        var _this = this;
-        var shape = ds.shape;
-        var position = this.getSnappedPoint(evt, ds.startPosition);
-        ModelUtils_1.ModelUtils.setShapePosition(this.history, this.model, shape, position);
-        ModelUtils_1.ModelUtils.updateMovingShapeConnections(this.history, shape, this.modelConnectorsWithoutBeginItemInfo, this.modelConnectorsWithoutEndItemInfo, function () {
-            _this.visualizerManager.resetConnectionTarget();
-            _this.visualizerManager.resetConnectionPoints();
-        }, function (shape, connectionPointIndex) {
-            _this.visualizerManager.setConnectionTarget(shape, Event_1.MouseEventElementType.Shape);
-            _this.visualizerManager.setConnectionPoints(shape, Event_1.MouseEventElementType.Shape, connectionPointIndex, true);
-        }, function (connector) { return _this.handler.addInteractingItem(connector); });
-        if (!this.draggingConnectors.filter(function (dc) { return !!_this.selectedItems[dc.connector.key]; }).length)
-            ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(this.history, this.model, shape);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.offsetConnector = function (connector, startPoints, startRenderContext, offset) {
-        var _this = this;
-        var newPoints = startPoints.map(function (p) { return _this.offsetPoint(p, offset); });
-        if (!newPoints[0].equals(connector.points[0]))
-            this.history.addAndRedo(new ChangeConnectorPointsHistoryItem_1.ChangeConnectorPointsHistoryItem(connector.key, newPoints, this.offsetRenderContext(startRenderContext, offset)));
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.offsetRenderContext = function (context, offset) {
-        var _this = this;
-        if (context === undefined)
-            return undefined;
-        return new ConnectorRenderPointsContext_1.ConnectorRenderPointsContext(context.renderPoints.map(function (p) {
-            var newPoint = _this.offsetPoint(p, offset);
-            return new ConnectorRenderPoint_1.ConnectorRenderPoint(newPoint.x, newPoint.y, p.pointIndex, p.skipped);
-        }), true, context.actualRoutingMode);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.offsetPoint = function (point, offset) {
-        var pointOffset = vector_1.Vector.fromPoints(point, this.startPoint);
-        return this.startPoint.clone().offset(offset.x - pointOffset.x, offset.y - pointOffset.y);
-    };
-    MouseHandlerDragDiagramItemStateBase.prototype.changeConnector = function (connector) {
-        ModelUtils_1.ModelUtils.tryRemoveConnectorIntermediatePoints(this.history, connector);
-        ModelUtils_1.ModelUtils.updateConnectorAttachedPoints(this.history, this.model, connector);
     };
     return MouseHandlerDragDiagramItemStateBase;
 }(MouseHandlerDraggingState_1.MouseHandlerDraggingState));
@@ -13802,12 +13689,12 @@ var MouseHandlerMoveConnectorState = (function (_super) {
         get: function () {
             var _this = this;
             if (this.shouldClone)
-                return this.draggingShapes.length > 0 || this.draggingConnectors.length > 0;
-            if (!this.draggingConnectors.length)
+                return this.dragHelper.draggingShapes.length > 0 || this.dragHelper.draggingConnectors.length > 0;
+            if (!this.dragHelper.draggingConnectors.length)
                 return false;
-            if (!this.draggingShapes.length)
-                return !this.draggingConnectors.some(function (x) { return !ModelUtils_1.ModelUtils.canMoveConnector(_this.selectedItems, x.connector); });
-            return ModelUtils_1.ModelUtils.canMoveConnector(this.selectedItems, this.draggingConnectors[this.draggingConnectorsIndexByKey[this.handler.mouseDownEvent.source.key]].connector);
+            if (!this.dragHelper.draggingShapes.length)
+                return !this.dragHelper.draggingConnectors.some(function (x) { return !ModelUtils_1.ModelUtils.canMoveConnector(_this.dragHelper.selectedItems, x.connector); });
+            return ModelUtils_1.ModelUtils.canMoveConnector(this.dragHelper.selectedItems, this.dragHelper.draggingConnectors[this.dragHelper.draggingConnectorsIndexByKey[this.handler.mouseDownEvent.source.key]].connector);
         },
         enumerable: false,
         configurable: true
@@ -13912,7 +13799,7 @@ var MouseHandlerMoveShapeState = (function (_super) {
     }
     Object.defineProperty(MouseHandlerMoveShapeState.prototype, "areValidDraggingShapes", {
         get: function () {
-            return this.shouldClone || this.draggingShapes.length > 0;
+            return this.shouldClone || this.dragHelper.draggingShapes.length > 0;
         },
         enumerable: false,
         configurable: true
@@ -18250,6 +18137,9 @@ var Exporter = (function () {
         var styleTextObj = connector.styleText.toObject();
         if (styleTextObj)
             result["styleText"] = styleTextObj;
+        var context = connector.tryCreateRenderPointsContext();
+        if (context)
+            result["context"] = context.toObject();
         return result;
     };
     Exporter.prototype.exportSvg = function (modelSize, pageColor, exportManager, callback) {
@@ -18327,6 +18217,7 @@ var ImageInfo_1 = __webpack_require__(6617);
 var ImporterBase_1 = __webpack_require__(8577);
 var ImportUtils_1 = __webpack_require__(6572);
 var color_1 = __webpack_require__(13);
+var ConnectorRenderPointsContext_1 = __webpack_require__(1510);
 var Importer = (function (_super) {
     __extends(Importer, _super);
     function Importer(shapeDescriptionManager, json) {
@@ -18447,6 +18338,8 @@ var Importer = (function (_super) {
             connector.styleText.fromObject(connectorObj["styleText"]);
         if (typeof connectorObj["zIndex"] === "number")
             connector.zIndex = connectorObj["zIndex"];
+        if (connectorObj["context"] !== undefined)
+            connector.replaceRenderPoints(ConnectorRenderPointsContext_1.ConnectorRenderPointsContext.fromObject(connectorObj["context"]), false);
         return connector;
     };
     return Importer;
@@ -19424,9 +19317,10 @@ var SugiyamaNodesOrderer = (function () {
         var blocks = [];
         var isBottom = alignment === MedianAlignmentMode.BottomLeft || alignment === MedianAlignmentMode.BottomRight;
         var allNodesInfo = new ListUtils_1.HashSet(nodeInfos.slice(0).sort(function (a, b) { return isBottom ? (a.layer - b.layer) : (b.layer - a.layer); }), function (n) { return n.key; });
+        var knownNodes = new ListUtils_1.HashSet();
         while (allNodesInfo.length) {
             var firstNode = allNodesInfo.item(0);
-            var block = this.getBlock(graph, firstNode, medians, alignment);
+            var block = this.getBlock(graph, firstNode, medians, alignment).filter(function (n) { return knownNodes.tryPush(n.key); });
             blocks.push(block);
             block.forEach(function (n) { return allNodesInfo.remove(n); });
         }
@@ -20544,6 +20438,270 @@ var CycleRemover = (function () {
     return CycleRemover;
 }());
 exports.CycleRemover = CycleRemover;
+
+
+/***/ }),
+
+/***/ 1057:
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RTree = void 0;
+var rectangle_1 = __webpack_require__(8011);
+var RTree = (function () {
+    function RTree(maxWidth) {
+        if (maxWidth === void 0) { maxWidth = 6; }
+        this.maxWidth = maxWidth;
+        this.minWidth = Math.floor(maxWidth / 2);
+        this.root = new RTreeNodeBranch(new rectangle_1.Rectangle(0, 0, 0, 0), []);
+    }
+    RTree.prototype.search = function (point) {
+        var result = [];
+        if (!this.root.rect.containsPoint(point))
+            return result;
+        var hitsStack = [];
+        hitsStack.push(this.root.nodes);
+        while (hitsStack.length) {
+            var nodes = hitsStack.pop();
+            for (var i = nodes.length - 1, node = void 0; node = nodes[i]; i--)
+                if (node.rect.containsPoint(point))
+                    if (isBranch(node))
+                        hitsStack.push(node.nodes);
+                    else
+                        result.push(node.obj);
+        }
+        return result;
+    };
+    RTree.prototype.insert = function (rect, obj) {
+        var newLeaf = new RTreeNodeLeaf(rect.clone(), obj);
+        if (!this.root.nodes.length) {
+            this.root.rect = rect.clone();
+            this.root.nodes.push(newLeaf);
+            return;
+        }
+        var treeStack = this.chooseLeafSubtree(newLeaf);
+        var retObj = newLeaf;
+        var current;
+        var previous;
+        while (treeStack.length) {
+            if (current && isBranch(current) && !current.nodes.length) {
+                previous = current;
+                current = treeStack.pop();
+                for (var i = 0, node = void 0; node = current.nodes[i]; i++) {
+                    if (isBranch(node) && (node === previous || !node.nodes.length)) {
+                        node.nodes.splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            else
+                current = treeStack.pop();
+            if (retObj instanceof RTreeNode || Array.isArray(retObj)) {
+                if (Array.isArray(retObj)) {
+                    for (var i = 0, retObjChild = void 0; retObjChild = retObj[i]; i++) {
+                        expandRect(current.rect, retObjChild.rect);
+                    }
+                    current.nodes = current.nodes.concat(retObj);
+                }
+                else {
+                    expandRect(current.rect, retObj.rect);
+                    current.nodes.push(retObj);
+                }
+                if (current.nodes.length <= this.maxWidth) {
+                    retObj = current.rect.clone();
+                }
+                else {
+                    var a = this.linearSplit(current.nodes);
+                    retObj = a;
+                    if (!treeStack.length) {
+                        current.nodes.push(a[0]);
+                        treeStack.push(current);
+                        retObj = a[1];
+                    }
+                }
+            }
+            else {
+                expandRect(current.rect, retObj);
+                retObj = current.rect.clone();
+            }
+        }
+    };
+    RTree.prototype.chooseLeafSubtree = function (newLeaf) {
+        var result = [];
+        var bestChoiceIndex = -1;
+        var bestChoiceArea;
+        var first = true;
+        result.push(this.root);
+        var nodes = this.root.nodes;
+        while (first || bestChoiceIndex !== -1) {
+            if (first)
+                first = false;
+            else {
+                result.push(nodes[bestChoiceIndex]);
+                nodes = nodes[bestChoiceIndex].nodes;
+                bestChoiceIndex = -1;
+            }
+            for (var i = nodes.length - 1, ltree = void 0; ltree = nodes[i]; i--) {
+                if (!isBranch(ltree)) {
+                    bestChoiceIndex = -1;
+                    break;
+                }
+                var oldLRatio = squarifiedRatio(ltree.rect.width, ltree.rect.height, ltree.nodes.length + 1);
+                var nw = Math.max(ltree.rect.x + ltree.rect.width, newLeaf.rect.x + newLeaf.rect.width) - Math.min(ltree.rect.x, newLeaf.rect.x);
+                var nh = Math.max(ltree.rect.y + ltree.rect.height, newLeaf.rect.y + newLeaf.rect.height) - Math.min(ltree.rect.y, newLeaf.rect.y);
+                var lratio = squarifiedRatio(nw, nh, ltree.nodes.length + 2);
+                if (bestChoiceIndex < 0 || Math.abs(lratio - oldLRatio) < bestChoiceArea) {
+                    bestChoiceArea = Math.abs(lratio - oldLRatio);
+                    bestChoiceIndex = i;
+                }
+            }
+        }
+        return result;
+    };
+    RTree.prototype.linearSplit = function (nodes) {
+        var n = this.pickLinear(nodes);
+        while (nodes.length > 0) {
+            this.pickNext(nodes, n[0], n[1]);
+        }
+        return n;
+    };
+    RTree.prototype.pickLinear = function (nodes) {
+        var lowestHighX = nodes.length - 1;
+        var highestLowX = 0;
+        var lowestHighY = nodes.length - 1;
+        var highestLowY = 0;
+        var t1;
+        var t2;
+        for (var i = nodes.length - 2, l = void 0; l = nodes[i]; i--) {
+            if (l.rect.x > nodes[highestLowX].rect.x)
+                highestLowX = i;
+            else if (l.rect.right < nodes[lowestHighX].rect.right)
+                lowestHighX = i;
+            if (l.rect.y > nodes[highestLowY].rect.y)
+                highestLowY = i;
+            else if (l.rect.bottom < nodes[lowestHighY].rect.bottom)
+                lowestHighY = i;
+        }
+        var dx = Math.abs((nodes[lowestHighX].rect.right) - nodes[highestLowX].rect.x);
+        var dy = Math.abs((nodes[lowestHighY].rect.bottom) - nodes[highestLowY].rect.y);
+        if (dx > dy) {
+            if (lowestHighX > highestLowX) {
+                t1 = nodes.splice(lowestHighX, 1)[0];
+                t2 = nodes.splice(highestLowX, 1)[0];
+            }
+            else {
+                t2 = nodes.splice(highestLowX, 1)[0];
+                t1 = nodes.splice(lowestHighX, 1)[0];
+            }
+        }
+        else {
+            if (lowestHighY > highestLowY) {
+                t1 = nodes.splice(lowestHighY, 1)[0];
+                t2 = nodes.splice(highestLowY, 1)[0];
+            }
+            else {
+                t2 = nodes.splice(highestLowY, 1)[0];
+                t1 = nodes.splice(lowestHighY, 1)[0];
+            }
+        }
+        return [
+            new RTreeNodeBranch(t1.rect.clone(), [t1]),
+            new RTreeNodeBranch(t2.rect.clone(), [t2])
+        ];
+    };
+    RTree.prototype.pickNext = function (nodes, a, b) {
+        var areaA = squarifiedRatio(a.rect.width, a.rect.height, a.nodes.length + 1);
+        var areaB = squarifiedRatio(b.rect.width, b.rect.height, b.nodes.length + 1);
+        var highAreaDelta;
+        var highAreaNode;
+        var lowestGrowthGroup;
+        for (var i = nodes.length - 1, l = void 0; l = nodes[i]; i--) {
+            var newAreaA = new rectangle_1.Rectangle(Math.min(a.rect.x, l.rect.x), Math.min(a.rect.y, l.rect.y), 0, 0);
+            newAreaA.width = Math.max(a.rect.right, l.rect.right) - newAreaA.x;
+            newAreaA.height = Math.max(a.rect.bottom, l.rect.bottom) - newAreaA.y;
+            var changeNewAreaA = Math.abs(squarifiedRatio(newAreaA.width, newAreaA.height, a.nodes.length + 2) - areaA);
+            var newAreaB = new rectangle_1.Rectangle(Math.min(b.rect.x, l.rect.x), Math.min(b.rect.y, l.rect.y), 0, 0);
+            newAreaB.width = Math.max(b.rect.right, l.rect.right) - newAreaB.x;
+            newAreaB.height = Math.max(b.rect.bottom, l.rect.bottom) - newAreaB.y;
+            var changeNewAreaB = Math.abs(squarifiedRatio(newAreaB.width, newAreaB.height, b.nodes.length + 2) - areaB);
+            if (!highAreaNode || !highAreaDelta || Math.abs(changeNewAreaB - changeNewAreaA) < highAreaDelta) {
+                highAreaNode = i;
+                highAreaDelta = Math.abs(changeNewAreaB - changeNewAreaA);
+                lowestGrowthGroup = changeNewAreaB < changeNewAreaA ? b : a;
+            }
+        }
+        var tmp = nodes.splice(highAreaNode, 1)[0];
+        if (a.nodes.length + nodes.length + 1 <= this.minWidth) {
+            a.nodes.push(tmp);
+            expandRect(a.rect, tmp.rect);
+        }
+        else if (b.nodes.length + nodes.length + 1 <= this.minWidth) {
+            b.nodes.push(tmp);
+            expandRect(b.rect, tmp.rect);
+        }
+        else {
+            lowestGrowthGroup.nodes.push(tmp);
+            expandRect(lowestGrowthGroup.rect, tmp.rect);
+        }
+    };
+    return RTree;
+}());
+exports.RTree = RTree;
+var RTreeNode = (function () {
+    function RTreeNode(rect) {
+        this.rect = rect;
+    }
+    return RTreeNode;
+}());
+var RTreeNodeLeaf = (function (_super) {
+    __extends(RTreeNodeLeaf, _super);
+    function RTreeNodeLeaf(rect, obj) {
+        var _this = _super.call(this, rect) || this;
+        _this.obj = obj;
+        return _this;
+    }
+    return RTreeNodeLeaf;
+}(RTreeNode));
+var RTreeNodeBranch = (function (_super) {
+    __extends(RTreeNodeBranch, _super);
+    function RTreeNodeBranch(rect, nodes) {
+        var _this = _super.call(this, rect) || this;
+        _this.nodes = nodes;
+        return _this;
+    }
+    return RTreeNodeBranch;
+}(RTreeNode));
+function isBranch(node) {
+    return "nodes" in node;
+}
+function squarifiedRatio(width, height, fill) {
+    var lperi = (width + height) / 2;
+    var larea = width * height;
+    var lgeo = larea / (lperi * lperi);
+    return larea * fill / lgeo;
+}
+function expandRect(rect, other) {
+    var rx = Math.max(rect.right, other.right);
+    var ry = Math.max(rect.bottom, other.bottom);
+    rect.x = Math.min(rect.x, other.x);
+    rect.y = Math.min(rect.y, other.y);
+    rect.width = rx - rect.x;
+    rect.height = ry - rect.y;
+}
 
 
 /***/ }),
@@ -22336,9 +22494,12 @@ var Connector = (function (_super) {
         else
             this.invalidateRenderPoints();
     };
-    Connector.prototype.replaceRenderPoints = function (context) {
-        if (context !== undefined)
+    Connector.prototype.replaceRenderPoints = function (context, shouldInvalidateRenderPoints) {
+        if (context !== undefined) {
             this.replaceRenderPointsCore(context.renderPoints, context.lockCreateRenderPoints, context.actualRoutingMode);
+            if (shouldInvalidateRenderPoints !== undefined)
+                this.shouldInvalidateRenderPoints = shouldInvalidateRenderPoints;
+        }
         else
             this.invalidateRenderPoints();
     };
@@ -22347,6 +22508,9 @@ var Connector = (function (_super) {
         this.lockCreateRenderPoints = false;
         this.actualRoutingMode = undefined;
         this.invalidateRenderPoints();
+    };
+    Connector.prototype.unlockCreateRenderPoints = function () {
+        this.lockCreateRenderPoints = false;
     };
     Connector.prototype.replaceRenderPointsCore = function (renderPoints, lockCreateRenderPoints, mode) {
         this.changeRenderPoints(renderPoints);
@@ -22768,6 +22932,20 @@ var ConnectorRenderPoint = (function (_super) {
         return this;
     };
     ConnectorRenderPoint.prototype.clone = function () { return new ConnectorRenderPoint(this.x, this.y, this.pointIndex, this.skipped); };
+    ConnectorRenderPoint.equal = function (p1, p2) {
+        return p1.equals(p2) && p1.pointIndex === p2.pointIndex && p1.skipped === p2.skipped;
+    };
+    ConnectorRenderPoint.prototype.toObject = function () {
+        return {
+            x: this.x,
+            y: this.y,
+            pointIndex: this.pointIndex,
+            skipped: this.skipped
+        };
+    };
+    ConnectorRenderPoint.fromObject = function (obj) {
+        return new ConnectorRenderPoint(obj["x"], obj["y"], obj["pointIndex"], obj["skipped"]);
+    };
     return ConnectorRenderPoint;
 }(point_1.Point));
 exports.ConnectorRenderPoint = ConnectorRenderPoint;
@@ -22992,7 +23170,7 @@ var AStarContext = (function (_super) {
         return _this;
     }
     AStarContext.prototype.addProhibitedPoint = function (point) {
-        this.prohibitedPoints[point.toString()] = point;
+        this.prohibitedPoints[point.x + "_" + point.y] = point;
     };
     AStarContext.prototype.getNeighborPoints = function (point) {
         var _this = this;
@@ -23010,7 +23188,7 @@ var AStarContext = (function (_super) {
         return node.penalty + this.metrics.penalty(distance, middlePosition, turnDirection, this.getIntersectedItems(middlePosition));
     };
     AStarContext.prototype.allowPoint = function (p) {
-        return this.prohibitedPoints[p.toString()] === undefined && (!this.prohibitedSegments || this.prohibitedSegments.allowPoint(p));
+        return !((p.x + "_" + p.y) in this.prohibitedPoints) && (!this.prohibitedSegments || this.prohibitedSegments.allowPoint(p));
     };
     AStarContext.prototype.getTurnDirection = function (angle) {
         return RightAngleConnectorRoutingMathOperations_1.RightAngleConnectorRoutingMathOperations.getTurnDirection(angle);
@@ -23018,17 +23196,8 @@ var AStarContext = (function (_super) {
     AStarContext.prototype.getIntersectedItems = function (position) {
         var _this = this;
         var margin = this.routingContext.shapeMargins;
-        return this.routingContext.getIntersectedItems(position, function (p, i) { return _this.hasIntersectedItem(p, i, margin); });
-    };
-    AStarContext.prototype.hasIntersectedItem = function (point, item, margin) {
-        if (!this.isIntersectedWithExtendedRectangle(point, item, margin))
-            return false;
-        if (this.hasOneShapeConnection(item))
-            return true;
-        return !this.itemContainsConnectionPoints(item);
-    };
-    AStarContext.prototype.isIntersectedWithExtendedRectangle = function (point, item, margin) {
-        return item.rectangle.clone().inflate(margin).containsPoint(point);
+        return this.routingContext.getIntersectedItems(position, margin)
+            .filter(function (i) { return _this.hasOneShapeConnection(i) || !_this.itemContainsConnectionPoints(i); });
     };
     AStarContext.prototype.itemContainsConnectionPoints = function (item) {
         var rectangle = item.rectangle;
@@ -23322,9 +23491,10 @@ var UniqueAStarNodePositions = (function () {
         if (getKey === void 0) { getKey = function (key) { return key.toString(); }; }
         this.getKey = getKey;
         this.items = {};
+        this.length = 0;
     }
     Object.defineProperty(UniqueAStarNodePositions.prototype, "count", {
-        get: function () { return Object.keys(this.items).length; },
+        get: function () { return this.length; },
         enumerable: false,
         configurable: true
     });
@@ -23334,13 +23504,17 @@ var UniqueAStarNodePositions = (function () {
     };
     UniqueAStarNodePositions.prototype.add = function (position, node) {
         var key = this.getKey(position);
-        if (this.items[key] === undefined)
+        if (this.items[key] === undefined) {
+            this.length++;
             this.items[key] = { position: position, node: node };
+        }
     };
     UniqueAStarNodePositions.prototype.remove = function (position) {
         var key = this.getKey(position);
-        if (this.items[key] !== undefined)
+        if (this.items[key] !== undefined) {
+            this.length--;
             delete this.items[key];
+        }
     };
     return UniqueAStarNodePositions;
 }());
@@ -23364,10 +23538,10 @@ var ConnectorProhibitedSegments = (function () {
         this.segments.push(segment);
     };
     ConnectorProhibitedSegments.prototype.addExludedPoint = function (point) {
-        this.exludedPoints[point.toString()] = point;
+        this.exludedPoints[point.x + "_" + point.y] = true;
     };
     ConnectorProhibitedSegments.prototype.allowPoint = function (point) {
-        if (this.exludedPoints[point.toString()] === undefined)
+        if (!((point.x + "_" + point.y) in this.exludedPoints))
             for (var i = 0; i < this.segments.length; i++)
                 if (this.segments[i].containsPoint(point))
                     return false;
@@ -23381,17 +23555,28 @@ exports.ConnectorProhibitedSegments = ConnectorProhibitedSegments;
 /***/ }),
 
 /***/ 1510:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ConnectorRenderPointsContext = void 0;
+var ConnectorRenderPoint_1 = __webpack_require__(4717);
 var ConnectorRenderPointsContext = (function () {
     function ConnectorRenderPointsContext(renderPoints, lockCreateRenderPoints, actualRoutingMode) {
         this.renderPoints = renderPoints;
         this.lockCreateRenderPoints = lockCreateRenderPoints;
         this.actualRoutingMode = actualRoutingMode;
     }
+    ConnectorRenderPointsContext.prototype.toObject = function () {
+        return {
+            actualRoutingMode: this.actualRoutingMode,
+            lockCreateRenderPoints: this.lockCreateRenderPoints,
+            renderPoints: this.renderPoints.map(function (p) { return p.toObject(); })
+        };
+    };
+    ConnectorRenderPointsContext.fromObject = function (obj) {
+        return new ConnectorRenderPointsContext(obj["renderPoints"].map(function (p) { return ConnectorRenderPoint_1.ConnectorRenderPoint.fromObject(p); }), obj["lockCreateRenderPoints"], obj["actualRoutingMode"]);
+    };
     return ConnectorRenderPointsContext;
 }());
 exports.ConnectorRenderPointsContext = ConnectorRenderPointsContext;
@@ -23522,26 +23707,16 @@ var ConnectorRoutingModel = (function () {
             return new RightAngleConnectorRoutingStrategy_1.RightAngleConnectorRoutingStrategy(this);
         return undefined;
     };
-    ConnectorRoutingModel.prototype.getItems = function (beginConnectorShape, endConnectorShape) {
-        return this.getShapes(beginConnectorShape, endConnectorShape);
+    ConnectorRoutingModel.prototype.getItems = function () {
+        return this.getShapes();
     };
     ConnectorRoutingModel.prototype.notifyConnectorRoutingModeChanged = function (connectorRoutingMode) {
         this.connectorRoutingMode = connectorRoutingMode;
     };
-    ConnectorRoutingModel.prototype.getShapes = function (beginConnectorShape, endConnectorShape) {
+    ConnectorRoutingModel.prototype.getShapes = function () {
         if (this.model === undefined || this.connectorRoutingMode === undefined || this.connectorRoutingMode === Settings_1.ConnectorRoutingMode.None)
             return [];
-        if (this.connectorRoutingMode === Settings_1.ConnectorRoutingMode.AllShapesOnly)
-            return this.model.items.filter(function (i) { return i instanceof Shape_1.Shape; });
-        return this.getConnectorShapes(beginConnectorShape, endConnectorShape);
-    };
-    ConnectorRoutingModel.prototype.getConnectorShapes = function (beginConnectorShape, endConnectorShape) {
-        var result = [];
-        if (beginConnectorShape)
-            result.push(beginConnectorShape);
-        if (endConnectorShape && beginConnectorShape !== endConnectorShape)
-            result.push(endConnectorShape);
-        return result;
+        return this.model.items.filter(function (i) { return i instanceof Shape_1.Shape; });
     };
     return ConnectorRoutingModel;
 }());
@@ -23644,6 +23819,7 @@ var AStarMetrics_1 = __webpack_require__(9927);
 var AStarContext_1 = __webpack_require__(2180);
 var AStarCalculator_1 = __webpack_require__(3975);
 var Utils_1 = __webpack_require__(8675);
+var RTree_1 = __webpack_require__(1057);
 var CuttingItemsContext = (function () {
     function CuttingItemsContext() {
         this.cuttingItemKeys = [];
@@ -23666,22 +23842,21 @@ var CuttingItemsContext = (function () {
 }());
 exports.CuttingItemsContext = CuttingItemsContext;
 var IntersectingItemsByPointsContext = (function () {
-    function IntersectingItemsByPointsContext() {
-        this.items = {};
+    function IntersectingItemsByPointsContext(routingModel) {
+        this.routingModel = routingModel;
+        this.trees = {};
     }
-    IntersectingItemsByPointsContext.prototype.getOrAddItems = function (point, getItems) {
-        if (point) {
-            var key = point.toString();
-            var item = this.items[key];
-            if (item !== undefined)
-                return item.items;
-            if (getItems) {
-                var items = getItems(point);
-                this.items[key] = { point: point, items: items };
-                return items;
-            }
+    IntersectingItemsByPointsContext.prototype.getItems = function (point, margin) {
+        return this.getOrCreateTree(margin).search(point);
+    };
+    IntersectingItemsByPointsContext.prototype.getOrCreateTree = function (margin) {
+        if (!this.trees[margin]) {
+            this.trees[margin] = new RTree_1.RTree();
+            var items = this.routingModel.getItems();
+            for (var i = 0, item = void 0; item = items[i]; i++)
+                this.trees[margin].insert(margin ? item.rectangle.inflate(margin, margin) : item.rectangle, item);
         }
-        return undefined;
+        return this.trees[margin];
     };
     return IntersectingItemsByPointsContext;
 }());
@@ -23697,7 +23872,7 @@ var RightAngleConnectorRoutingContext = (function () {
         this.endConnectionSide = this.getConnectionSide(this.endConnectionShape, endConnectionPointIndex, this.endPoint);
         this.ignorableItemKeys = {};
         this.cuttingShapesContext = new CuttingItemsContext();
-        this.intersectedItemsByPointsContext = new IntersectingItemsByPointsContext();
+        this.intersectedItemsByPointsContext = new IntersectingItemsByPointsContext(this.routingModel);
         this.isInvalidRenderSegments = true;
     }
     Object.defineProperty(RightAngleConnectorRoutingContext.prototype, "shapeMargins", {
@@ -23806,11 +23981,11 @@ var RightAngleConnectorRoutingContext = (function () {
         RightAngleConnectorRoutingMathOperations_1.RightAngleConnectorRoutingMathOperations.unionPoints(result);
         return result;
     };
-    RightAngleConnectorRoutingContext.prototype.getIntersectedItems = function (point, predicate) {
+    RightAngleConnectorRoutingContext.prototype.getIntersectedItems = function (point, margin) {
         var _this = this;
-        return this.intersectedItemsByPointsContext.getOrAddItems(point, function (p) { return _this.routingModel
-            .getItems(_this.beginConnectionShape, _this.endConnectionShape)
-            .filter(function (s) { return !_this.isIgnorableItem(s) && predicate(p, s); }); });
+        return this.intersectedItemsByPointsContext
+            .getItems(point, margin)
+            .filter(function (item) { return !_this.isIgnorableItem(item); });
     };
     RightAngleConnectorRoutingContext.prototype.validateRenderPoints = function (result) {
         if (this.isInvalidRenderSegments) {
@@ -23838,7 +24013,7 @@ var RightAngleConnectorRoutingContext = (function () {
     };
     RightAngleConnectorRoutingContext.prototype.processIntersection = function () {
         var _this = this;
-        var shapes = this.routingModel.getItems(this.beginConnectionShape, this.endConnectionShape);
+        var shapes = this.routingModel.getItems();
         if (shapes)
             shapes.forEach(function (s) {
                 var key = s.key;
@@ -23981,8 +24156,8 @@ var RightAngleConnectorRoutingContext = (function () {
         return this.createBeginConnectionSegmentCore(-offset);
     };
     RightAngleConnectorRoutingContext.prototype.hasIntersectedItemsByPoint = function (point, secondPoint, connectionItem) {
-        var intersectedItems = this.getIntersectedItems(point, function (p, s) { return s.rectangle.containsPoint(p) && !s.rectangle.containsPoint(secondPoint) && s.key !== connectionItem.key; });
-        return intersectedItems !== undefined && intersectedItems.length > 0;
+        return this.getIntersectedItems(point, 0)
+            .some(function (i) { return i.key !== connectionItem.key && !i.rectangle.containsPoint(secondPoint); });
     };
     RightAngleConnectorRoutingContext.prototype.createEndConnectionSegment = function (offset, endShapeContainsBeginConnection) {
         if (this.endConnectionSide === DiagramItem_1.ConnectionPointSide.Undefined)
@@ -24023,11 +24198,11 @@ var RightAngleConnectorRoutingContext = (function () {
         return RightAngleConnectorRoutingMathOperations_1.RightAngleConnectorRoutingMathOperations.isConnectionRectanleLineIntersected(this.endConnectionShape.rectangle, segment, this.endConnectionSide, excludeBeginPoint, excludeEndPoint, function (x, y) { return new point_1.Point(x, y); });
     };
     RightAngleConnectorRoutingContext.prototype.isIgnorableItem = function (item) {
-        return this.ignorableItemKeys[item.key] !== undefined;
+        return item.key in this.ignorableItemKeys;
     };
     RightAngleConnectorRoutingContext.prototype.createExtendedShapesBounds = function () {
         var _this = this;
-        return this.routingModel.getItems(this.beginConnectionShape, this.endConnectionShape).map(function (i) { return i.rectangle.clone().inflate(_this.routingModel.shapeMargins); });
+        return this.routingModel.getItems().map(function (i) { return i.rectangle.clone().inflate(_this.routingModel.shapeMargins); });
     };
     RightAngleConnectorRoutingContext.prototype.createGrid = function () {
         return RoutingGrid_1.RoutingGrid.create(this.createGridPoints(), this.createExtendedShapesBounds(), function (x, y) { return new point_1.Point(x, y); });
@@ -24441,6 +24616,181 @@ var DiagramItem = (function () {
     return DiagramItem;
 }());
 exports.DiagramItem = DiagramItem;
+
+
+/***/ }),
+
+/***/ 4742:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.DraggingConnector = exports.SelectionDragHelper = void 0;
+var vector_1 = __webpack_require__(9716);
+var ChangeConnectorPointsHistoryItem_1 = __webpack_require__(58);
+var ConnectorRenderPointsContext_1 = __webpack_require__(1510);
+var ModelUtils_1 = __webpack_require__(4867);
+var ConnectorRenderPoint_1 = __webpack_require__(4717);
+var ModelOperationSettings_1 = __webpack_require__(6879);
+var SelectionDragHelper = (function () {
+    function SelectionDragHelper(history, model, permissionsProvider, startPoint, selectedItems) {
+        var _this = this;
+        this.history = history;
+        this.model = model;
+        this.permissionsProvider = permissionsProvider;
+        this.startPoint = startPoint;
+        this.draggingShapes = [];
+        this.draggingConnectors = [];
+        this.selectedItems = {};
+        this.draggingConnectorsIndexByKey = {};
+        selectedItems.forEach(function (i) { return _this.selectedItems[i.key] = i; });
+    }
+    SelectionDragHelper.prototype.initDraggingShapes = function (shapes, shouldClone) {
+        var _this = this;
+        this.draggingShapes = shapes.map(function (s) { return new DraggingShape(s); });
+        if (!shouldClone)
+            this.draggingShapes.forEach(function (draggingShape) { return _this.permissionsProvider.addInteractingItem(draggingShape.shape, ModelOperationSettings_1.DiagramModelOperation.MoveShape); });
+    };
+    SelectionDragHelper.prototype.initDraggingConnectors = function (connectors, shouldClone) {
+        var _this = this;
+        this.draggingConnectors = [];
+        this.draggingConnectorsIndexByKey = {};
+        connectors.forEach(function (c) { return _this.registerConnector(c); });
+        if (!shouldClone)
+            this.draggingShapes.forEach(function (x) {
+                var attachedConnectors = x.shape.attachedConnectors;
+                if (attachedConnectors)
+                    attachedConnectors.forEach(function (c) {
+                        if (!_this.containsDraggingConnectorByKey(c.key))
+                            _this.registerConnector(c);
+                    });
+            });
+        this.modelConnectorsWithoutBeginItemInfo = this.createModelConnectorsWithoutBeginItemInfo();
+        this.modelConnectorsWithoutEndItemInfo = this.createModelConnectorsWithoutEndItemInfo();
+    };
+    SelectionDragHelper.prototype.move = function (shouldClone, getMovePoint, resetTargetCallback, updateTargetCallback) {
+        var _this = this;
+        if (this.draggingShapes.length) {
+            var selectedShapes_1 = this.draggingShapes.map(function (ds) { return ds.shape; });
+            this.draggingShapes.forEach(function (ds) {
+                var shape = ds.shape;
+                while (shape.container) {
+                    if (selectedShapes_1.indexOf(shape.container) !== -1)
+                        return false;
+                    shape = shape.container;
+                }
+                _this.moveShape(ds, getMovePoint, resetTargetCallback, updateTargetCallback);
+            });
+            var firstDraggingShape = this.draggingShapes[0];
+            var offset_1 = vector_1.Vector.fromPoints(firstDraggingShape.startPosition.clone(), firstDraggingShape.shape.position.clone());
+            if (offset_1.x || offset_1.y)
+                this.draggingConnectors.forEach(function (dc) { return _this.moveConnectorCore(dc.connector, dc.startPoints, dc.startRenderContext, offset_1, shouldClone); });
+        }
+        else
+            this.draggingConnectors.forEach(function (x) { return _this.moveConnector(x, shouldClone, getMovePoint); });
+    };
+    SelectionDragHelper.prototype.containsDraggingConnectorByKey = function (key) {
+        return this.draggingConnectorsIndexByKey[key] !== undefined;
+    };
+    SelectionDragHelper.prototype.onTryUpdateModelSize = function (offsetLeft, offsetTop) {
+        this.modelConnectorsWithoutBeginItemInfo.forEach(function (pi) {
+            pi.point.x += offsetLeft;
+            pi.point.y += offsetTop;
+        });
+        this.modelConnectorsWithoutEndItemInfo.forEach(function (pi) {
+            pi.point.x += offsetLeft;
+            pi.point.y += offsetTop;
+        });
+    };
+    SelectionDragHelper.prototype.finish = function () {
+        this.draggingConnectors.forEach(function (c) { return c.connector.unlockCreateRenderPoints(); });
+    };
+    SelectionDragHelper.prototype.moveConnector = function (dc, shouldClone, getMovePoint) {
+        var startPoints = dc.startPoints;
+        var offset = vector_1.Vector.fromPoints(startPoints[0].clone(), getMovePoint(startPoints[0]).clone());
+        if (offset.x || offset.y)
+            this.moveConnectorCore(dc.connector, startPoints, dc.startRenderContext, offset, shouldClone);
+    };
+    SelectionDragHelper.prototype.moveConnectorCore = function (connector, startPoints, startRenderContext, offset, shouldClone) {
+        if (shouldClone || ModelUtils_1.ModelUtils.canMoveConnector(this.selectedItems, connector))
+            this.offsetConnector(connector, startPoints, startRenderContext, offset);
+        else
+            this.changeConnector(connector);
+    };
+    SelectionDragHelper.prototype.moveShape = function (ds, getMovePoint, resetTargetCallback, updateTargetCallback) {
+        var _this = this;
+        var shape = ds.shape;
+        var position = getMovePoint(ds.startPosition);
+        ModelUtils_1.ModelUtils.setShapePosition(this.history, this.model, shape, position);
+        ModelUtils_1.ModelUtils.updateMovingShapeConnections(this.history, shape, this.modelConnectorsWithoutBeginItemInfo, this.modelConnectorsWithoutEndItemInfo, resetTargetCallback, updateTargetCallback, function (connector) { return _this.permissionsProvider.addInteractingItem(connector); });
+        if (!this.draggingConnectors.filter(function (dc) { return !!_this.selectedItems[dc.connector.key]; }).length)
+            ModelUtils_1.ModelUtils.updateShapeAttachedConnectors(this.history, this.model, shape);
+    };
+    SelectionDragHelper.prototype.offsetConnector = function (connector, startPoints, startRenderContext, offset) {
+        var _this = this;
+        var newPoints = startPoints.map(function (p) { return _this.offsetPoint(p, offset); });
+        if (!newPoints[0].equals(connector.points[0]))
+            this.history.addAndRedo(new ChangeConnectorPointsHistoryItem_1.ChangeConnectorPointsHistoryItem(connector.key, newPoints, this.offsetRenderContext(startRenderContext, offset)));
+    };
+    SelectionDragHelper.prototype.offsetRenderContext = function (context, offset) {
+        var _this = this;
+        if (context === undefined)
+            return undefined;
+        return new ConnectorRenderPointsContext_1.ConnectorRenderPointsContext(context.renderPoints.map(function (p) {
+            var newPoint = _this.offsetPoint(p, offset);
+            return new ConnectorRenderPoint_1.ConnectorRenderPoint(newPoint.x, newPoint.y, p.pointIndex, p.skipped);
+        }), true, context.actualRoutingMode);
+    };
+    SelectionDragHelper.prototype.offsetPoint = function (point, offset) {
+        var pointOffset = vector_1.Vector.fromPoints(point, this.startPoint);
+        return this.startPoint.clone().offset(offset.x - pointOffset.x, offset.y - pointOffset.y);
+    };
+    SelectionDragHelper.prototype.changeConnector = function (connector) {
+        ModelUtils_1.ModelUtils.tryRemoveConnectorIntermediatePoints(this.history, connector);
+        ModelUtils_1.ModelUtils.updateConnectorAttachedPoints(this.history, this.model, connector);
+    };
+    SelectionDragHelper.prototype.registerConnector = function (connector) {
+        this.draggingConnectorsIndexByKey[connector.key] = this.draggingConnectors.push(new DraggingConnector(connector)) - 1;
+    };
+    SelectionDragHelper.prototype.createModelConnectorsWithoutBeginItemInfo = function () {
+        var _this = this;
+        var connectors = this.model.findConnectorsCore(function (c) { return !c.beginItem && !_this.containsDraggingConnectorByKey(c.key); });
+        return connectors.map(function (c) {
+            return {
+                connector: c,
+                point: c.points[0].clone()
+            };
+        });
+    };
+    SelectionDragHelper.prototype.createModelConnectorsWithoutEndItemInfo = function () {
+        var _this = this;
+        var connectors = this.model.findConnectorsCore(function (c) { return !c.endItem && !_this.containsDraggingConnectorByKey(c.key); });
+        return connectors.map(function (c) {
+            return {
+                connector: c,
+                point: c.points[c.points.length - 1].clone()
+            };
+        });
+    };
+    return SelectionDragHelper;
+}());
+exports.SelectionDragHelper = SelectionDragHelper;
+var DraggingConnector = (function () {
+    function DraggingConnector(connector) {
+        this.connector = connector;
+        this.startPoints = connector.points.map(function (x) { return x.clone(); });
+        this.startRenderContext = connector.tryCreateRenderPointsContext();
+    }
+    return DraggingConnector;
+}());
+exports.DraggingConnector = DraggingConnector;
+var DraggingShape = (function () {
+    function DraggingShape(shape) {
+        this.shape = shape;
+        this.startPosition = shape.position.clone();
+    }
+    return DraggingShape;
+}());
 
 
 /***/ }),
@@ -25257,11 +25607,16 @@ var ModelUtils = (function () {
                         ModelUtils.setShapePosition(history, model, child, childPosition);
                     }
                 });
+            return true;
         }
+        return false;
     };
     ModelUtils.setShapeSize = function (history, model, shape, newPosition, newSize) {
-        if (!shape.size.equals(newSize) || !shape.position.equals(newPosition))
+        if (!shape.size.equals(newSize) || !shape.position.equals(newPosition)) {
             history.addAndRedo(new ResizeShapeHistoryItem_1.ResizeShapeHistoryItem(shape.key, newPosition, newSize));
+            return true;
+        }
+        return false;
     };
     ModelUtils.addConnectorPoint = function (history, connectorKey, pointIndex, position) {
         history.addAndRedo(new AddConnectorPointHistoryItem_1.AddConnectorPointHistoryItem(connectorKey, pointIndex, position));
@@ -25287,14 +25642,14 @@ var ModelUtils = (function () {
     ModelUtils.deleteConnectorUnnecessaryPoints = function (history, connector) {
         var oldRenderPoints = connector.getRenderPoints(true).map(function (p) { return p.clone(); });
         if (connector.properties.lineOption === ConnectorProperties_1.ConnectorLineOption.Straight) {
-            var unnecessaryPoints = ModelUtils.createUnnecessaryRenderPoints(oldRenderPoints.filter(function (p) { return !p.skipped; }).map(function (p) { return p.clone(); }), connector.skippedRenderPoints, function (removedPoint) { return ModelUtils.findFirstPointIndex(oldRenderPoints, function (p) { return p.equals(removedPoint); }); });
+            var unnecessaryPoints = ModelUtils.createUnnecessaryRenderPoints(oldRenderPoints.filter(function (p) { return !p.skipped; }).map(function (p) { return p.clone(); }), connector.skippedRenderPoints, function (removedPoint) { return ModelUtils.findFirstPointIndex(oldRenderPoints, function (p) { return ConnectorRenderPoint_1.ConnectorRenderPoint.equal(p, removedPoint); }); });
             if (Object.keys(unnecessaryPoints).length)
                 history.addAndRedo(new ChangeConnectorPointsHistoryItem_1.ReplaceConnectorPointsHistoryItem(connector.key, ModelUtils.createNecessaryPoints(connector.points.map(function (p) { return p.clone(); }), unnecessaryPoints)));
         }
         else {
             var oldContext = connector.tryCreateRenderPointsContext(true);
             var newRenderPoints = oldRenderPoints.filter(function (p) { return !p.skipped; }).map(function (p) { return p.clone(); });
-            var unnecessaryPoints = ModelUtils.createUnnecessaryRightAngleRenderPoints(newRenderPoints, connector.skippedRenderPoints, function (removedPoint) { return ModelUtils.findFirstPointIndex(oldRenderPoints, function (p) { return p.equals(removedPoint); }); });
+            var unnecessaryPoints = ModelUtils.createUnnecessaryRightAngleRenderPoints(newRenderPoints, connector.skippedRenderPoints, function (removedPoint) { return ModelUtils.findFirstPointIndex(oldRenderPoints, function (p) { return ConnectorRenderPoint_1.ConnectorRenderPoint.equal(p, removedPoint); }); });
             if (Object.keys(unnecessaryPoints).length) {
                 var newPoints = ModelUtils.createNecessaryPoints(connector.points.map(function (p) { return p.clone(); }), unnecessaryPoints);
                 var newRenderContext = new ConnectorRenderPointsContext_1.ConnectorRenderPointsContext(ModelUtils.validateRenderPointIndexes(newPoints, newRenderPoints, 0), oldContext.lockCreateRenderPoints, oldContext.actualRoutingMode);
@@ -25368,15 +25723,16 @@ var ModelUtils = (function () {
     };
     ModelUtils.collectNotSkippedRenderPoints = function (targetRenderPoints, sourceRenderPoints, removedPoint, removedIndex, getPosition, predicate) {
         if (predicate === void 0) { predicate = function (_) { return true; }; }
-        if (!predicate(removedPoint))
-            return false;
-        var positionIndex = getPosition(removedPoint);
-        if (targetRenderPoints[positionIndex] === undefined) {
-            targetRenderPoints[positionIndex] = removedPoint;
-            removedPoint.skipped = true;
-            sourceRenderPoints.splice(removedIndex, 1);
+        if (predicate(removedPoint)) {
+            var positionIndex = getPosition(removedPoint);
+            if (targetRenderPoints[positionIndex] === undefined) {
+                targetRenderPoints[positionIndex] = removedPoint;
+                removedPoint.skipped = true;
+                sourceRenderPoints.splice(removedIndex, 1);
+                return true;
+            }
         }
-        return true;
+        return false;
     };
     ModelUtils.removeUnnecessaryPoint = function (points, point, removedIndex, removeExcessPoints) {
         if (removeExcessPoints && point.pointIndex === -1) {
@@ -26126,7 +26482,7 @@ var ModelUtils = (function () {
     };
     ModelUtils.changeShapeType = function (history, model, shape, shapeType) {
         if (shape.description.key === shapeType)
-            return;
+            return false;
         history.beginTransaction();
         var oldConPts = shape.getConnectionPoints();
         var oldConPtsSides = oldConPts.map(function (p) { return shape.getConnectionPointSide(p); });
@@ -26141,6 +26497,7 @@ var ModelUtils = (function () {
             this.updateConnectorAttachedPoints(history, model, connector);
         }
         history.endTransaction();
+        return true;
     };
     ModelUtils.updateConnectionIndexByNewShapeType = function (history, connector, position, oldPointIndex, oldConPts, oldConPtsSides, newConPts, newConPtsSides) {
         if (oldPointIndex < 0)
@@ -27975,7 +28332,7 @@ var CustomShapeDescription = (function (_super) {
         return new rectangle_1.Rectangle(left + (this.properties.imageLeft && !forToolbox ? this.properties.imageLeft * width : 0), top + (this.properties.imageTop && !forToolbox ? this.properties.imageTop * height : 0), this.properties.imageWidth && !forToolbox ? this.properties.imageWidth * width : width, this.properties.imageHeight && !forToolbox ? this.properties.imageHeight * height : height);
     };
     CustomShapeDescription.prototype.updateSvgImage = function (cacheImageInfo) {
-        var isToolboxImage = cacheImageInfo.imageUrl && cacheImageInfo.imageUrl === this.properties.svgToolboxUrl;
+        var isToolboxImage = this.svgToolboxImage && cacheImageInfo.imageUrl && cacheImageInfo.imageUrl === this.properties.svgToolboxUrl;
         var svgImage = isToolboxImage ? this.svgToolboxImage : this.svgImage;
         if (cacheImageInfo.base64)
             svgImage.loadBase64Content(cacheImageInfo.base64);
@@ -33310,7 +33667,7 @@ var CanvasItemsManager = (function (_super) {
         this.populateItems(itemsToUpdate, this.selectedItems, newSelectedItems);
         this.selectedItems = newSelectedItems;
         itemsToUpdate.forEach(function (item) {
-            if (item instanceof Connector_1.Connector)
+            if (item instanceof Connector_1.Connector && !_this.pendingRemoveChanges[item.key])
                 _this.applyOrPostponeChanges([new ModelChange_1.ItemChange(item, ModelChange_1.ItemChangeType.UpdateClassName, true)]);
         });
     };
@@ -39031,7 +39388,6 @@ var AutoZoomMode;
 var ConnectorRoutingMode;
 (function (ConnectorRoutingMode) {
     ConnectorRoutingMode[ConnectorRoutingMode["None"] = 0] = "None";
-    ConnectorRoutingMode[ConnectorRoutingMode["ConnectorShapesOnly"] = 1] = "ConnectorShapesOnly";
     ConnectorRoutingMode[ConnectorRoutingMode["AllShapesOnly"] = 2] = "AllShapesOnly";
 })(ConnectorRoutingMode = exports.ConnectorRoutingMode || (exports.ConnectorRoutingMode = {}));
 
@@ -40570,6 +40926,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   __read: () => (/* binding */ __read),
 /* harmony export */   __rest: () => (/* binding */ __rest),
 /* harmony export */   __spread: () => (/* binding */ __spread),
+/* harmony export */   __spreadArray: () => (/* binding */ __spreadArray),
 /* harmony export */   __spreadArrays: () => (/* binding */ __spreadArrays),
 /* harmony export */   __values: () => (/* binding */ __values)
 /* harmony export */ });
@@ -40597,6 +40954,8 @@ var extendStatics = function(d, b) {
 };
 
 function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
     extendStatics(d, b);
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
@@ -40719,19 +41078,31 @@ function __read(o, n) {
     return ar;
 }
 
+/** @deprecated */
 function __spread() {
     for (var ar = [], i = 0; i < arguments.length; i++)
         ar = ar.concat(__read(arguments[i]));
     return ar;
 }
 
+/** @deprecated */
 function __spreadArrays() {
     for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
     for (var r = Array(s), k = 0, i = 0; i < il; i++)
         for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
             r[k] = a[j];
     return r;
-};
+}
+
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
 
 function __await(v) {
     return this instanceof __await ? (this.v = v, this) : new __await(v);
@@ -40786,19 +41157,17 @@ function __importDefault(mod) {
     return (mod && mod.__esModule) ? mod : { default: mod };
 }
 
-function __classPrivateFieldGet(receiver, privateMap) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to get private field on non-instance");
-    }
-    return privateMap.get(receiver);
+function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 }
 
-function __classPrivateFieldSet(receiver, privateMap, value) {
-    if (!privateMap.has(receiver)) {
-        throw new TypeError("attempted to set private field on non-instance");
-    }
-    privateMap.set(receiver, value);
-    return value;
+function __classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
 }
 
 

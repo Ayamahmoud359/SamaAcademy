@@ -17,10 +17,48 @@ namespace Academy.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Academy.Models.Absence", b =>
+                {
+                    b.Property<int>("AbsenceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AbsenceId"));
+
+                    b.Property<DateTime>("AbsentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAbsent")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("SubscriptionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TraineeId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AbsenceId");
+
+                    b.HasIndex("SubscriptionId");
+
+                    b.HasIndex("TraineeId");
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("Abscesses", (string)null);
+                });
 
             modelBuilder.Entity("Academy.Models.Branch", b =>
                 {
@@ -34,11 +72,7 @@ namespace Academy.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BranchNameAR")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BranchNameEN")
+                    b.Property<string>("BranchName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -50,7 +84,7 @@ namespace Academy.Migrations
 
                     b.HasKey("BranchId");
 
-                    b.ToTable("Branches");
+                    b.ToTable("Branches", (string)null);
                 });
 
             modelBuilder.Entity("Academy.Models.Category", b =>
@@ -61,19 +95,11 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryId"));
 
-                    b.Property<string>("CategoryDescriptionAR")
+                    b.Property<string>("CategoryDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CategoryDescriptionEN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CategoryNameAR")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CategoryNameEN")
+                    b.Property<string>("CategoryName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -87,80 +113,26 @@ namespace Academy.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
-            modelBuilder.Entity("Academy.Models.CategoryTrainers", b =>
+            modelBuilder.Entity("Academy.Models.Champion", b =>
                 {
-                    b.Property<int>("CategoryTrainersId")
+                    b.Property<int>("ChampionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CategoryTrainersId"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CategoryTrainersId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("TrainerId");
-
-                    b.ToTable("CategoryTrainers");
-                });
-
-            modelBuilder.Entity("Academy.Models.ChampionChild", b =>
-                {
-                    b.Property<int>("ChampionChildId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChampionChildId"));
-
-                    b.Property<int>("ChampionsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChildId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ChampionChildId");
-
-                    b.HasIndex("ChampionsId");
-
-                    b.HasIndex("ChildId");
-
-                    b.ToTable("ChampionChildren");
-                });
-
-            modelBuilder.Entity("Academy.Models.Champions", b =>
-                {
-                    b.Property<int>("ChampionsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChampionsId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChampionId"));
 
                     b.Property<string>("ChampionDate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ChampionDescriptionAR")
+                    b.Property<string>("ChampionDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ChampionDescriptionEN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ChampionNameAR")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ChampionNameEN")
+                    b.Property<string>("ChampionName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -173,91 +145,11 @@ namespace Academy.Migrations
                     b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
-                    b.HasKey("ChampionsId");
+                    b.HasKey("ChampionId");
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Champions");
-                });
-
-            modelBuilder.Entity("Academy.Models.Child", b =>
-                {
-                    b.Property<int>("ChildId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChildId"));
-
-                    b.Property<string>("BirthDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ChildName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ParentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ChildId");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("Children");
-                });
-
-            modelBuilder.Entity("Academy.Models.ChildAbscess", b =>
-                {
-                    b.Property<int>("ChildAbscessId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChildAbscessId"));
-
-                    b.Property<DateTime>("AbsentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChildId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsAbsent")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("SubCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ChildAbscessId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("ChildId");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("SubCategoryId");
-
-                    b.HasIndex("TrainerId");
-
-                    b.ToTable("Abscesses");
+                    b.ToTable("Champions", (string)null);
                 });
 
             modelBuilder.Entity("Academy.Models.Department", b =>
@@ -271,19 +163,11 @@ namespace Academy.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("int");
 
-                    b.Property<string>("DepartmentDescriptionAR")
+                    b.Property<string>("DepartmentDescription")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DepartmentDescriptionEN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DepartmentNameAR")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DepartmentNameEN")
+                    b.Property<string>("DepartmentName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -297,25 +181,16 @@ namespace Academy.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
                 });
 
-            modelBuilder.Entity("Academy.Models.MonthlyChildScore", b =>
+            modelBuilder.Entity("Academy.Models.Exam", b =>
                 {
-                    b.Property<int>("MonthlyChildScoreId")
+                    b.Property<int>("ExamId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MonthlyChildScoreId"));
-
-                    b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChildId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamId"));
 
                     b.Property<int>("Score")
                         .HasColumnType("int");
@@ -323,25 +198,24 @@ namespace Academy.Migrations
                     b.Property<string>("ScoreDate")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SubCategoryId")
+                    b.Property<int>("SubscriptionId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("TraineeId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TrainerId")
                         .HasColumnType("int");
 
-                    b.HasKey("MonthlyChildScoreId");
+                    b.HasKey("ExamId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("SubscriptionId");
 
-                    b.HasIndex("ChildId");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.HasIndex("SubCategoryId");
+                    b.HasIndex("TraineeId");
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("MonthlyChildScores");
+                    b.ToTable("Exams", (string)null);
                 });
 
             modelBuilder.Entity("Academy.Models.Parent", b =>
@@ -381,108 +255,101 @@ namespace Academy.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Parents");
+                    b.ToTable("Parents", (string)null);
                 });
 
-            modelBuilder.Entity("Academy.Models.SubCategory", b =>
+            modelBuilder.Entity("Academy.Models.Subscription", b =>
                 {
-                    b.Property<int>("SubCategoryId")
+                    b.Property<int>("SubscriptionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubCategoryId"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SubCategoryDescriptionAR")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubCategoryDescriptionEN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubCategoryNameAR")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubCategoryNameEN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SubCategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("SubCategories");
-                });
-
-            modelBuilder.Entity("Academy.Models.SubCategoryTrainer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("SubCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubCategoryId");
-
-                    b.HasIndex("TrainerId");
-
-                    b.ToTable("SubCategoryTrainer");
-                });
-
-            modelBuilder.Entity("Academy.Models.Subscriptions", b =>
-                {
-                    b.Property<int>("SubscriptionsId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionsId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionId"));
 
                     b.Property<int?>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChildId")
                         .HasColumnType("int");
 
                     b.Property<int?>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SubCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SubscriptionDate")
+                    b.Property<string>("EndDate")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("TrainerId")
+                    b.Property<string>("StartDate")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TraineeId")
                         .HasColumnType("int");
 
-                    b.HasKey("SubscriptionsId");
+                    b.Property<int?>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SubscriptionId");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("ChildId");
-
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("SubCategoryId");
+                    b.HasIndex("TraineeId");
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Subscriptions");
+                    b.ToTable("Subscriptions", (string)null);
+                });
+
+            modelBuilder.Entity("Academy.Models.Trainee", b =>
+                {
+                    b.Property<int>("TraineeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TraineeId"));
+
+                    b.Property<string>("BirthDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ParentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TraineeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TraineeId");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("Trainees", (string)null);
+                });
+
+            modelBuilder.Entity("Academy.Models.TraineeChampion", b =>
+                {
+                    b.Property<int>("TraineeChampionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TraineeChampionId"));
+
+                    b.Property<int>("ChampionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TraineeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TraineeChampionId");
+
+                    b.HasIndex("ChampionId");
+
+                    b.HasIndex("TraineeId");
+
+                    b.ToTable("TraineeChampions", (string)null);
                 });
 
             modelBuilder.Entity("Academy.Models.Trainer", b =>
@@ -505,12 +372,14 @@ namespace Academy.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<DateTime>("SubscriptionDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("TrainerAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrainerEmail")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrainerName")
@@ -527,7 +396,47 @@ namespace Academy.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Trainers");
+                    b.ToTable("Trainers", (string)null);
+                });
+
+            modelBuilder.Entity("Academy.Models.TrainerCategories", b =>
+                {
+                    b.Property<int>("TrainerCategoriesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerCategoriesId"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TrainerId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TrainerCategoriesId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("TrainerId");
+
+                    b.ToTable("CategoryTrainers", (string)null);
+                });
+
+            modelBuilder.Entity("Academy.Models.Absence", b =>
+                {
+                    b.HasOne("Academy.Models.Subscription", "Subscription")
+                        .WithMany("Absences")
+                        .HasForeignKey("SubscriptionId");
+
+                    b.HasOne("Academy.Models.Trainee", null)
+                        .WithMany("Absences")
+                        .HasForeignKey("TraineeId");
+
+                    b.HasOne("Academy.Models.Trainer", null)
+                        .WithMany("Absences")
+                        .HasForeignKey("TrainerId");
+
+                    b.Navigation("Subscription");
                 });
 
             modelBuilder.Entity("Academy.Models.Category", b =>
@@ -541,99 +450,15 @@ namespace Academy.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("Academy.Models.CategoryTrainers", b =>
-                {
-                    b.HasOne("Academy.Models.Category", "Category")
-                        .WithMany("CategoryTrainers")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Academy.Models.Trainer", "Trainer")
-                        .WithMany("CategoryTrainers")
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Trainer");
-                });
-
-            modelBuilder.Entity("Academy.Models.ChampionChild", b =>
-                {
-                    b.HasOne("Academy.Models.Champions", "Champions")
-                        .WithMany("championChildren")
-                        .HasForeignKey("ChampionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Academy.Models.Child", "Child")
-                        .WithMany("ChampionChildren")
-                        .HasForeignKey("ChildId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Champions");
-
-                    b.Navigation("Child");
-                });
-
-            modelBuilder.Entity("Academy.Models.Champions", b =>
+            modelBuilder.Entity("Academy.Models.Champion", b =>
                 {
                     b.HasOne("Academy.Models.Department", "Department")
-                        .WithMany()
+                        .WithMany("Champions")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Department");
-                });
-
-            modelBuilder.Entity("Academy.Models.Child", b =>
-                {
-                    b.HasOne("Academy.Models.Parent", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Parent");
-                });
-
-            modelBuilder.Entity("Academy.Models.ChildAbscess", b =>
-                {
-                    b.HasOne("Academy.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId");
-
-                    b.HasOne("Academy.Models.Child", "Child")
-                        .WithMany()
-                        .HasForeignKey("ChildId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Academy.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
-
-                    b.HasOne("Academy.Models.SubCategory", "SubCategory")
-                        .WithMany()
-                        .HasForeignKey("SubCategoryId");
-
-                    b.HasOne("Academy.Models.Trainer", "Trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId");
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Child");
-
-                    b.Navigation("Department");
-
-                    b.Navigation("SubCategory");
-
-                    b.Navigation("Trainer");
                 });
 
             modelBuilder.Entity("Academy.Models.Department", b =>
@@ -647,39 +472,23 @@ namespace Academy.Migrations
                     b.Navigation("Branch");
                 });
 
-            modelBuilder.Entity("Academy.Models.MonthlyChildScore", b =>
+            modelBuilder.Entity("Academy.Models.Exam", b =>
                 {
-                    b.HasOne("Academy.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId");
-
-                    b.HasOne("Academy.Models.Child", "Child")
-                        .WithMany()
-                        .HasForeignKey("ChildId")
+                    b.HasOne("Academy.Models.Subscription", "Subscription")
+                        .WithMany("Exams")
+                        .HasForeignKey("SubscriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Academy.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
+                    b.HasOne("Academy.Models.Trainee", null)
+                        .WithMany("Exams")
+                        .HasForeignKey("TraineeId");
 
-                    b.HasOne("Academy.Models.SubCategory", "SubCategory")
-                        .WithMany()
-                        .HasForeignKey("SubCategoryId");
-
-                    b.HasOne("Academy.Models.Trainer", "Trainer")
-                        .WithMany()
+                    b.HasOne("Academy.Models.Trainer", null)
+                        .WithMany("Exams")
                         .HasForeignKey("TrainerId");
 
-                    b.Navigation("Category");
-
-                    b.Navigation("Child");
-
-                    b.Navigation("Department");
-
-                    b.Navigation("SubCategory");
-
-                    b.Navigation("Trainer");
+                    b.Navigation("Subscription");
                 });
 
             modelBuilder.Entity("Academy.Models.Parent", b =>
@@ -693,67 +502,63 @@ namespace Academy.Migrations
                     b.Navigation("Branch");
                 });
 
-            modelBuilder.Entity("Academy.Models.SubCategory", b =>
+            modelBuilder.Entity("Academy.Models.Subscription", b =>
                 {
                     b.HasOne("Academy.Models.Category", "Category")
-                        .WithMany("SubCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Academy.Models.SubCategoryTrainer", b =>
-                {
-                    b.HasOne("Academy.Models.SubCategory", "SubCategory")
-                        .WithMany("SubCategoryTrainers")
-                        .HasForeignKey("SubCategoryId");
-
-                    b.HasOne("Academy.Models.Trainer", "Trainer")
-                        .WithMany("subCategoryTrainers")
-                        .HasForeignKey("TrainerId");
-
-                    b.Navigation("SubCategory");
-
-                    b.Navigation("Trainer");
-                });
-
-            modelBuilder.Entity("Academy.Models.Subscriptions", b =>
-                {
-                    b.HasOne("Academy.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("Subscriptions")
                         .HasForeignKey("CategoryId");
-
-                    b.HasOne("Academy.Models.Child", "Child")
-                        .WithMany()
-                        .HasForeignKey("ChildId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
                     b.HasOne("Academy.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId");
 
-                    b.HasOne("Academy.Models.SubCategory", "SubCategory")
-                        .WithMany()
-                        .HasForeignKey("SubCategoryId");
-
-                    b.HasOne("Academy.Models.Trainer", "Trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId")
+                    b.HasOne("Academy.Models.Trainee", "Trainee")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("TraineeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
+                    b.HasOne("Academy.Models.Trainer", "Trainer")
+                        .WithMany()
+                        .HasForeignKey("TrainerId");
 
-                    b.Navigation("Child");
+                    b.Navigation("Category");
 
                     b.Navigation("Department");
 
-                    b.Navigation("SubCategory");
+                    b.Navigation("Trainee");
 
                     b.Navigation("Trainer");
+                });
+
+            modelBuilder.Entity("Academy.Models.Trainee", b =>
+                {
+                    b.HasOne("Academy.Models.Parent", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Parent");
+                });
+
+            modelBuilder.Entity("Academy.Models.TraineeChampion", b =>
+                {
+                    b.HasOne("Academy.Models.Champion", "Champion")
+                        .WithMany("TraineeChampions")
+                        .HasForeignKey("ChampionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Academy.Models.Trainee", "Trainee")
+                        .WithMany("ChampionChildren")
+                        .HasForeignKey("TraineeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Champion");
+
+                    b.Navigation("Trainee");
                 });
 
             modelBuilder.Entity("Academy.Models.Trainer", b =>
@@ -775,6 +580,25 @@ namespace Academy.Migrations
                     b.Navigation("Department");
                 });
 
+            modelBuilder.Entity("Academy.Models.TrainerCategories", b =>
+                {
+                    b.HasOne("Academy.Models.Category", "Category")
+                        .WithMany("CategoryTrainers")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Academy.Models.Trainer", "Trainer")
+                        .WithMany("CategoryTrainers")
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Trainer");
+                });
+
             modelBuilder.Entity("Academy.Models.Branch", b =>
                 {
                     b.Navigation("Departments");
@@ -788,22 +612,19 @@ namespace Academy.Migrations
                 {
                     b.Navigation("CategoryTrainers");
 
-                    b.Navigation("SubCategories");
+                    b.Navigation("Subscriptions");
                 });
 
-            modelBuilder.Entity("Academy.Models.Champions", b =>
+            modelBuilder.Entity("Academy.Models.Champion", b =>
                 {
-                    b.Navigation("championChildren");
-                });
-
-            modelBuilder.Entity("Academy.Models.Child", b =>
-                {
-                    b.Navigation("ChampionChildren");
+                    b.Navigation("TraineeChampions");
                 });
 
             modelBuilder.Entity("Academy.Models.Department", b =>
                 {
                     b.Navigation("Categories");
+
+                    b.Navigation("Champions");
                 });
 
             modelBuilder.Entity("Academy.Models.Parent", b =>
@@ -811,16 +632,31 @@ namespace Academy.Migrations
                     b.Navigation("Children");
                 });
 
-            modelBuilder.Entity("Academy.Models.SubCategory", b =>
+            modelBuilder.Entity("Academy.Models.Subscription", b =>
                 {
-                    b.Navigation("SubCategoryTrainers");
+                    b.Navigation("Absences");
+
+                    b.Navigation("Exams");
+                });
+
+            modelBuilder.Entity("Academy.Models.Trainee", b =>
+                {
+                    b.Navigation("Absences");
+
+                    b.Navigation("ChampionChildren");
+
+                    b.Navigation("Exams");
+
+                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("Academy.Models.Trainer", b =>
                 {
+                    b.Navigation("Absences");
+
                     b.Navigation("CategoryTrainers");
 
-                    b.Navigation("subCategoryTrainers");
+                    b.Navigation("Exams");
                 });
 #pragma warning restore 612, 618
         }

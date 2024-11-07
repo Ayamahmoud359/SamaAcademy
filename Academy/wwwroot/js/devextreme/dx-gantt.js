@@ -1,9 +1,9 @@
 /*!
  * DevExpress Gantt (dx-gantt)
- * Version: 4.1.49
- * Build date: Thu Sep 14 2023
+ * Version: 4.1.56
+ * Build date: Mon Jun 10 2024
  *
- * Copyright (c) 2012 - 2023 Developer Express Inc. ALL RIGHTS RESERVED
+ * Copyright (c) 2012 - 2024 Developer Express Inc. ALL RIGHTS RESERVED
  * Read about DevExpress licensing here: https://www.devexpress.com/Support/EULAs
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -997,21 +997,6 @@ var DomUtils = (function () {
         function getAbsolutePositionY_FF3(element) {
             return Math.round(element.getBoundingClientRect().top + DomUtils.getDocumentScrollTop());
         }
-        function getAbsolutePositionY_Opera(curEl) {
-            var isFirstCycle = true;
-            if (curEl && DomUtils.isHTMLTableRowElement(curEl) && curEl.cells.length > 0)
-                curEl = curEl.cells[0];
-            var pos = getAbsoluteScrollOffset_OperaFF(curEl, false);
-            while (curEl != null) {
-                pos += curEl.offsetTop;
-                if (!isFirstCycle)
-                    pos -= curEl.scrollTop;
-                curEl = curEl.offsetParent;
-                isFirstCycle = false;
-            }
-            pos += document.body.scrollTop;
-            return pos;
-        }
         function getAbsolutePositionY_NS(curEl) {
             var pos = getAbsoluteScrollOffset_OperaFF(curEl, false);
             var isFirstCycle = true;
@@ -1047,8 +1032,6 @@ var DomUtils = (function () {
             return getAbsolutePositionY_IE(element);
         else if (browser_1.Browser.Firefox && browser_1.Browser.Version >= 3)
             return getAbsolutePositionY_FF3(element);
-        else if (browser_1.Browser.Opera)
-            return getAbsolutePositionY_Opera(element);
         else if (browser_1.Browser.NetscapeFamily && (!browser_1.Browser.Firefox || browser_1.Browser.Version < 3))
             return getAbsolutePositionY_NS(element);
         else if (browser_1.Browser.WebKitFamily || browser_1.Browser.Edge)
@@ -8948,6 +8931,7 @@ exports.Task = void 0;
 var tslib_1 = __webpack_require__(655);
 var common_1 = __webpack_require__(2491);
 var DataObject_1 = __webpack_require__(6124);
+var invalidDateMillseconds = -8000000000000000;
 var Task = (function (_super) {
     tslib_1.__extends(Task, _super);
     function Task() {
@@ -8978,10 +8962,11 @@ var Task = (function (_super) {
             _super.prototype.assignFromObject.call(this, sourceObj);
             this.owner = sourceObj.owner;
             this.parentId = (0, common_1.isDefined)(sourceObj.parentId) ? String(sourceObj.parentId) : null;
+            this.rawParentId = sourceObj.parentId;
             this.description = sourceObj.description;
             this.title = sourceObj.title;
-            this.start = typeof sourceObj.start === "string" ? new Date(sourceObj.start) : sourceObj.start || new Date(0);
-            this.end = typeof sourceObj.end === "string" ? new Date(sourceObj.end) : sourceObj.end || new Date(0);
+            this.start = typeof sourceObj.start === "string" ? new Date(sourceObj.start) : sourceObj.start || this.createInvalidDate();
+            this.end = typeof sourceObj.end === "string" ? new Date(sourceObj.end) : sourceObj.end || this.createInvalidDate();
             this.duration = sourceObj.duration;
             this.progress = sourceObj.progress;
             this.taskType = sourceObj.taskType;
@@ -9007,8 +8992,14 @@ var Task = (function (_super) {
     Task.prototype.getDuration = function () {
         return this.end.getTime() - this.start.getTime();
     };
+    Task.prototype.isValidStart = function () { return this.isValidTaskaDte(this.start); };
+    Task.prototype.isValidEnd = function () { return this.isValidTaskaDte(this.end); };
     Task.prototype.isValid = function () {
-        return !!this.start.getTime() && !!this.end.getTime();
+        return this.isValidStart() && this.isValidEnd();
+    };
+    Task.prototype.createInvalidDate = function () { return new Date(invalidDateMillseconds); };
+    Task.prototype.isValidTaskaDte = function (value) {
+        return !!value && value.getTime() !== invalidDateMillseconds;
     };
     return Task;
 }(DataObject_1.DataObject));
@@ -11158,11 +11149,12 @@ var ViewVisualModel = (function () {
     ViewVisualModel.prototype.getTaskObjectForDataSource = function (task) {
         var parentTask = task.parentId && this.tasks.getItemById(task.parentId);
         var rootId = this.getRootTaskId();
-        var parentId = rootId && task.parentId === rootId ? task.parentId : parentTask === null || parentTask === void 0 ? void 0 : parentTask.id;
+        var isRootLevelTask = rootId && task.parentId === rootId;
+        var parentId = isRootLevelTask ? this.getRootRawValue() : parentTask === null || parentTask === void 0 ? void 0 : parentTask.id;
         var taskObject = {
             id: task.id,
-            start: task.start,
-            end: task.end,
+            start: task.isValidStart() ? task.start : null,
+            end: task.isValidEnd() ? task.end : null,
             duration: task.duration,
             description: task.description,
             parentId: parentId,
@@ -11211,6 +11203,10 @@ var ViewVisualModel = (function () {
             };
         }
         return null;
+    };
+    ViewVisualModel.prototype.getRootRawValue = function () {
+        var _a, _b, _c;
+        return (_c = (_b = (_a = this.root.children[0]) === null || _a === void 0 ? void 0 : _a.task) === null || _b === void 0 ? void 0 : _b.rawParentId) !== null && _c !== void 0 ? _c : null;
     };
     ViewVisualModel.prototype.populateItemsForView = function () {
         this._viewItemList.splice(0, this._viewItemList.length);
@@ -11562,7 +11558,7 @@ var ViewVisualModel = (function () {
         end !== null && end !== void 0 ? end : (end = this._viewItemList.length - 1);
         for (var i = start; i <= end; i++) {
             var item = this._viewItemList[i];
-            if ((item === null || item === void 0 ? void 0 : item.getVisible()) && ((_a = item === null || item === void 0 ? void 0 : item.task) === null || _a === void 0 ? void 0 : _a.isValid))
+            if ((item === null || item === void 0 ? void 0 : item.getVisible()) && ((_a = item === null || item === void 0 ? void 0 : item.task) === null || _a === void 0 ? void 0 : _a.isValid()))
                 result.push(i);
         }
         return result;
@@ -15893,6 +15889,7 @@ var GanttView = (function () {
         this.updateView();
     };
     GanttView.prototype.cleanMarkup = function () {
+        this.setNormalScreenMode();
         this.renderHelper.taskAreaManagerDetachEvents();
         this.taskEditController.detachEvents();
         this.clearStripLinesUpdater();
@@ -16067,7 +16064,7 @@ var GanttView = (function () {
     GanttView.prototype.getTaskResources = function (key) {
         var model = this.viewModel;
         var task = model.getItemByPublicId("task", key);
-        return task && model.getAssignedResources(task).items;
+        return (task && model.getAssignedResources(task).items) || [];
     };
     GanttView.prototype.getVisibleTaskKeys = function () { return this.viewModel.getVisibleTasks().map(function (t) { return t.id; }); };
     GanttView.prototype.getVisibleDependencyKeys = function () { return this.viewModel.getVisibleDependencies().map(function (d) { return d.id; }); };
@@ -16099,6 +16096,18 @@ var GanttView = (function () {
     };
     GanttView.prototype.getTaskTreeLine = function (taskKey) {
         return this.viewModel.getTaskTreeLine(taskKey).reverse();
+    };
+    GanttView.prototype.isInFullScreenMode = function () {
+        var _a;
+        return !!((_a = this.fullScreenModeHelper) === null || _a === void 0 ? void 0 : _a.isInFullScreenMode);
+    };
+    GanttView.prototype.setFullScreenMode = function () {
+        if (!this.isInFullScreenMode())
+            this.fullScreenModeHelper.toggle();
+    };
+    GanttView.prototype.setNormalScreenMode = function () {
+        if (this.isInFullScreenMode())
+            this.fullScreenModeHelper.toggle();
     };
     GanttView.prototype.setTaskValue = function (id, fieldName, newValue) {
         var command = this.commandManager.updateTaskCommand;
@@ -17591,7 +17600,8 @@ var ScaleCalculator = (function () {
             var nextDate = this.getNextScaleDate(currentDate, scaleType);
             var isStart = currentDate.getTime() === this.range.start.getTime();
             var isEnd = nextDate.getTime() >= this.range.end.getTime();
-            var width = isStart || isEnd ? this.getRangeTickCount(currentDate, nextDate) * defWidth : defWidth;
+            var needWidthCorrection = isStart || isEnd || (scaleType > Enums_1.ViewType.Hours && DateUtils_1.DateUtils.hasDST());
+            var width = needWidthCorrection ? this.getRangeTickCount(currentDate, nextDate) * defWidth : defWidth;
             items.push(new ScaleItemInfo(currentDate, nextDate, new point_1.Point(x, undefined), new size_1.Size(width, 0)));
             currentDate = nextDate;
             x += width;
@@ -17625,6 +17635,11 @@ var ScaleCalculator = (function () {
         return items;
     };
     ScaleCalculator.prototype.getDateInScale = function (pos) {
+        if (pos < 0) {
+            var timeOffset = pos / this.tickSize.width;
+            var timeSpan = DateUtils_1.DateUtils.getTickTimeSpan(this.viewType);
+            return new Date(this.range.start.getTime() + timeOffset * timeSpan);
+        }
         for (var i = 0; i < this.bottomScaleItems.length; i++) {
             var item = this.bottomScaleItems[i];
             var width = item.size.width;
@@ -19717,6 +19732,8 @@ var TaskRender = (function () {
         if (!viewItem.task.isValid() || !viewItem.visible) {
             var taskDependencies = this.getTaskDependencies(viewItem.task.internalId);
             this.addInvalidTaskDependencies(taskDependencies);
+            if (viewItem.selected)
+                this.createTaskSelectionElement(index);
             return;
         }
         if (!viewItem.isCustom)
@@ -20507,7 +20524,7 @@ var DateUtils = (function () {
         return DateUtils.getRangeMSPeriod(start, end) / DateUtils.getTickTimeSpan(scaleType);
     };
     DateUtils.getRangeMSPeriod = function (start, end) {
-        return end.getTime() - DateUtils.getDSTDelta(start, end) - start.getTime();
+        return end.getTime() - DateUtils.getDSTTotalDelta(start, end) - start.getTime();
     };
     DateUtils.getRangeTickCountInMonthsViewType = function (start, end) {
         var startMonthStartDate = new Date(start.getFullYear(), start.getMonth(), 1);
@@ -20543,10 +20560,38 @@ var DateUtils = (function () {
         var timeZoneDiff = DateUtils.getTimezoneOffsetDiff(start, end) * DateUtils.msPerMinute;
         return timeZoneDiff > 0 ? timeZoneDiff : 0;
     };
+    DateUtils.getDSTTotalDelta = function (start, end) {
+        if (!DateUtils.hasDST())
+            return 0;
+        var refDate = start;
+        var delta = 0;
+        var year = refDate.getFullYear();
+        var month = refDate.getMonth();
+        while (refDate < end) {
+            if (month >= 5) {
+                year++;
+                month = 0;
+            }
+            else
+                month = 5;
+            var newRefDate = new Date(year, month, 1);
+            if (newRefDate > end)
+                newRefDate = end;
+            delta += DateUtils.getDSTDelta(refDate, newRefDate);
+            refDate = newRefDate;
+        }
+        return delta;
+    };
     DateUtils.getDSTCorrectedTaskEnd = function (start, period) {
         var time = start.getTime() + period;
-        var delta = DateUtils.getDSTDelta(start, new Date(time));
+        var delta = DateUtils.getDSTTotalDelta(start, new Date(time));
         return new Date(time + delta);
+    };
+    DateUtils.hasDST = function () {
+        var year = (new Date()).getFullYear();
+        var firstJan = new Date(year, 0, 1);
+        var firstJune = new Date(year, 5, 1);
+        return DateUtils.getTimezoneOffsetDiff(firstJan, firstJune) !== 0;
     };
     DateUtils.msPerMinute = 60 * 1000;
     DateUtils.msPerHour = 3600000;

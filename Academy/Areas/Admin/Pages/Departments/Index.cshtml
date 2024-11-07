@@ -6,22 +6,273 @@
 <div class="row">
     <div class="col-xxl-12 col-xl-12">
         <div class="card card-height-100">
-           @*  <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">@sharedResource["Orders"]</h4>
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Departments</h4>
                 <div class="flex-shrink-0">
-                    <a href="/admin/Configurations/ManageCreateOrder/CreateOrder" class="btn btn-soft-primary">
-                        @sharedResource["Create Order"]
+                    <a href="/admin/Departments/Add" class="btn btn-soft-primary">
+                        Add Department
                     </a>
                 </div>
-            </div> *@
+            </div>
             <!-- end card header -->
             <!-- card body -->
             <div class="card-body">
-              
+                @(Html.DevExtreme().DataGrid<Academy.Models.Department>()
+                    .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetDepartments").Key("DepartmentId"))
+                    .RemoteOperations(true)
+                    .ColumnHidingEnabled(true)
+                    .Width("100%")
+                    .Columns(columns =>
+                    {
+                        // Example column configuration
+                        columns.AddFor(m => m.DepartmentName).Caption("Department Name");
+                        columns.AddFor(m => m.BranchId).Caption("Branch").Lookup(lookup => lookup
+                        .DataSource(ds => ds.WebApi().Controller("Data").LoadAction("BranchsLookup").Key("Value"))
+                .ValueExpr("Value")
+                .DisplayExpr("Text")
+                );
+                        columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                    <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
+                        <a href="/Admin/Departments/View?Id=<%- data.DepartmentId %>" class="text-primary d-inline-block">
+
+                            @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
+                        </a>
+                       
+                        @Html.DevExtreme().Button().Text("Add Category").OnClick("function (e) { AddCategory(data.DepartmentId) }").Type(ButtonType.Success)
+
+                        <a href="/Admin/Departments/Edit?Id=<%- data.DepartmentId %>"  class="text-primary d-inline-block">
+                            
+                            @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
+                        </a>
+
+                        @Html.DevExtreme().Button().Text("Delete").Type(ButtonType.Danger)
+                      
+                    </div>
+                </text>);
+                    })
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                   //.Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    //.OnExporting("exporting")
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                   .GroupPanel(p => p.Visible(true))
+                    //.Selection(s => s.Mode(SelectionMode.Multiple))
+                    .Paging(paging => paging.PageSize(5).Enabled(true))
+                    .WordWrapEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    //.ColumnChooser(c => c.Enabled(true))
+                    .ColumnFixing(c => c.Enabled(true))
+                   .Grouping(g => g.AutoExpandAll(false))
+                    .Pager(pager =>
+                    {
+                        pager.Visible(true);
+                        pager.DisplayMode(GridPagerDisplayMode.Full);
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new JS("[5,10,20,50,100,'all']"));
+                        pager.ShowInfo(true);
+                        pager.ShowNavigationButtons(true);
+                    })
+                    .SearchPanel(searchPanel => searchPanel
+                    .Visible(true)
+                    .Placeholder("SearchTxt"))
+                    .RemoteOperations(false)
+                   @*  .Summary(s => s
+                    .TotalItems(totalItems =>
+                    {
+                        totalItems.AddFor(m => m.BranchId).SummaryType(SummaryType.Count);
+                    })
+                    .GroupItems(groupItems =>
+                    {
+                        groupItems.Add().SummaryType(SummaryType.Count);
+                    })
+                    ) *@
+                    )
             </div>
             <!-- end card body -->
-        
+            @(Html.DevExtreme().Popup().ID("customPopup").MaxHeight(300)
+                .Title("Add Category")
+                .Visible(false)
+                .OnHiding("closeButtonClick")
+               // .OnShown("onPopupShown")
+                .ContentTemplate(@<text>
+               <div class="card-body">
+                    <div class="live-preview">
+                        <div asp-validation-summary="ModelOnly" class="text-danger" ></div>
+                        <div  class="text-danger" id="Err"></div>
+                        <form method="post" id="frm" onsubmit="return handleSubmit(event)">
+                            <div class="mb-3">
+
+                                <label asp-for="@Model.cat.CategoryName" class="form-label">Category Name</label>
+                                <input asp-for="@Model.cat.CategoryName" class="form-control" required/>
+                                <span asp-validation-for="@Model.cat.CategoryName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="@Model.cat.CategoryDescription" class="form-label">Category Description</label>
+                                <input asp-for="@Model.cat.CategoryDescription" class="form-control" required />
+                                <span asp-validation-for="@Model.cat.CategoryDescription" class="text-danger"></span>
+
+                            </div>
+                       
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success" onclick="saveButtonClick()">Save</button>
+                               @*  @Html.DevExtreme().Button().Text("Save").Type(ButtonType.Success).OnClick("function (e) { saveButtonClick() }") *@
+                                @Html.DevExtreme().Button().Text("Cancel").OnClick("function (e) { cancelButtonClick() }")
+                               
+                            </div>
+                   
+                        </form> 
+
+                       
+                    </div>
+
+                </div> 
+               
+            </text>)
+                )
+
     </div>
 </div>
+
+                        <script>
+
+    var currentKey;
+
+        $(document).ready(function () {
+            // Initialize jQuery validation (only if you're using jQuery Validation in the form)
+            $("#frm").validate({
+                errorClass: 'text-danger',
+                validClass: 'text-success'
+            });
+         });
+        //                     function onPopupShown() {
+        //                         console.log("shown")
+        //     var form = document.getElementById('frm');
+        //     if (form) {
+        //         // Reset and trigger validation
+        //         $(form).validate().resetForm();  // Reset any previous validation errors
+        //         $(form).valid();  // Trigger jQuery validation to show error messages
+        //         form.checkValidity();  // Trigger native HTML5 validation
+
+        //         console.log("Validation triggered when popup is shown.");
+        //     }
+                        //  }
+        function handleSubmit(event) {
+            console.log("submit")
+            // Trigger the client-side validation
+            var isValid = true;
+            // Validate form using ASP.NET Core's built-in validation
+            if (!event.target.checkValidity()) {
+                isValid = false;  // If the form fails validation, prevent submission
+            }
+
+            if (!isValid) {
+                event.preventDefault(); // Prevent form submission if validation fails
+            }
+
+            // Return false to prevent form from submitting even if valid
+            return false;
+        }
+    function AddCategory(data) {
+            console.log(data)
+            currentKey=data
+        $('#customPopup').dxPopup('instance').option('visible', true);
+           // document.getElementById("cat_DepartmentId").value = data
+       
+    }
+    function saveButtonClick() {
+      //  var grid = $('#gridContainer').dxDataGrid('instance');
+      //Ajax Reuest to save category
+            console.log("save")
+        Name = document.getElementById("cat_CategoryName").value;
+        Description= document.getElementById("cat_CategoryDescription").value ;
+            if (Name && Description!=""){
+                var category = {
+                    CategoryName: Name,
+                    CategoryDescription: Description,
+                    DepartmentId: currentKey
+
+                };
+                var json = JSON.stringify(category);
+                console.log(json)
+                $.ajax({
+                    type: "POST",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    }
+                    ,
+                    url: "/admin/Departments/Index?handler=AddCategory",
+                    //async: false,
+                    data: json,
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+
+                    success: function (response) {
+                        console.log(response)
+                        if (response == "Added") {
+                            $('#customPopup').dxPopup('instance').option('visible', false);
+                        }
+                        else if (response=="SomeThing Went Wrong") {
+                            console.log(currentKey)
+                            document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time"
+                        }
+                        else{
+                            console.log(currentKey)
+                            document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
+                        }
+                       
+                    },
+                    failure: function (response) {
+                        document.getElementById("Err").innerHTML = response;
+                    }
+                });
+
+            }
+         
+    }
+    function cancelButtonClick() {
+           
+        $('#customPopup').dxPopup('instance').option('visible', false);
+    
+    }
+
+    function closeButtonClick() {
+            console.log("close")
+             document.getElementById("Err").innerHTML = "";
+            document.getElementById("frm").reset();
+           // document.getElementById("cat_CategoryName").value = "";
+          //  document.getElementById("cat_CategoryDescription").value = "";
+        //    $('#customPopup').dxPopup('instance').option('visible', false);
+        currentKey = -1;
+    }
+
+
+        function exporting(e) {
+            var workbook = new ExcelJS.Workbook();
+            var worksheet = workbook.addWorksheet('Orders');
+
+            DevExpress.excelExporter.exportDataGrid({
+                component: e.component,
+                worksheet: worksheet,
+                autoFilterEnabled: true
+            }).then(function () {
+                workbook.xlsx.writeBuffer().then(function (buffer) {
+                    var currentdate = new Date();
+                    var datetime = currentdate.getDate() + "_"
+                        + (currentdate.getMonth() + 1) + "_"
+                        + currentdate.getFullYear() + "_"
+                        + currentdate.getHours() + "_"
+                        + currentdate.getMinutes() + "_"
+                        + currentdate.getSeconds();
+                    saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'Departments_' + datetime + '.xlsx');
+                });
+            });
+            e.cancel = true;
+        }
+
+
+                        </script>
 
                         

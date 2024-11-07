@@ -4,6 +4,7 @@ using Academy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
 
 namespace Academy.Areas.Admin.Pages.Parents
 {
@@ -12,7 +13,12 @@ namespace Academy.Areas.Admin.Pages.Parents
         [BindProperty]
         public ParentVM ParentVM { get; set; }
         public List<Branch> Branches { get; set; }
-      
+        [BindProperty]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This email is already taken.")]
+        public string Email { get; set; }
 
         private readonly AcademyContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -33,36 +39,33 @@ namespace Academy.Areas.Admin.Pages.Parents
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (ModelState.IsValid)
+            Branches = _context.Branches.ToList();
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+            try
             {
                 var parent = new Parent
                 {
-                    
+
                     IsActive = true,
-                    BranchId=ParentVM.BranchId,
-                    ParentEmail=ParentVM.Email,
-                    ParentName=ParentVM.ParentName,
-                    ParentAddress=ParentVM.ParentAddress,
-                    ParentPhone=ParentVM.ParentPhone,
+                    BranchId = ParentVM.BranchId,
+                    ParentEmail = Email,
+                    ParentName = ParentVM.ParentName,
+                    ParentAddress = ParentVM.ParentAddress,
+                    ParentPhone = ParentVM.ParentPhone,
 
                 };
-                try
-                {
-                    _context.Parents.Add(parent);
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception exc)
-                {
-                    ModelState.AddModelError(string.Empty, exc.Message);
-                    return Page();
 
-                }
+                _context.Parents.Add(parent);
+                await _context.SaveChangesAsync();
 
 
                 var user = new ApplicationUser
                 {
-                    UserName = ParentVM.Email,
-                    Email = ParentVM.Email,
+                    UserName = Email,
+                    Email = Email,
 
                     PhoneNumber = ParentVM.ParentPhone,
                     EntityId = parent.ParentId,
@@ -70,32 +73,34 @@ namespace Academy.Areas.Admin.Pages.Parents
 
                 };
 
-                try
-                {
-                    var result = await _userManager.CreateAsync(user, ParentVM.Password);
+                var result = await _userManager.CreateAsync(user, ParentVM.Password);
 
-                    if (result.Succeeded)
-                    {
-                        Redirect("/Admin/Index");
-
-                    }
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                    // If we got this far, something failed, redisplay form
-                    return Page();
-                }
-                catch (Exception exc)
+                if (result.Succeeded)
                 {
-                    ModelState.AddModelError(string.Empty, exc.Message);
+                   return RedirectToPage("Index"); 
 
                 }
+                _context.Parents.Remove(parent);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+                // If we got this far, something failed, redisplay form
+                return Page();
+            }
+
+            catch (Exception exc)
+            {
+                ModelState.AddModelError(string.Empty, exc.Message);
+                return Page();
+
 
             }
-            return Page();
 
 
         }
+          
+
+        }
     }
-}
+

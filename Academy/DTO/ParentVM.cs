@@ -1,16 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Academy.DTO
 {
     public class ParentVM
     {
-        [Required]
+
         [EmailAddress]
         [Display(Name = "Email")]
-        public string Email { get; set; }
+        [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This email is already taken.")]
+        public string? Email { get; set; }
 
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [Required(ErrorMessage = "Password is required")]
+        [StringLength(10, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
@@ -19,10 +21,11 @@ namespace Academy.DTO
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required(ErrorMessage = "Trainer Name is required")]
+        [Required(ErrorMessage = "Parent Name is required")]
         public string ParentName { get; set; }
+        [Required(ErrorMessage = "Parent Phone is required")]
         public string ParentPhone { get; set; }
-        [Required(ErrorMessage = "Trainer Address is required")]
+        [Required(ErrorMessage = "Parent Address is required")]
         public string ParentAddress { get; set; }
 
         [Required(ErrorMessage = "Branch is required")]

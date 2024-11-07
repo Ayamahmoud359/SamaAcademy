@@ -1,0 +1,61 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Branchs.AddModel
+@{
+    ViewBag.Title = "Add Branch";
+    ViewBag.pTitle = "Add Branch";
+    ViewBag.pageTitle = "Add";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Add Branch</h4>
+               
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form method="post">
+                        
+                        <div class="mb-3">
+                            <label asp-for="@Model.BranchVM.BranchName" class="form-label">Branch Name</label>
+                            <input asp-for="@Model.BranchVM.BranchName" class="form-control" />
+                            <span asp-validation-for="@Model.BranchVM.BranchName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.BranchVM.BranchAddress" class="form-label">Branch Address</label>
+                            <input asp-for="@Model.BranchVM.BranchAddress" class="form-control" />
+                            <span asp-validation-for="@Model.BranchVM.BranchAddress" class="text-danger"></span>
+                        </div>
+
+                        
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Add Branch</button>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+</div><!--end row-->
+
+
+
+
+
+    <!-- prismjs plugin -->
+    <script src="~/assets/libs/prismjs/prism.js"></script>
+
+    <script src="~/assets/js/app.js"></script>
+
+<!-- particles js -->
+<script src="~/assets/libs/particles.js/particles.js"></script>
+<!-- particles app js -->
+<script src="~/assets/js/pages/particles.app.js"></script>
+<!-- password-addon init -->
+<script src="~/assets/js/pages/password-addon.init.js"></script>
+ 

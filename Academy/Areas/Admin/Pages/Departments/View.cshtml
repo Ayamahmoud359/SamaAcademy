@@ -1,0 +1,43 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Departments.ViewModel
+@{
+}
+<div class="slim-mainpanel">
+    <div class="container">
+        <div class="slim-pageheader">
+            <ol class="breadcrumb slim-breadcrumb">
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Departments</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Department Details</li>
+            </ol>
+            <h6 class="slim-pagetitle">Depatrment Information</h6>
+        </div><!-- slim-pageheader -->
+
+        <div class="section-wrapper">
+            @* <label class="section-title">Please fill your company information</label>*@
+            @*<p class="mg-b-20 mg-sm-b-40">Please fill your company information</p>*@
+
+            <div class="form-layout">
+                <div class="row mg-b-25">
+                    <div class="col-lg-6">
+                        <label class="form-control-label">Department Name: <span class="tx-danger">*</span></label>
+                        <div style="font-size:xx-large">@Model.Dept.DepartmentName</div>
+                    </div><!-- col-4 -->
+
+                    
+
+
+                </div><!-- row -->
+
+
+                <div class="form-layout-footer">
+                    <a asp-area="Admin" asp-page="/Departments/Index">
+                        <input type='button' class="btn btn-secondary bd-0" value='Back to List' />
+                    </a>
+                </div><!-- form-layout-footer -->
+
+            </div><!-- form-layout -->
+        </div><!-- section-wrapper -->
+
+    </div><!-- container -->
+</div>
