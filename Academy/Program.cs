@@ -3,6 +3,7 @@ using Academy.Models;
 using Academy.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,23 +27,46 @@ builder.Services.AddControllers()
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = null; // Use null to keep property names as is
     });
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+#region Toast
+builder.Services.AddRazorPages();
+builder.Services.AddRazorPages().AddNToastNotifyToastr(new ToastrOptions()
+{
+    ProgressBar = true,
+    PreventDuplicates = true,
+    CloseButton = true
+});
+
+//builder.Services.AddRazorPages().AddRazorRuntimeCompilation().AddNToastNotifyToastr(new ToastrOptions
+//{
+//    PositionClass = ToastPositions.TopRight,
+//    ProgressBar = true,
+//    TimeOut = 5000,
+//    CloseButton = true,
+//    PreventDuplicates = false,
+//});
+#endregion
 var app = builder.Build();
 System.Net.ServicePointManager.SecurityProtocol |= System.Net.SecurityProtocolType.Tls12;
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseMigrationsEndPoint();
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
 }
 else
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseNToastNotify();
 
 app.UseRouting();
 
