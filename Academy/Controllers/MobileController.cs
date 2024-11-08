@@ -98,7 +98,7 @@ namespace Academy.Controllers
         [Route("GetTrainersByBranchId")]
         public async Task<ActionResult<List<Trainer>>> GetTrainersByBranchId(int BranchId)
         {
-            var trainers = await _context.Trainers.Where(e => e.BranchId == BranchId && e.IsActive).ToListAsync();
+            var trainers = await _context.Trainers.Include(e=>e.Department).Where(e => e.Department.BranchId == BranchId && e.IsActive).ToListAsync();
             return Ok(trainers);
         }
         #endregion
@@ -129,7 +129,7 @@ namespace Academy.Controllers
         
         public async Task<ActionResult<List<Trainer>>> GetTrainersByBranchIdAndCategoryId(int BranchId, int CategoryId)
         {
-            var trainers = await _context.Trainers.Include(e => e.CategoryTrainers).Where(e => e.CategoryTrainers.Any(e => e.CategoryId == CategoryId) && e.BranchId== BranchId && e.IsActive).ToListAsync();
+            var trainers = await _context.Trainers.Include(e=>e.Department).Include(e => e.CategoryTrainers).Where(e => e.CategoryTrainers.Any(e => e.CategoryId == CategoryId) && e.Department.BranchId== BranchId && e.IsActive).ToListAsync();
             return Ok(trainers);
         }
         #endregion

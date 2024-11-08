@@ -48,7 +48,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
       
         public void OnGet()
         {
-            Branches = _context.Branches.ToList();
+            Branches = _context.Branches.Where(b => b.IsActive).ToList();
             Departments = new List<Department>();
             Categories = new List<Category>();
         }
@@ -56,9 +56,9 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
      
         public async Task<IActionResult> OnPostAsync()
         {
-            Branches = _context.Branches.ToList();
-            Departments =_context.Departments.Where(d=>d.BranchId== Trainer.BranchId).ToList();
-            Categories = _context.Categories.Where(d => d.DepartmentId == Trainer.DepartmentId).ToList();
+            Branches = _context.Branches.Where(b => b.IsActive).ToList();
+            Departments =_context.Departments.Where(d=>d.IsActive&&d.BranchId== Trainer.BranchId).ToList();
+            Categories = _context.Categories.Where(d =>d.IsActive&& d.DepartmentId == Trainer.DepartmentId).ToList();
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -71,7 +71,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
                     TrainerAddress = Trainer.TrainerAddress,
                     TrainerEmail =Email,
                     TrainerPhone = Trainer.TrainerPhone,
-                    BranchId = Trainer.BranchId,
+                   
                     DepartmentId = Trainer.DepartmentId,
                     IsActive = true,
 
@@ -116,7 +116,11 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
             return RedirectToPage ("Index");
 
             }
-            _context.CategoryTrainers.RemoveRange(categoryTrainer);
+                if (categoryTrainer.Count != 0)
+                {
+                    _context.CategoryTrainers.RemoveRange(categoryTrainer);
+                }
+            
             _context.Trainers.Remove(coach);
             _context.SaveChanges();
             foreach (var error in result.Errors)
@@ -141,7 +145,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
             {
                 // Retrieve categories based on the department ID
                 var categoriesInDepartment = _context.Categories
-                    .Where(e => e.DepartmentId == departmentId).Select(c=>new {c.CategoryId,c.CategoryName})
+                    .Where(e =>e.IsActive&& e.DepartmentId == departmentId).Select(c=>new {c.CategoryId,c.CategoryName})
                     .ToList();
 
                 // Assign the department ID and categories to the view model
@@ -160,12 +164,12 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
         {
             try
             {
-                //var category = JsonConvert.DeserializeObject<Category>(data);
+               
                 if (id != 0)
                 {
 
 
-                   var  departments = _context.Departments.Where(b => b.BranchId == id).Select(b=> new { b.DepartmentName, b.DepartmentId }).ToList();
+                   var  departments = _context.Departments.Where(b =>b.IsActive&& b.BranchId == id).Select(b=> new { b.DepartmentName, b.DepartmentId }).ToList();
 
 
                     return new JsonResult(departments);

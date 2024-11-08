@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Academy.Migrations
 {
     [DbContext(typeof(AcademyContext))]
-    [Migration("20241107142815_update")]
-    partial class update
+    [Migration("20241108201030_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,7 @@ namespace Academy.Migrations
                     b.Property<bool>("IsAbsent")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("SubscriptionId")
+                    b.Property<int>("SubscriptionId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TraineeId")
@@ -60,7 +60,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Abscesses");
+                    b.ToTable("Abscenses");
                 });
 
             modelBuilder.Entity("Academy.Models.Branch", b =>
@@ -109,7 +109,7 @@ namespace Academy.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.HasKey("CategoryId");
@@ -272,9 +272,6 @@ namespace Academy.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("EndDate")
                         .HasColumnType("nvarchar(max)");
 
@@ -284,14 +281,12 @@ namespace Academy.Migrations
                     b.Property<int>("TraineeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TrainerId")
+                    b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
                     b.HasKey("SubscriptionId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("TraineeId");
 
@@ -363,7 +358,7 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerId"));
 
-                    b.Property<int>("BranchId")
+                    b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<int>("DepartmentId")
@@ -383,6 +378,7 @@ namespace Academy.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrainerEmail")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrainerName")
@@ -429,7 +425,9 @@ namespace Academy.Migrations
                 {
                     b.HasOne("Academy.Models.Subscription", "Subscription")
                         .WithMany("Absences")
-                        .HasForeignKey("SubscriptionId");
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Academy.Models.Trainee", null)
                         .WithMany("Absences")
@@ -511,10 +509,6 @@ namespace Academy.Migrations
                         .WithMany("Subscriptions")
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("Academy.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
-
                     b.HasOne("Academy.Models.Trainee", "Trainee")
                         .WithMany("Subscriptions")
                         .HasForeignKey("TraineeId")
@@ -523,11 +517,11 @@ namespace Academy.Migrations
 
                     b.HasOne("Academy.Models.Trainer", "Trainer")
                         .WithMany()
-                        .HasForeignKey("TrainerId");
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("Department");
 
                     b.Navigation("Trainee");
 
@@ -566,19 +560,15 @@ namespace Academy.Migrations
 
             modelBuilder.Entity("Academy.Models.Trainer", b =>
                 {
-                    b.HasOne("Academy.Models.Branch", "Branch")
+                    b.HasOne("Academy.Models.Branch", null)
                         .WithMany("Trainers")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BranchId");
 
                     b.HasOne("Academy.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Branch");
 
                     b.Navigation("Department");
                 });

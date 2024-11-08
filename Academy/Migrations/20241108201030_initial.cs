@@ -47,7 +47,7 @@ namespace Academy.Migrations
                         column: x => x.BranchId,
                         principalTable: "Branches",
                         principalColumn: "BranchId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,7 +72,7 @@ namespace Academy.Migrations
                         column: x => x.BranchId,
                         principalTable: "Branches",
                         principalColumn: "BranchId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -83,7 +83,7 @@ namespace Academy.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     DepartmentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -94,7 +94,7 @@ namespace Academy.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "DepartmentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -118,7 +118,7 @@ namespace Academy.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "DepartmentId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -128,14 +128,14 @@ namespace Academy.Migrations
                     TrainerId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TrainerName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TrainerEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TrainerEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TrainerPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TrainerAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     SubscriptionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BranchId = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: false)
+                    DepartmentId = table.Column<int>(type: "int", nullable: false),
+                    BranchId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -144,8 +144,7 @@ namespace Academy.Migrations
                         name: "FK_Trainers_Branches_BranchId",
                         column: x => x.BranchId,
                         principalTable: "Branches",
-                        principalColumn: "BranchId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "BranchId");
                     table.ForeignKey(
                         name: "FK_Trainers_Departments_DepartmentId",
                         column: x => x.DepartmentId,
@@ -155,7 +154,7 @@ namespace Academy.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Children",
+                name: "Trainees",
                 columns: table => new
                 {
                     TraineeId = table.Column<int>(type: "int", nullable: false)
@@ -168,37 +167,13 @@ namespace Academy.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Children", x => x.TraineeId);
+                    table.PrimaryKey("PK_Trainees", x => x.TraineeId);
                     table.ForeignKey(
-                        name: "FK_Children_Parents_ParentId",
+                        name: "FK_Trainees_Parents_ParentId",
                         column: x => x.ParentId,
                         principalTable: "Parents",
                         principalColumn: "ParentId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SubCategories",
-                columns: table => new
-                {
-                    SubCategoryId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    SubCategoryNameEN = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SubCategoryNameAR = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SubCategoryDescriptionEN = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SubCategoryDescriptionAR = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SubCategories", x => x.SubCategoryId);
-                    table.ForeignKey(
-                        name: "FK_SubCategories_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "CategoryId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -218,7 +193,7 @@ namespace Academy.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "CategoryId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_CategoryTrainers_Trainers_TrainerId",
                         column: x => x.TrainerId,
@@ -228,41 +203,15 @@ namespace Academy.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ChampionChildren",
-                columns: table => new
-                {
-                    TraineeChampionId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ChampionId = table.Column<int>(type: "int", nullable: false),
-                    TraineeId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ChampionChildren", x => x.TraineeChampionId);
-                    table.ForeignKey(
-                        name: "FK_ChampionChildren_Champions_ChampionId",
-                        column: x => x.ChampionId,
-                        principalTable: "Champions",
-                        principalColumn: "ChampionId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ChampionChildren_Children_TraineeId",
-                        column: x => x.TraineeId,
-                        principalTable: "Children",
-                        principalColumn: "TraineeId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Subscriptions",
                 columns: table => new
                 {
                     SubscriptionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SubscriptionDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StartDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndDate = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TraineeId = table.Column<int>(type: "int", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true),
-                    TrainerId = table.Column<int>(type: "int", nullable: true),
+                    TrainerId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -274,49 +223,47 @@ namespace Academy.Migrations
                         principalTable: "Categories",
                         principalColumn: "CategoryId");
                     table.ForeignKey(
-                        name: "FK_Subscriptions_Children_TraineeId",
+                        name: "FK_Subscriptions_Trainees_TraineeId",
                         column: x => x.TraineeId,
-                        principalTable: "Children",
+                        principalTable: "Trainees",
                         principalColumn: "TraineeId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Subscriptions_Departments_DepartmentId",
-                        column: x => x.DepartmentId,
-                        principalTable: "Departments",
-                        principalColumn: "DepartmentId");
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Subscriptions_Trainers_TrainerId",
                         column: x => x.TrainerId,
                         principalTable: "Trainers",
-                        principalColumn: "TrainerId");
+                        principalColumn: "TrainerId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubCategoryTrainer",
+                name: "TraineeChampions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    TraineeChampionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SubCategoryId = table.Column<int>(type: "int", nullable: true),
-                    TrainerId = table.Column<int>(type: "int", nullable: true)
+                    ChampionId = table.Column<int>(type: "int", nullable: false),
+                    TraineeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubCategoryTrainer", x => x.Id);
+                    table.PrimaryKey("PK_TraineeChampions", x => x.TraineeChampionId);
                     table.ForeignKey(
-                        name: "FK_SubCategoryTrainer_SubCategories_SubCategoryId",
-                        column: x => x.SubCategoryId,
-                        principalTable: "SubCategories",
-                        principalColumn: "SubCategoryId");
+                        name: "FK_TraineeChampions_Champions_ChampionId",
+                        column: x => x.ChampionId,
+                        principalTable: "Champions",
+                        principalColumn: "ChampionId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_SubCategoryTrainer_Trainers_TrainerId",
-                        column: x => x.TrainerId,
-                        principalTable: "Trainers",
-                        principalColumn: "TrainerId");
+                        name: "FK_TraineeChampions_Trainees_TraineeId",
+                        column: x => x.TraineeId,
+                        principalTable: "Trainees",
+                        principalColumn: "TraineeId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Abscesses",
+                name: "Abscenses",
                 columns: table => new
                 {
                     AbsenceId = table.Column<int>(type: "int", nullable: false)
@@ -324,32 +271,33 @@ namespace Academy.Migrations
                     IsAbsent = table.Column<bool>(type: "bit", nullable: false),
                     AbsentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    SubscriptionId = table.Column<int>(type: "int", nullable: true),
+                    SubscriptionId = table.Column<int>(type: "int", nullable: false),
                     TraineeId = table.Column<int>(type: "int", nullable: true),
                     TrainerId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Abscesses", x => x.AbsenceId);
+                    table.PrimaryKey("PK_Abscenses", x => x.AbsenceId);
                     table.ForeignKey(
-                        name: "FK_Abscesses_Children_TraineeId",
-                        column: x => x.TraineeId,
-                        principalTable: "Children",
-                        principalColumn: "TraineeId");
-                    table.ForeignKey(
-                        name: "FK_Abscesses_Subscriptions_SubscriptionId",
+                        name: "FK_Abscenses_Subscriptions_SubscriptionId",
                         column: x => x.SubscriptionId,
                         principalTable: "Subscriptions",
-                        principalColumn: "SubscriptionId");
+                        principalColumn: "SubscriptionId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Abscesses_Trainers_TrainerId",
+                        name: "FK_Abscenses_Trainees_TraineeId",
+                        column: x => x.TraineeId,
+                        principalTable: "Trainees",
+                        principalColumn: "TraineeId");
+                    table.ForeignKey(
+                        name: "FK_Abscenses_Trainers_TrainerId",
                         column: x => x.TrainerId,
                         principalTable: "Trainers",
                         principalColumn: "TrainerId");
                 });
 
             migrationBuilder.CreateTable(
-                name: "MonthlyChildScores",
+                name: "Exams",
                 columns: table => new
                 {
                     ExamId = table.Column<int>(type: "int", nullable: false)
@@ -362,38 +310,38 @@ namespace Academy.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MonthlyChildScores", x => x.ExamId);
+                    table.PrimaryKey("PK_Exams", x => x.ExamId);
                     table.ForeignKey(
-                        name: "FK_MonthlyChildScores_Children_TraineeId",
-                        column: x => x.TraineeId,
-                        principalTable: "Children",
-                        principalColumn: "TraineeId");
-                    table.ForeignKey(
-                        name: "FK_MonthlyChildScores_Subscriptions_SubscriptionId",
+                        name: "FK_Exams_Subscriptions_SubscriptionId",
                         column: x => x.SubscriptionId,
                         principalTable: "Subscriptions",
                         principalColumn: "SubscriptionId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_MonthlyChildScores_Trainers_TrainerId",
+                        name: "FK_Exams_Trainees_TraineeId",
+                        column: x => x.TraineeId,
+                        principalTable: "Trainees",
+                        principalColumn: "TraineeId");
+                    table.ForeignKey(
+                        name: "FK_Exams_Trainers_TrainerId",
                         column: x => x.TrainerId,
                         principalTable: "Trainers",
                         principalColumn: "TrainerId");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Abscesses_SubscriptionId",
-                table: "Abscesses",
+                name: "IX_Abscenses_SubscriptionId",
+                table: "Abscenses",
                 column: "SubscriptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Abscesses_TraineeId",
-                table: "Abscesses",
+                name: "IX_Abscenses_TraineeId",
+                table: "Abscenses",
                 column: "TraineeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Abscesses_TrainerId",
-                table: "Abscesses",
+                name: "IX_Abscenses_TrainerId",
+                table: "Abscenses",
                 column: "TrainerId");
 
             migrationBuilder.CreateIndex(
@@ -412,24 +360,9 @@ namespace Academy.Migrations
                 column: "TrainerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ChampionChildren_ChampionId",
-                table: "ChampionChildren",
-                column: "ChampionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ChampionChildren_TraineeId",
-                table: "ChampionChildren",
-                column: "TraineeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Champions_DepartmentId",
                 table: "Champions",
                 column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Children_ParentId",
-                table: "Children",
-                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Departments_BranchId",
@@ -437,18 +370,18 @@ namespace Academy.Migrations
                 column: "BranchId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MonthlyChildScores_SubscriptionId",
-                table: "MonthlyChildScores",
+                name: "IX_Exams_SubscriptionId",
+                table: "Exams",
                 column: "SubscriptionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MonthlyChildScores_TraineeId",
-                table: "MonthlyChildScores",
+                name: "IX_Exams_TraineeId",
+                table: "Exams",
                 column: "TraineeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MonthlyChildScores_TrainerId",
-                table: "MonthlyChildScores",
+                name: "IX_Exams_TrainerId",
+                table: "Exams",
                 column: "TrainerId");
 
             migrationBuilder.CreateIndex(
@@ -457,29 +390,9 @@ namespace Academy.Migrations
                 column: "BranchId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubCategories_CategoryId",
-                table: "SubCategories",
-                column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SubCategoryTrainer_SubCategoryId",
-                table: "SubCategoryTrainer",
-                column: "SubCategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SubCategoryTrainer_TrainerId",
-                table: "SubCategoryTrainer",
-                column: "TrainerId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Subscriptions_CategoryId",
                 table: "Subscriptions",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Subscriptions_DepartmentId",
-                table: "Subscriptions",
-                column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Subscriptions_TraineeId",
@@ -490,6 +403,21 @@ namespace Academy.Migrations
                 name: "IX_Subscriptions_TrainerId",
                 table: "Subscriptions",
                 column: "TrainerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TraineeChampions_ChampionId",
+                table: "TraineeChampions",
+                column: "ChampionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TraineeChampions_TraineeId",
+                table: "TraineeChampions",
+                column: "TraineeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trainees_ParentId",
+                table: "Trainees",
+                column: "ParentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trainers_BranchId",
@@ -506,37 +434,31 @@ namespace Academy.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Abscesses");
+                name: "Abscenses");
 
             migrationBuilder.DropTable(
                 name: "CategoryTrainers");
 
             migrationBuilder.DropTable(
-                name: "ChampionChildren");
+                name: "Exams");
 
             migrationBuilder.DropTable(
-                name: "MonthlyChildScores");
-
-            migrationBuilder.DropTable(
-                name: "SubCategoryTrainer");
-
-            migrationBuilder.DropTable(
-                name: "Champions");
+                name: "TraineeChampions");
 
             migrationBuilder.DropTable(
                 name: "Subscriptions");
 
             migrationBuilder.DropTable(
-                name: "SubCategories");
-
-            migrationBuilder.DropTable(
-                name: "Children");
-
-            migrationBuilder.DropTable(
-                name: "Trainers");
+                name: "Champions");
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Trainees");
+
+            migrationBuilder.DropTable(
+                name: "Trainers");
 
             migrationBuilder.DropTable(
                 name: "Parents");

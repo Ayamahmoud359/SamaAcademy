@@ -10,7 +10,7 @@ namespace Academy.Models
       
         public string CategoryDescription{ get; set; }
    
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
         //Department Id
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }

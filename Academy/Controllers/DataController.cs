@@ -2,6 +2,7 @@
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Academy.Controllers
 {
@@ -18,7 +19,7 @@ namespace Academy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDepartments(DataSourceLoadOptions loadOptions)
         {
-            var Depts= _context.Departments.Select(i => new
+            var Depts= _context.Departments.Include(d=>d.Branch).Where(d=>d.IsActive&&d.Branch.IsActive).Select(i => new
             {
                 i.DepartmentName,
                 i.DepartmentId,
@@ -34,7 +35,7 @@ namespace Academy.Controllers
            
 
             var lookup = from i in _context.Branches
-                      
+                         where  i.IsActive
                          orderby i.BranchName
                          select new
                          {

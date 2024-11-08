@@ -31,8 +31,8 @@ namespace Academy.Areas.Admin.Pages.Departments
 
             try
             {
-                Branches = _context.Branches.ToList();
-                var department = await _context.Departments.FirstOrDefaultAsync(m => m.DepartmentId == id);
+                Branches = _context.Branches.Where(b => b.IsActive).ToList();
+                var department = await _context.Departments.Include(d=>d.Branch).FirstOrDefaultAsync(m => m.IsActive && m.Branch.IsActive&& m.DepartmentId == id );
                 if (department != null)
                 {
                     Dept = new DepartmentVM();
@@ -58,8 +58,8 @@ namespace Academy.Areas.Admin.Pages.Departments
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            Branches = _context.Branches.ToList();
-            if(!ModelState.IsValid)
+            Branches = _context.Branches.Where(b => b.IsActive).ToList();
+            if (!ModelState.IsValid)
             {
                 return Page();
             }

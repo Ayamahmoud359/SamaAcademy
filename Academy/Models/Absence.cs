@@ -8,8 +8,8 @@ namespace Academy.Models
         public bool IsAbsent { get; set; }
         public DateTime AbsentDate { get; set; }
         public string Type { get; set; }
-        public int? SubscriptionId { get; set; }
-        public Subscription? Subscription { get; set; }
+        public int SubscriptionId { get; set; }
+        public Subscription Subscription { get; set; }
 
     }
 }

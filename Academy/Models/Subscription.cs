@@ -15,13 +15,13 @@ namespace Academy.Models
         public int TraineeId { get; set; }
         public Trainee Trainee { get; set; }
         //Department Id
-        [ForeignKey("Department")]
-        public int ? DepartmentId { get; set; }
-        public Department ?Department { get; set; }
+        //[ForeignKey("Department")]
+        //public int  DepartmentId { get; set; }
+        //public Department Department { get; set; }
         //Trainer Id
         [ForeignKey("Trainer")]
-        public int? TrainerId { get; set; }
-        public Trainer? Trainer { get; set; }
+        public int TrainerId { get; set; }
+        public Trainer Trainer { get; set; }
 
         [ForeignKey("Category")]
         public int? CategoryId { get; set; }

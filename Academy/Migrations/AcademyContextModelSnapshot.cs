@@ -36,7 +36,7 @@ namespace Academy.Migrations
                     b.Property<bool>("IsAbsent")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("SubscriptionId")
+                    b.Property<int>("SubscriptionId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TraineeId")
@@ -57,7 +57,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Abscesses", (string)null);
+                    b.ToTable("Abscenses");
                 });
 
             modelBuilder.Entity("Academy.Models.Branch", b =>
@@ -84,7 +84,7 @@ namespace Academy.Migrations
 
                     b.HasKey("BranchId");
 
-                    b.ToTable("Branches", (string)null);
+                    b.ToTable("Branches");
                 });
 
             modelBuilder.Entity("Academy.Models.Category", b =>
@@ -106,14 +106,14 @@ namespace Academy.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
                     b.HasKey("CategoryId");
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("Academy.Models.Champion", b =>
@@ -149,7 +149,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Champions", (string)null);
+                    b.ToTable("Champions");
                 });
 
             modelBuilder.Entity("Academy.Models.Department", b =>
@@ -181,7 +181,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("Academy.Models.Exam", b =>
@@ -215,7 +215,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Exams", (string)null);
+                    b.ToTable("Exams");
                 });
 
             modelBuilder.Entity("Academy.Models.Parent", b =>
@@ -255,7 +255,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Parents", (string)null);
+                    b.ToTable("Parents");
                 });
 
             modelBuilder.Entity("Academy.Models.Subscription", b =>
@@ -269,9 +269,6 @@ namespace Academy.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
-
                     b.Property<string>("EndDate")
                         .HasColumnType("nvarchar(max)");
 
@@ -281,20 +278,18 @@ namespace Academy.Migrations
                     b.Property<int>("TraineeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TrainerId")
+                    b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
                     b.HasKey("SubscriptionId");
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("DepartmentId");
-
                     b.HasIndex("TraineeId");
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Subscriptions", (string)null);
+                    b.ToTable("Subscriptions");
                 });
 
             modelBuilder.Entity("Academy.Models.Trainee", b =>
@@ -326,7 +321,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Trainees", (string)null);
+                    b.ToTable("Trainees");
                 });
 
             modelBuilder.Entity("Academy.Models.TraineeChampion", b =>
@@ -349,7 +344,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("TraineeId");
 
-                    b.ToTable("TraineeChampions", (string)null);
+                    b.ToTable("TraineeChampions");
                 });
 
             modelBuilder.Entity("Academy.Models.Trainer", b =>
@@ -360,7 +355,7 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerId"));
 
-                    b.Property<int>("BranchId")
+                    b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<int>("DepartmentId")
@@ -380,6 +375,7 @@ namespace Academy.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrainerEmail")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrainerName")
@@ -396,7 +392,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Trainers", (string)null);
+                    b.ToTable("Trainers");
                 });
 
             modelBuilder.Entity("Academy.Models.TrainerCategories", b =>
@@ -419,14 +415,16 @@ namespace Academy.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("CategoryTrainers", (string)null);
+                    b.ToTable("CategoryTrainers");
                 });
 
             modelBuilder.Entity("Academy.Models.Absence", b =>
                 {
                     b.HasOne("Academy.Models.Subscription", "Subscription")
                         .WithMany("Absences")
-                        .HasForeignKey("SubscriptionId");
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Academy.Models.Trainee", null)
                         .WithMany("Absences")
@@ -508,10 +506,6 @@ namespace Academy.Migrations
                         .WithMany("Subscriptions")
                         .HasForeignKey("CategoryId");
 
-                    b.HasOne("Academy.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
-
                     b.HasOne("Academy.Models.Trainee", "Trainee")
                         .WithMany("Subscriptions")
                         .HasForeignKey("TraineeId")
@@ -520,11 +514,11 @@ namespace Academy.Migrations
 
                     b.HasOne("Academy.Models.Trainer", "Trainer")
                         .WithMany()
-                        .HasForeignKey("TrainerId");
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("Department");
 
                     b.Navigation("Trainee");
 
@@ -563,19 +557,15 @@ namespace Academy.Migrations
 
             modelBuilder.Entity("Academy.Models.Trainer", b =>
                 {
-                    b.HasOne("Academy.Models.Branch", "Branch")
+                    b.HasOne("Academy.Models.Branch", null)
                         .WithMany("Trainers")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BranchId");
 
                     b.HasOne("Academy.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Branch");
 
                     b.Navigation("Department");
                 });
