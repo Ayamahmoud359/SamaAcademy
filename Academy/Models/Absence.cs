@@ -10,6 +10,7 @@ namespace Academy.Models
         public string Type { get; set; }
         public int SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }
+        public bool IsDeleted { get; set; }
 
     }
 }

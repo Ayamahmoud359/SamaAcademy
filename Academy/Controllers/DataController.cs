@@ -45,5 +45,19 @@ namespace Academy.Controllers
             return Json(await DataSourceLoader.LoadAsync(lookup, loadOptions));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetBranchs(DataSourceLoadOptions loadOptions)
+        {
+            var Branchs = _context.Branches.Where(d => d.IsActive).Select(i => new
+            {
+                i.BranchName,
+                i.BranchAddress,
+                i.BranchId
+            });
+            return Json(await DataSourceLoader.LoadAsync(Branchs, loadOptions));
+
+
+        }
+
     }
 }

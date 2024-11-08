@@ -17,6 +17,7 @@ namespace Academy.Models
         public string TrainerAddress { get; set; }
         public string? Image { get; set; }
         public bool IsActive { get; set; }
+        public bool IsDeleted { get; set; }
         public DateTime SubscriptionDate { get; set; }
 
         //[ForeignKey("Branch")]

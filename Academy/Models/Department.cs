@@ -13,6 +13,7 @@ namespace Academy.Models
         public bool IsActive { get; set; }
         [ForeignKey("Branch")]
         public int BranchId { get; set; }
+        public bool IsDeleted { get; set; }
         public Branch? Branch { get; set; }
         ///list of Category
         public ICollection<Category> Categories { get; set; } = new List<Category>();

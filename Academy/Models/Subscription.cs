@@ -31,7 +31,7 @@ namespace Academy.Models
 
         // Logs exams for this subscription
         public ICollection<Exam> Exams { get; set; }= new List<Exam>();
-
+        public bool IsDeleted { get; set; }
 
 
     }

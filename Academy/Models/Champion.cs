@@ -12,7 +12,7 @@ namespace Academy.Models
      
         [DataType(DataType.Date)]
         public string ChampionDate { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
         public int? ChampionScore { get; set; }
         ///Department Id
         [ForeignKey("Department")]
@@ -20,6 +20,6 @@ namespace Academy.Models
       public Department Department { get; set; }
         ///list of Child
         public ICollection<TraineeChampion> TraineeChampions { get; set; } = new List<TraineeChampion>();
-
+        public bool IsDeleted { get; set; }
     }
 }

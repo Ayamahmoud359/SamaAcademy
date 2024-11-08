@@ -20,5 +20,6 @@ namespace Academy.Models
         public ICollection<TrainerCategories> CategoryTrainers { get; set; } = new List<TrainerCategories>();
         // A category can have many trainees (through subscriptions)
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
+        public bool IsDeleted { get; set; }
     }
 }

@@ -11,10 +11,10 @@ namespace Academy.Models
         [DataType(DataType.Date)]
         public string BirthDate { get; set; }
         public string? Image { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
         ///Parent Id
         [ForeignKey("Parent")]
-      
+    
         public int ParentId { get; set; }
         public Parent Parent { get; set; }
          /// List of Champion
@@ -27,5 +27,6 @@ namespace Academy.Models
 
         // Exams taken by this trainee
         public ICollection<Exam> Exams { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

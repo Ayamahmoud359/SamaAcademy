@@ -59,6 +59,7 @@ namespace Academy.Areas.Admin.Pages.Departments
                 if (dept != null)
                 {
                     dept.IsActive = false;
+                    dept.IsDeleted=true;
                     _context.Attach(dept).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     
