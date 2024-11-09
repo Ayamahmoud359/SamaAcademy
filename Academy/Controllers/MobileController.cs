@@ -23,7 +23,7 @@ namespace Academy.Controllers
             _context = context;
         }
         #region Login
-        [HttpGet]
+        [HttpPost]
         [Route("Login")]
         public async Task<ActionResult<ApplicationUser>> Login([FromQuery] string Email, [FromQuery] string Password)
         {
