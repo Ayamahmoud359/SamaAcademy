@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Academy.Migrations
 {
     [DbContext(typeof(AcademyContext))]
-    [Migration("20241106015022_initial")]
-    partial class initial
+    [Migration("20241108212151_update")]
+    partial class update
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,10 @@ namespace Academy.Migrations
                     b.Property<bool>("IsAbsent")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("SubscriptionId")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("SubscriptionId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TraineeId")
@@ -60,7 +63,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Abscesses");
+                    b.ToTable("Abscenses");
                 });
 
             modelBuilder.Entity("Academy.Models.Branch", b =>
@@ -83,6 +86,9 @@ namespace Academy.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.HasKey("BranchId");
@@ -109,7 +115,10 @@ namespace Academy.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.HasKey("CategoryId");
@@ -145,7 +154,10 @@ namespace Academy.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.HasKey("ChampionId");
@@ -180,6 +192,9 @@ namespace Academy.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.HasKey("DepartmentId");
 
                     b.HasIndex("BranchId");
@@ -194,6 +209,9 @@ namespace Academy.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamId"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("Score")
                         .HasColumnType("int");
@@ -218,7 +236,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("MonthlyChildScores");
+                    b.ToTable("Exams");
                 });
 
             modelBuilder.Entity("Academy.Models.Parent", b =>
@@ -235,7 +253,10 @@ namespace Academy.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("ParentAddress")
@@ -261,66 +282,6 @@ namespace Academy.Migrations
                     b.ToTable("Parents");
                 });
 
-            modelBuilder.Entity("Academy.Models.SubCategory", b =>
-                {
-                    b.Property<int>("SubCategoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubCategoryId"));
-
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SubCategoryDescriptionAR")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubCategoryDescriptionEN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubCategoryNameAR")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SubCategoryNameEN")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SubCategoryId");
-
-                    b.HasIndex("CategoryId");
-
-                    b.ToTable("SubCategories");
-                });
-
-            modelBuilder.Entity("Academy.Models.SubCategoryTrainer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("SubCategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrainerId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubCategoryId");
-
-                    b.HasIndex("TrainerId");
-
-                    b.ToTable("SubCategoryTrainer");
-                });
-
             modelBuilder.Entity("Academy.Models.Subscription", b =>
                 {
                     b.Property<int>("SubscriptionId")
@@ -332,23 +293,24 @@ namespace Academy.Migrations
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DepartmentId")
-                        .HasColumnType("int");
+                    b.Property<string>("EndDate")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SubscriptionDate")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StartDate")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TraineeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TrainerId")
+                    b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
                     b.HasKey("SubscriptionId");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("TraineeId");
 
@@ -372,7 +334,10 @@ namespace Academy.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<int>("ParentId")
@@ -386,7 +351,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Children");
+                    b.ToTable("Trainees");
                 });
 
             modelBuilder.Entity("Academy.Models.TraineeChampion", b =>
@@ -400,6 +365,9 @@ namespace Academy.Migrations
                     b.Property<int>("ChampionId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("TraineeId")
                         .HasColumnType("int");
 
@@ -409,7 +377,7 @@ namespace Academy.Migrations
 
                     b.HasIndex("TraineeId");
 
-                    b.ToTable("ChampionChildren");
+                    b.ToTable("TraineeChampions");
                 });
 
             modelBuilder.Entity("Academy.Models.Trainer", b =>
@@ -420,7 +388,7 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerId"));
 
-                    b.Property<int>("BranchId")
+                    b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<int>("DepartmentId")
@@ -432,6 +400,9 @@ namespace Academy.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("SubscriptionDate")
                         .HasColumnType("datetime2");
 
@@ -440,6 +411,7 @@ namespace Academy.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrainerEmail")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TrainerName")
@@ -470,6 +442,9 @@ namespace Academy.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
@@ -486,7 +461,9 @@ namespace Academy.Migrations
                 {
                     b.HasOne("Academy.Models.Subscription", "Subscription")
                         .WithMany("Absences")
-                        .HasForeignKey("SubscriptionId");
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Academy.Models.Trainee", null)
                         .WithMany("Absences")
@@ -562,41 +539,11 @@ namespace Academy.Migrations
                     b.Navigation("Branch");
                 });
 
-            modelBuilder.Entity("Academy.Models.SubCategory", b =>
-                {
-                    b.HasOne("Academy.Models.Category", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Academy.Models.SubCategoryTrainer", b =>
-                {
-                    b.HasOne("Academy.Models.SubCategory", "SubCategory")
-                        .WithMany("SubCategoryTrainers")
-                        .HasForeignKey("SubCategoryId");
-
-                    b.HasOne("Academy.Models.Trainer", "Trainer")
-                        .WithMany()
-                        .HasForeignKey("TrainerId");
-
-                    b.Navigation("SubCategory");
-
-                    b.Navigation("Trainer");
-                });
-
             modelBuilder.Entity("Academy.Models.Subscription", b =>
                 {
                     b.HasOne("Academy.Models.Category", "Category")
                         .WithMany("Subscriptions")
                         .HasForeignKey("CategoryId");
-
-                    b.HasOne("Academy.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
 
                     b.HasOne("Academy.Models.Trainee", "Trainee")
                         .WithMany("Subscriptions")
@@ -606,11 +553,11 @@ namespace Academy.Migrations
 
                     b.HasOne("Academy.Models.Trainer", "Trainer")
                         .WithMany()
-                        .HasForeignKey("TrainerId");
+                        .HasForeignKey("TrainerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Category");
-
-                    b.Navigation("Department");
 
                     b.Navigation("Trainee");
 
@@ -649,19 +596,15 @@ namespace Academy.Migrations
 
             modelBuilder.Entity("Academy.Models.Trainer", b =>
                 {
-                    b.HasOne("Academy.Models.Branch", "Branch")
+                    b.HasOne("Academy.Models.Branch", null)
                         .WithMany("Trainers")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BranchId");
 
                     b.HasOne("Academy.Models.Department", "Department")
                         .WithMany()
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Branch");
 
                     b.Navigation("Department");
                 });
@@ -716,11 +659,6 @@ namespace Academy.Migrations
             modelBuilder.Entity("Academy.Models.Parent", b =>
                 {
                     b.Navigation("Children");
-                });
-
-            modelBuilder.Entity("Academy.Models.SubCategory", b =>
-                {
-                    b.Navigation("SubCategoryTrainers");
                 });
 
             modelBuilder.Entity("Academy.Models.Subscription", b =>

@@ -11,5 +11,6 @@ namespace Academy.Models
         [ForeignKey("Trainer")]
         public int TrainerId { get; set; }
         public Trainer Trainer { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

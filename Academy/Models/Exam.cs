@@ -6,7 +6,7 @@ namespace Academy.Models
     public class Exam
     {
         public int ExamId { get; set; }
-  
+        public bool IsDeleted { get; set; }
         public int Score { get; set; }
         [DataType(DataType.Date)]
         public string? ScoreDate  { get; set; }

@@ -32,14 +32,14 @@ namespace Academy.Areas.Admin.Pages.Parents
         }
         public void OnGet()
         {
-            Branches = _context.Branches.ToList();
+            Branches = _context.Branches.Where(b=>b.IsActive).ToList();
             
         }
 
 
         public async Task<IActionResult> OnPostAsync()
         {
-            Branches = _context.Branches.ToList();
+            Branches = _context.Branches.Where(b=>b.IsActive).ToList();
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -66,7 +66,6 @@ namespace Academy.Areas.Admin.Pages.Parents
                 {
                     UserName = Email,
                     Email = Email,
-
                     PhoneNumber = ParentVM.ParentPhone,
                     EntityId = parent.ParentId,
                     EntityName = "Parent"

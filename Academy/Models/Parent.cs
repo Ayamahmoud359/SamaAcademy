@@ -10,13 +10,14 @@ namespace Academy.Models
         public string ParentEmail{ get; set; }
         public string ParentPhone { get; set; }
         public string? Image { get; set; }
-        public bool? IsActive { get; set; }
+        public bool IsActive { get; set; }
         //list of children
         public ICollection<Trainee> Children { get; set; } = new List<Trainee>();
         ///Branch Id
         [ForeignKey("Branch")]
         public int BranchId { get; set; }
         public Branch Branch { get; set; }
+        public bool IsDeleted { get; set; }
 
     }
 }

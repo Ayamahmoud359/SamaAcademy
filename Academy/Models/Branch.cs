@@ -16,7 +16,7 @@
         ////list of parents
         
         public ICollection<Parent> Parents { get; set; } = new List<Parent>();
-
+        public bool IsDeleted { get; set; }
 
 
     }
