@@ -31,14 +31,14 @@ namespace Academy.Areas.Admin.Pages.Departments
 
             try
             {
-                Branches = _context.Branches.Where(b => b.IsActive).ToList();
-                var department = await _context.Departments.Include(d=>d.Branch).FirstOrDefaultAsync(m => m.IsActive && m.Branch.IsActive&& m.DepartmentId == id );
+                Branches = _context.Branches.Where(b => b.IsActive && !b.IsDeleted).ToList();
+                var department = await _context.Departments.Include(d=>d.Branch).FirstOrDefaultAsync(m => /*m.Branch.IsActive&&*/ m.DepartmentId == id );
                 if (department != null)
                 {
                     Dept = new DepartmentVM();
                     Dept.DepartmentName = department.DepartmentName;
                     Dept.DepartmentDescription = department.DepartmentDescription;
-                    Dept.BranchId = department.BranchId;
+                   Dept.BranchId = department.BranchId;
                     Dept.DepartmentId = department.DepartmentId;
                     Dept.IsActive = department.IsActive;
                     return Page();
@@ -58,7 +58,7 @@ namespace Academy.Areas.Admin.Pages.Departments
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            Branches = _context.Branches.Where(b => b.IsActive).ToList();
+            Branches = _context.Branches.Where(b => b.IsActive && !b.IsDeleted).ToList();
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -71,7 +71,7 @@ namespace Academy.Areas.Admin.Pages.Departments
                 {
                     department.DepartmentName = Dept.DepartmentName;
                     department.DepartmentDescription = Dept.DepartmentDescription;
-                    department.BranchId = Dept.BranchId;
+                   // department.BranchId = Dept.BranchId;
                     department.IsActive = Dept.IsActive;
                     _context.Attach(department).State = EntityState.Modified;
                     await _context.SaveChangesAsync();

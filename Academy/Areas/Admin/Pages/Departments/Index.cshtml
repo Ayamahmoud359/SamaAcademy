@@ -31,6 +31,11 @@
                 .ValueExpr("Value")
                 .DisplayExpr("Text")
                 );
+                        columns.Add().Caption("Status").CellTemplate(@<text>
+                    <span>
+                        <%= data.IsActive ? "Active" : "Not Active" %>
+                    </span>
+                </text>);
                         columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
                     <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
                         <a href="/Admin/Departments/View?Id=<%- data.DepartmentId %>" class="text-primary d-inline-block">
@@ -112,7 +117,7 @@
 
                     <h4 class="fs-semibold">You are about to delete This Department </h4>
                     <p class="text-muted fs-14 mb-4 pt-1">
-                       Deleting This Department will remove all of its information from its database.
+                       Deleting This Department will remove all of its information .
                     </p>
                     <div class="hstack gap-2 justify-content-center remove">
                         <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close"

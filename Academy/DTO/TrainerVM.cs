@@ -7,7 +7,7 @@ namespace Academy.DTO
 {
     public class TrainerVM
     {
-        
+        public int TrainerId { get; set; }
         [EmailAddress]
         [Display(Name = "Email")]
         [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This email is already taken.")]

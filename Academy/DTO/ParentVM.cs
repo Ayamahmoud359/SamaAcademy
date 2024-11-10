@@ -5,6 +5,7 @@ namespace Academy.DTO
 {
     public class ParentVM
     {
+        public int ParentId { get; set; }
 
         [EmailAddress]
         [Display(Name = "Email")]
@@ -28,8 +29,6 @@ namespace Academy.DTO
         [Required(ErrorMessage = "Parent Address is required")]
         public string ParentAddress { get; set; }
 
-        [Required(ErrorMessage = "Branch is required")]
-        public int BranchId { get; set; }
-   
+       
     }
 }

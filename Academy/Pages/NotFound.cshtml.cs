@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AssetProject.Pages
+namespace Academy.Pages
 {
     public class NotFoundModel : PageModel
     {

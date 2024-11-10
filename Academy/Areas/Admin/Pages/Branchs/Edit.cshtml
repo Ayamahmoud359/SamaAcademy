@@ -1,0 +1,61 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Branchs.EditModel
+@{
+}
+@{
+    ViewBag.Title = "Edit Branch";
+    ViewBag.pTitle = "Edit Branch";
+    ViewBag.pageTitle = "Edit";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Edit Branch</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form method="post">
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Branch.BranchId" class="form-label"></label>
+                            <input asp-for="@Model.Branch.BranchId" class="form-control" />
+                            <span asp-validation-for="@Model.Branch.BranchId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.Branch.BranchName" class="form-label">Branch Name</label>
+                            <input asp-for="@Model.Branch.BranchName" class="form-control" />
+                            <span asp-validation-for="@Model.Branch.BranchName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Branch.BranchAddress" class="form-label">Branch Address</label>
+                            <input asp-for="@Model.Branch.BranchAddress" class="form-control" />
+                            <span asp-validation-for="@Model.Branch.BranchAddress" class="text-danger"></span>
+                        </div>
+
+                      
+                        <div class="mb-3">
+                            @Html.CheckBoxFor(m => m.Branch.IsActive, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="Active">
+                                Is Active?
+                            </label>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Save </button>
+                            <a href="/Admin/Branchs" class="text-primary d-inline-block">
+                                <button type="button" class="btn btn-primary">Back To List </button>
+                            </a>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+

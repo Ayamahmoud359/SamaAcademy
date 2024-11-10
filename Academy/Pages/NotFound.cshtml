@@ -1,14 +1,14 @@
 ﻿@page
-@model AssetProject.Pages.NotFoundModel
+@model NotFoundModel
 @{
-    Layout = null;
+    ViewData["Title"] = "Not Found";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Not Found</title>
-</head>
-<body>
-    <h1 style="text-align:center;color:red">Not Found</h1>
-</body>
-</html>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="text-center">
+        <h1 class="display-1 text-danger">404</h1>
+        <h2 class="h3">Oops! Page not found.</h2>
+        <p class="lead text-muted">The page you're looking for doesn't exist or has been moved.</p>
+        <a href="/Admin/Index" class="btn btn-success btn-lg">Go to Home</a>
+    </div>
+</div>

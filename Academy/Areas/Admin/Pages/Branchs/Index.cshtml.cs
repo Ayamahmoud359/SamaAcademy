@@ -4,21 +4,19 @@ using Academy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using NToastNotify;
-using static Azure.Core.HttpHeader;
 
-namespace Academy.Areas.Admin.Pages.Departments
+namespace Academy.Areas.Admin.Pages.Branchs
 {
     public class IndexModel : PageModel
     {
-      
-        public CategoryVM cat { set; get; }
+       
+        public DepartmentVM Dept{ set; get; }
         private readonly AcademyContext _context;
         [BindProperty]
-        public int deptid { set; get; }
+        public int Branchid { set; get; }
         private readonly IToastNotification _toastNotification;
-        public IndexModel(AcademyContext context , IToastNotification toastNotification)
+        public IndexModel(AcademyContext context, IToastNotification toastNotification)
         {
             _context = context;
             _toastNotification = toastNotification;
@@ -28,25 +26,27 @@ namespace Academy.Areas.Admin.Pages.Departments
 
         }
 
-        public IActionResult OnPostAddCategory([FromBody] Category category)
+        public IActionResult OnPostAddDepartment([FromBody] Department dept)
         {
             try
             {
                 //var category = JsonConvert.DeserializeObject<Category>(data);
-                if (category != null)
+                if (dept != null)
                 {
-                    Category newCategory = new Category()
+                    Department department = new Department()
                     {
-                        CategoryName=category.CategoryName,
-                        CategoryDescription=category.CategoryDescription,
-                        DepartmentId=category.DepartmentId,
-                        IsActive=true
+
+                        IsActive = true,
+                        DepartmentName = dept.DepartmentName,
+                        DepartmentDescription = dept.DepartmentDescription,
+                        BranchId = dept.BranchId
 
                     };
 
-                    _context.Categories.Add(newCategory);
-                    _context.SaveChanges();
-
+                    _context.Departments.Add(department);
+                     _context.SaveChanges();
+                     
+                  
                     return new JsonResult("Added");
                 }
 
@@ -60,19 +60,20 @@ namespace Academy.Areas.Admin.Pages.Departments
 
         }
 
-        public async Task<IActionResult> OnPostDeleteDepartment()
+        public async Task<IActionResult> OnPostDeleteBranch()
         {
             try
             {
-                var dept = _context.Departments.Find(deptid);
-                if (dept != null)
+                var branch = _context.Branches.Find(Branchid);
+                if (branch != null)
                 {
-                    dept.IsActive = false;
-                    dept.IsDeleted=true;
-                    _context.Attach(dept).State = EntityState.Modified;
+                    branch.IsActive = false;
+                    branch.IsDeleted = true;
+                    _context.Attach(branch).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
-                    _toastNotification.AddSuccessToastMessage("Deleted Successfull");
+                    _toastNotification.AddSuccessToastMessage("Deleted Successfully");
                 }
+
                 else
                 {
                     _toastNotification.AddErrorToastMessage("Something went wrong");
@@ -81,7 +82,7 @@ namespace Academy.Areas.Admin.Pages.Departments
             catch (Exception)
 
             {
-                _toastNotification.AddErrorToastMessage("Something went wrong");
+               _toastNotification.AddErrorToastMessage("Something went wrong");
             }
 
             return RedirectToPage("Index");

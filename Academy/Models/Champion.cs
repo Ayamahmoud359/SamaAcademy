@@ -17,7 +17,7 @@ namespace Academy.Models
         ///Department Id
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
-      public Department Department { get; set; }
+        public Department Department { get; set; }
         ///list of Child
         public ICollection<TraineeChampion> TraineeChampions { get; set; } = new List<TraineeChampion>();
         public bool IsDeleted { get; set; }

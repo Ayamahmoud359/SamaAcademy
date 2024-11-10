@@ -5,6 +5,7 @@ namespace Academy.Models
 {
     public class Subscription
     {
+
         public int SubscriptionId { get; set; }
         [DataType(DataType.Date)]
         public string? StartDate { get; set; }
@@ -14,14 +15,10 @@ namespace Academy.Models
         [ForeignKey("Trainee")]
         public int TraineeId { get; set; }
         public Trainee Trainee { get; set; }
-        //Department Id
-        //[ForeignKey("Department")]
-        //public int  DepartmentId { get; set; }
-        //public Department Department { get; set; }
-        //Trainer Id
-        [ForeignKey("Trainer")]
-        public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }
+      
+        [ForeignKey("Department")]
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; }
 
         [ForeignKey("Category")]
         public int? CategoryId { get; set; }

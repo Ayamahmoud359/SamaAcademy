@@ -92,7 +92,8 @@
 
 
     } *@
-    @Html.Partial("~/Pages/Shared/Partials/_title_meta.cshtml")   @*  @{
+    @Html.Partial("~/Pages/Shared/Partials/_title_meta.cshtml")   
+    @*  @{
         var locale = Context.Request.HttpContext.Features.Get<IRequestCultureFeature>();
         var BrowserCulture = locale.RequestCulture.UICulture.ToString();
         //English

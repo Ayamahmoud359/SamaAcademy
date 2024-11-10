@@ -48,7 +48,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
       
         public void OnGet()
         {
-            Branches = _context.Branches.Where(b => b.IsActive).ToList();
+            Branches = _context.Branches.Where(b => b.IsActive && !b.IsDeleted).ToList();
             Departments = new List<Department>();
             Categories = new List<Category>();
         }
@@ -56,9 +56,9 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
      
         public async Task<IActionResult> OnPostAsync()
         {
-            Branches = _context.Branches.Where(b => b.IsActive).ToList();
-            Departments =_context.Departments.Where(d=>d.IsActive&&d.BranchId== Trainer.BranchId).ToList();
-            Categories = _context.Categories.Where(d =>d.IsActive&& d.DepartmentId == Trainer.DepartmentId).ToList();
+            Branches = _context.Branches.Where(b => b.IsActive && !b.IsDeleted ).ToList();
+            Departments =_context.Departments.Where(d=>d.IsActive&& !d.IsDeleted && d.BranchId== Trainer.BranchId).ToList();
+            Categories = _context.Categories.Where(d =>d.IsActive&&! d.IsDeleted&& d.DepartmentId == Trainer.DepartmentId).ToList();
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -143,17 +143,19 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
         {
             try
             {
-                // Retrieve categories based on the department ID
-                var categoriesInDepartment = _context.Categories
-                    .Where(e =>e.IsActive&& e.DepartmentId == departmentId).Select(c=>new {c.CategoryId,c.CategoryName})
+
+                if (departmentId != 0)
+                {
+
+                    // Retrieve categories based on the department ID
+                    var categoriesInDepartment = _context.Categories
+                    .Where(e => e.IsActive && !e.IsDeleted && e.DepartmentId == departmentId).Select(c => new { c.CategoryId, c.CategoryName })
                     .ToList();
 
-                // Assign the department ID and categories to the view model
-            
 
-                // Return the partial view with the populated view model
-                return new JsonResult(categoriesInDepartment);
-               
+                    return new JsonResult(categoriesInDepartment);
+                }
+                return new JsonResult("SomeThing Went Wrong");
             }
             catch (Exception ex)
             {
@@ -169,7 +171,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
                 {
 
 
-                   var  departments = _context.Departments.Where(b =>b.IsActive&& b.BranchId == id).Select(b=> new { b.DepartmentName, b.DepartmentId }).ToList();
+                   var  departments = _context.Departments.Where(b =>b.IsActive && !b.IsDeleted && b.BranchId == id).Select(b=> new { b.DepartmentName, b.DepartmentId }).ToList();
 
 
                     return new JsonResult(departments);

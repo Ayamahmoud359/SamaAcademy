@@ -1,0 +1,94 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Branchs.DepartmentsModel
+@{
+}
+<div class="row">
+    <div class="col-xxl-12 col-xl-12">
+        <div class="card card-height-100">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Departmentss</h4>
+                
+            </div>
+            <!-- end card header -->
+            <!-- card body -->
+            <div class="card-body">
+                @(Html.DevExtreme().DataGrid<Academy.Models.Department>()
+                    .DataSource(ds => ds.RemoteController()
+                    .LoadUrl(Url.Page("Departments", "GridData")).Key("DepartmentId"))
+                    .RemoteOperations(true)
+                    .ColumnHidingEnabled(true)
+                    .Width("100%")
+                    .Columns(columns =>
+                    {
+                        // Example column configuration
+                        columns.AddFor(m => m.DepartmentName).Caption("Department Name");
+                        columns.Add().Caption("Status").CellTemplate(@<text>
+                    <span>
+                        <%= data.IsActive ? "Active" : "Not Active" %>
+                    </span>
+                </text>);
+                       
+                        columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                    <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
+                        <a href="/Admin/Branchs/View?Id=<%- data.BranchId %>" class="text-primary d-inline-block">
+
+                            @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
+                        </a>
+
+                        @Html.DevExtreme().Button().Text("Add Department").OnClick("function (e) { AddDepartment(data.BranchId) }").Type(ButtonType.Success)
+
+                        <a href="/Admin/Branchs/Edit?Id=<%- data.BranchId %>" class="text-primary d-inline-block">
+
+                            @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
+                        </a>
+
+                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.BranchId) }").Type(ButtonType.Danger)
+
+                    </div>
+                </text>);
+                    })
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    //.Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    //.OnExporting("exporting")
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    //.Selection(s => s.Mode(SelectionMode.Multiple))
+                    .Paging(paging => paging.PageSize(5).Enabled(true))
+                    .WordWrapEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    //.ColumnChooser(c => c.Enabled(true))
+                    .ColumnFixing(c => c.Enabled(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .Pager(pager =>
+                    {
+                        pager.Visible(true);
+                        pager.DisplayMode(GridPagerDisplayMode.Full);
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new JS("[5,10,20,50,100,'all']"));
+                        pager.ShowInfo(true);
+                        pager.ShowNavigationButtons(true);
+                    })
+                    .SearchPanel(searchPanel => searchPanel
+                    .Visible(true)
+                    .Placeholder("SearchTxt"))
+                    .RemoteOperations(false)
+                    @*  .Summary(s => s
+                .TotalItems(totalItems =>
+                {
+                totalItems.AddFor(m => m.BranchId).SummaryType(SummaryType.Count);
+                })
+                .GroupItems(groupItems =>
+                {
+                groupItems.Add().SummaryType(SummaryType.Count);
+                })
+                ) *@
+                    )
+            </div>
+            <!-- End Card Body  -->
+           
+          
+        </div>
+    </div>

@@ -1,0 +1,313 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Branchs.IndexModel
+@{
+}
+<div class="row">
+    <div class="col-xxl-12 col-xl-12">
+        <div class="card card-height-100">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Branchs</h4>
+                <div class="flex-shrink-0">
+                    <a href="/admin/Branchs/Add" class="btn btn-soft-primary">
+                        Add Branch
+                    </a>
+                </div>
+            </div>
+            <!-- end card header -->
+            <!-- card body -->
+            <div class="card-body">
+                @(Html.DevExtreme().DataGrid<Academy.Models.Branch>()
+                    .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetBranchs").Key("BranchId"))
+                    .RemoteOperations(true)
+                    .ColumnHidingEnabled(true)
+                    .Width("100%")
+                    .Columns(columns =>
+                    {
+                        // Example column configuration
+                        columns.AddFor(m => m.BranchName).Caption("Department Name");
+
+                        columns.Add().Caption("Status").CellTemplate(@<text>
+                    <span>
+                        <%= data.IsActive ? "Active" : "Not Active" %>
+                    </span>
+                </text>);
+                        columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                    <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
+                        <a href="/Admin/Branchs/View?Id=<%- data.BranchId %>" class="text-primary d-inline-block">
+
+                            @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
+                        </a>
+
+                        @Html.DevExtreme().Button().Text("Add Department").OnClick("function (e) { AddDepartment(data.BranchId) }").Type(ButtonType.Success)
+
+                        <a href="/Admin/Branchs/Edit?Id=<%- data.BranchId %>" class="text-primary d-inline-block">
+
+                            @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
+                        </a>
+
+                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.BranchId) }").Type(ButtonType.Danger)
+
+                    </div>
+                </text>);
+                    })
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    //.Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    //.OnExporting("exporting")
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    //.Selection(s => s.Mode(SelectionMode.Multiple))
+                    .Paging(paging => paging.PageSize(5).Enabled(true))
+                    .WordWrapEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    //.ColumnChooser(c => c.Enabled(true))
+                    .ColumnFixing(c => c.Enabled(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .Pager(pager =>
+                    {
+                        pager.Visible(true);
+                        pager.DisplayMode(GridPagerDisplayMode.Full);
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new JS("[5,10,20,50,100,'all']"));
+                        pager.ShowInfo(true);
+                        pager.ShowNavigationButtons(true);
+                    })
+                    .SearchPanel(searchPanel => searchPanel
+                    .Visible(true)
+                    .Placeholder("SearchTxt"))
+                    .RemoteOperations(false)
+                    @*  .Summary(s => s
+                .TotalItems(totalItems =>
+                {
+                totalItems.AddFor(m => m.BranchId).SummaryType(SummaryType.Count);
+                })
+                .GroupItems(groupItems =>
+                {
+                groupItems.Add().SummaryType(SummaryType.Count);
+                })
+                ) *@
+                    )
+            </div>
+               <!-- End Card Body  -->
+          
+
+            <!-- Start Delete Popup  -->
+            <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1"
+                 aria-labelledby="deleteRecordLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close" id="btn-close"></button>
+                        </div>
+                        <div class="modal-body p-5 text-center">
+                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json"
+                                       trigger="loop" colors="primary:#405189,secondary:#f06548"
+                                       style="width:90px;height:90px"></lord-icon>
+                            <div class="mt-4 text-center">
+
+
+                                <h4 class="fs-semibold">You are about to delete This Branch </h4>
+                                <p class="text-muted fs-14 mb-4 pt-1">
+                                    Deleting This Branch will remove all of its information .
+                                </p>
+                                <div class="hstack gap-2 justify-content-center remove">
+                                    <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close"
+                                            data-bs-dismiss="modal">
+                                        <i class="ri-close-line me-1 align-middle"></i>
+                                        Close
+                                    </button>
+                                    <form asp-area="Admin" asp-page="/Branchs/Index" asp-page-handler="DeleteBranch">
+                                        <input asp-for="@Model.Branchid" id="DeleteBranch" hidden>
+                                        <button class="btn btn-danger" type="submit" id="delete-record">
+                                            Yes,
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Delete Popup  -->
+
+
+
+            <!-- Start Add department Popup  -->
+                <div class="modal fade" id="showModal" tabindex="-1"
+                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content p-3">
+                            <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close" id="btn-close" onclick="cancelButtonClick()"></button>
+                        </div>
+                        <form method="post" id="frm" onsubmit="return handleSubmit(event)">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="text-danger" id="Err"></div>
+                            <div class="mb-3">
+
+                                <label asp-for="@Model.Dept.DepartmentName" class="form-label">Department Name</label>
+                                <input asp-for="@Model.Dept.DepartmentName" class="form-control" required />
+                                <span asp-validation-for="@Model.Dept.DepartmentName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="@Model.Dept.DepartmentDescription" class="form-label">Department Description</label>
+                                <input asp-for="@Model.Dept.DepartmentDescription" class="form-control" required />
+                                <span asp-validation-for="@Model.Dept.DepartmentDescription" class="text-danger"></span>
+
+                            </div>
+
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success" onclick="saveButtonClick()">Save</button>
+                                @*  @Html.DevExtreme().Button().Text("Save").Type(ButtonType.Success).OnClick("function (e) { saveButtonClick() }") *@
+                                @Html.DevExtreme().Button().Text("Cancel").OnClick("function (e) { cancelButtonClick() }")
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                    </div>
+                </div>
+                 <!-- End Add department Popup  -->
+        </div>
+    </div>
+
+    <script>
+                function Delete(Id) {
+
+                  document.getElementById("DeleteBranch").value = Id
+                  $('#deleteRecordModal').modal('show');
+
+          };
+
+         var currentKey;
+
+           
+          
+             function handleSubmit(event) {
+                 console.log("submit")
+                 // Trigger the client-side validation
+                 var isValid = true;
+                 // Validate form using ASP.NET Core's built-in validation
+                 if (!event.target.checkValidity()) {
+                     isValid = false;  // If the form fails validation, prevent submission
+                 }
+
+                 if (!isValid) {
+                     event.preventDefault(); // Prevent form submission if validation fails
+                 }
+
+                 // Return false to prevent form from submitting even if valid
+                 return false;
+             }
+         function AddDepartment(data) {
+                 console.log(data)
+                 currentKey=data
+          $('#showModal').modal('show');
+                
+         }
+         function saveButtonClick() {
+        
+                 console.log("save")
+             Name = document.getElementById("Dept_DepartmentName").value;
+             Description= document.getElementById("Dept_DepartmentDescription").value ;
+                 if (Name && Description!=""){
+                     var dept = {
+                         DepartmentName: Name,
+                         DepartmentDescription: Description,
+                        BranchId: currentKey
+
+                     };
+                     var json = JSON.stringify(dept);
+                     console.log(json)
+                     $.ajax({
+                         type: "POST",
+                         beforeSend: function (xhr) {
+                             xhr.setRequestHeader("XSRF-TOKEN",
+                                 $('input:hidden[name="__RequestVerificationToken"]').val());
+                         }
+                         ,
+                         url: "/admin/Branchs/Index?handler=AddDepartment",
+                         //async: false,
+                         data: json,
+                         dataType: "json",
+                         contentType: "application/json; charset=utf-8",
+
+                         success: function (response) {
+                             console.log(response)
+                             if (response == "Added") {
+                                console.log("close")
+                  document.getElementById("Err").innerHTML = "";
+                  var namespan=document.getElementById("Dept_DepartmentName-error");
+                  var descriptionspan=document.getElementById("Dept_DepartmentDescription-error")
+                   console.log(namespan)
+                    console.log(descriptionspan)
+             if(descriptionspan){
+               document.getElementById("Dept_DepartmentDescription-error").innerHTML = "";
+                console.log("Description span removed")
+                             } 
+               if(namespan){
+                       document.getElementById("Dept_DepartmentName-error").innerHTML = "";
+                        console.log("name span removed")
+                     }
+                  
+                 document.getElementById("frm").reset();
+                  $('#showModal').modal('hide');
+                   currentKey = -1;
+                             }
+                             else if (response=="SomeThing Went Wrong") {
+                                 console.log(currentKey)
+                                 document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time"
+                             }
+                             else{
+                                 console.log(currentKey)
+                                 document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
+                             }
+
+                         },
+                         failure: function (response) {
+                             document.getElementById("Err").innerHTML = response;
+                         }
+                     });
+
+                 }
+
+         }
+         function cancelButtonClick() {
+             console.log("close")
+                  document.getElementById("Err").innerHTML = "";
+                  var namespan=document.getElementById("Dept_DepartmentName-error");
+                  var descriptionspan=document.getElementById("Dept_DepartmentDescription-error")
+                   console.log(namespan)
+                    console.log(descriptionspan)
+             if(descriptionspan){
+               document.getElementById("Dept_DepartmentDescription-error").innerHTML = "";
+                console.log("Description span removed")
+                             } 
+               if(namespan){
+                       document.getElementById("Dept_DepartmentName-error").innerHTML = "";
+                        console.log("name span removed")
+                     }
+                  
+                  
+                 document.getElementById("frm").reset();
+
+             $('#showModal').modal('hide');
+              currentKey = -1;
+
+         }
+
+      
+
+
+            
+    </script>
+

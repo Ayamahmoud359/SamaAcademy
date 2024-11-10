@@ -1,0 +1,69 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Parents.EditModel
+@{
+}
+@{
+    ViewBag.Title = "Add Parent";
+    ViewBag.pTitle = "Add Parent";
+    ViewBag.pageTitle = "Add";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Add Parent</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Parent.ParentName" class="form-label">Parent Name</label>
+                            <input asp-for="@Model.Parent.ParentName" class="form-control" />
+                            <span asp-validation-for="@Model.Parent.ParentName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Parent.ParentEmail" class="form-label">Parent Email</label>
+                            <input asp-for="@Model.Parent.ParentEmail" class="form-control" />
+                            <span asp-validation-for="@Model.Parent.ParentEmail" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Parent.ParentId" class="form-label">Parent Email</label>
+                            <input asp-for="@Model.Parent.ParentId" class="form-control" />
+                            <span asp-validation-for="@Model.Parent.ParentId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.Parent.ParentPhone" class="form-label">Parent Phone</label>
+                            <input asp-for="@Model.Parent.ParentPhone" class="form-control" />
+                            <span asp-validation-for="@Model.Parent.ParentPhone" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Parent.ParentAddress" class="form-label">Parent Address</label>
+                            <input asp-for="@Model.Parent.ParentAddress" class="form-control" />
+                            <span asp-validation-for="@Model.Parent.ParentAddress" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.CheckBoxFor(m => m.Parent.IsActive, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="Active">
+                                Is Active?
+                            </label>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Add Parent</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div><!--end row-->
+

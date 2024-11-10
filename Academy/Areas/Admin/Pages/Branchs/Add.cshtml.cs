@@ -25,7 +25,6 @@ namespace Academy.Areas.Admin.Pages.Branchs
             Branch branch = new Branch()
             {
                 BranchName = BranchVM.BranchName,
-               
                 BranchAddress = BranchVM.BranchAddress,
                 IsActive = true
             };

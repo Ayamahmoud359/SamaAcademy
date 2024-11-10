@@ -19,12 +19,12 @@ namespace Academy.Areas.Admin.Pages.Departments
         }
         public void OnGet()
         {
-            Branches = _context.Branches.Where(b=>b.IsActive).ToList();
+            Branches = _context.Branches.Where(b=>b.IsActive&&!b.IsDeleted).ToList();
         }
         public async Task<IActionResult> OnPostAsync()
 
         {
-            Branches = _context.Branches.Where(b=>b.IsActive).ToList();
+            Branches = _context.Branches.Where(b=>b.IsActive&&!b.IsDeleted).ToList();
             if (!ModelState.IsValid)
             {
                 return Page();

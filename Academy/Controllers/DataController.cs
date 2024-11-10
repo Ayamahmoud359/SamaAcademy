@@ -19,11 +19,13 @@ namespace Academy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDepartments(DataSourceLoadOptions loadOptions)
         {
-            var Depts= _context.Departments.Include(d=>d.Branch).Where(d=>d.IsActive&&d.Branch.IsActive).Select(i => new
+            var Depts= _context.Departments.Include(d=>d.Branch).Where(d=>!d.IsDeleted&&!d.Branch.IsDeleted&&d.Branch.IsActive).Select(i => new
             {
                 i.DepartmentName,
                 i.DepartmentId,
-                i.BranchId
+                i.BranchId,
+                i.IsActive
+
             });
             return Json(await DataSourceLoader.LoadAsync(Depts, loadOptions));
 
@@ -35,7 +37,7 @@ namespace Academy.Controllers
            
 
             var lookup = from i in _context.Branches
-                         where  i.IsActive
+                         where  !i.IsDeleted
                          orderby i.BranchName
                          select new
                          {
@@ -48,13 +50,33 @@ namespace Academy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetBranchs(DataSourceLoadOptions loadOptions)
         {
-            var Branchs = _context.Branches.Where(d => d.IsActive).Select(i => new
+            var Branchs = _context.Branches.Where(d => !d.IsDeleted).Select(i => new
             {
                 i.BranchName,
                 i.BranchAddress,
-                i.BranchId
+                i.BranchId,
+                i.IsActive
+                
             });
             return Json(await DataSourceLoader.LoadAsync(Branchs, loadOptions));
+
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetParents(DataSourceLoadOptions loadOptions)
+        {
+            var barents = _context.Parents.Where(d => !d.IsDeleted).Select(i => new
+            {
+                i.ParentName,
+                i.ParentAddress,
+                i.ParentId,
+                i.ParentPhone,
+                i.IsActive,
+                i.ParentEmail
+                
+            });
+            return Json(await DataSourceLoader.LoadAsync(barents, loadOptions));
 
 
         }

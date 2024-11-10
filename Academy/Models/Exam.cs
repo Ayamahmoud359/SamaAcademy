@@ -10,9 +10,13 @@ namespace Academy.Models
         public int Score { get; set; }
         [DataType(DataType.Date)]
         public string? ScoreDate  { get; set; }
-
+        public string? Review { get; set; }
         public int SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }
+        //Trainer Id
+        [ForeignKey("Trainer")]
+        public int TrainerId { get; set; }
+        public Trainer Trainer { get; set; }
 
     }
 }
