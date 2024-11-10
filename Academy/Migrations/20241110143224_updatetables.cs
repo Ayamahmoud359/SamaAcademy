@@ -5,7 +5,7 @@
 namespace Academy.Migrations
 {
     /// <inheritdoc />
-    public partial class update3 : Migration
+    public partial class updatetables : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -13,10 +13,6 @@ namespace Academy.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Trainees_Branches_BranchId",
                 table: "Trainees");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Trainers_Branches_BranchId",
-                table: "Trainers");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_Trainers_Departments_DepartmentId",
@@ -31,22 +27,13 @@ namespace Academy.Migrations
                 table: "Trainees");
 
             migrationBuilder.DropColumn(
-                name: "DepartmentId",
-                table: "Trainers");
-
-            migrationBuilder.DropColumn(
                 name: "BranchId",
                 table: "Trainees");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "BranchId",
+            migrationBuilder.RenameColumn(
+                name: "DepartmentId",
                 table: "Trainers",
-                type: "int",
-                nullable: false,
-                defaultValue: 0,
-                oldClrType: typeof(int),
-                oldType: "int",
-                oldNullable: true);
+                newName: "Branch");
 
             migrationBuilder.AddColumn<bool>(
                 name: "IsActive",
@@ -88,14 +75,6 @@ namespace Academy.Migrations
                 principalTable: "Branches",
                 principalColumn: "BranchId",
                 onDelete: ReferentialAction.Restrict);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Trainers_Branches_BranchId",
-                table: "Trainers",
-                column: "BranchId",
-                principalTable: "Branches",
-                principalColumn: "BranchId",
-                onDelete: ReferentialAction.Restrict);
         }
 
         /// <inheritdoc />
@@ -104,10 +83,6 @@ namespace Academy.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_Subscriptions_Branches_BranchId",
                 table: "Subscriptions");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Trainers_Branches_BranchId",
-                table: "Trainers");
 
             migrationBuilder.DropIndex(
                 name: "IX_Subscriptions_BranchId",
@@ -129,20 +104,10 @@ namespace Academy.Migrations
                 name: "IsActive",
                 table: "CategoryTrainers");
 
-            migrationBuilder.AlterColumn<int>(
-                name: "BranchId",
+            migrationBuilder.RenameColumn(
+                name: "Branch",
                 table: "Trainers",
-                type: "int",
-                nullable: true,
-                oldClrType: typeof(int),
-                oldType: "int");
-
-            migrationBuilder.AddColumn<int>(
-                name: "DepartmentId",
-                table: "Trainers",
-                type: "int",
-                nullable: false,
-                defaultValue: 0);
+                newName: "DepartmentId");
 
             migrationBuilder.AddColumn<int>(
                 name: "BranchId",
@@ -168,13 +133,6 @@ namespace Academy.Migrations
                 principalTable: "Branches",
                 principalColumn: "BranchId",
                 onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Trainers_Branches_BranchId",
-                table: "Trainers",
-                column: "BranchId",
-                principalTable: "Branches",
-                principalColumn: "BranchId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Trainers_Departments_DepartmentId",

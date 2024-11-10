@@ -414,7 +414,10 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerId"));
 
-                    b.Property<int>("BranchId")
+                    b.Property<int>("Branch")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("BranchId")
                         .HasColumnType("int");
 
                     b.Property<string>("Image")
@@ -634,9 +637,7 @@ namespace Academy.Migrations
                 {
                     b.HasOne("Academy.Models.Branch", null)
                         .WithMany("Trainers")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BranchId");
                 });
 
             modelBuilder.Entity("Academy.Models.TrainerCategories", b =>
