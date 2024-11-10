@@ -33,9 +33,6 @@ namespace Academy.Models
         // Exams taken by this trainee
         public ICollection<Exam> Exams { get; set; }
         public bool IsDeleted { get; set; }
-        ///Branch Id
-        [ForeignKey("Branch")]
-        public int BranchId { get; set; }
-        public Branch Branch { get; set; }
+     
     }
 }

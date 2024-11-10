@@ -107,7 +107,7 @@ namespace Academy.Areas.Admin.Pages.Parents
                     TraineeName = trainee.TraineeName,
                     TraineePhone=trainee.TraineePhone,
                     TraineeAddress=trainee.TraineeAddress,
-                    BranchId=trainee.BranchId,
+                    //BranchId=trainee.BranchId,
                     TraineeEmail=trainee.Email,
                     BirthDate=trainee.BirthDate,
                     ParentId=trainee.ParentId,

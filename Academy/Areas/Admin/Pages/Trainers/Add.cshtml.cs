@@ -72,7 +72,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
                     TrainerEmail =Email,
                     TrainerPhone = Trainer.TrainerPhone,
                    
-                    DepartmentId = Trainer.DepartmentId,
+                    //DepartmentId = Trainer.DepartmentId,
                     IsActive = true,
 
 

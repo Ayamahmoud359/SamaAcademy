@@ -94,23 +94,23 @@ namespace Academy.Controllers
         }
         #endregion
         #region GetTrainersByBranchId
-        [HttpGet]
-        [Route("GetTrainersByBranchId")]
-        public async Task<ActionResult<List<Trainer>>> GetTrainersByBranchId(int BranchId)
-        {
-            var trainers = await _context.Trainers.Include(e=>e.Department).Where(e => e.Department.BranchId == BranchId && e.IsActive).ToListAsync();
-            return Ok(trainers);
-        }
+        //[HttpGet]
+        //[Route("GetTrainersByBranchId")]
+        //public async Task<ActionResult<List<Trainer>>> GetTrainersByBranchId(int BranchId)
+        //{
+        //    //var trainers = await _context.Trainers.Include(e=>e.Department).Where(e => e.Department.BranchId == BranchId && e.IsActive).ToListAsync();
+        //    return Ok(trainers);
+        //}
         #endregion
 
         #region GetTrainersByDepartmentId
-        [HttpGet]
-        [Route("GetTrainersByDepartmentId")]
-        public async Task<ActionResult<List<Trainer>>> GetTrainersByDepartmentId(int DepartmentId)
-        {
-            var trainers = await _context.Trainers.Where(e => e.DepartmentId == DepartmentId && e.IsActive).ToListAsync();
-            return Ok(trainers);
-        }
+        //[HttpGet]
+        //[Route("GetTrainersByDepartmentId")]
+        //public async Task<ActionResult<List<Trainer>>> GetTrainersByDepartmentId(int DepartmentId)
+        //{
+        //    //var trainers = await _context.Trainers.Where(e => e.DepartmentId == DepartmentId && e.IsActive).ToListAsync();
+        //    return Ok(trainers);
+        //}
         #endregion
         #region GetTrainersByCategoryId
         [HttpGet]
@@ -123,15 +123,15 @@ namespace Academy.Controllers
         #endregion
         #region GetTrainersByBranchIdAndCategoryId
 
-        [HttpGet]
+        //[HttpGet]
 
-        [Route("GetTrainersByBranchIdAndCategoryId")]
+        //[Route("GetTrainersByBranchIdAndCategoryId")]
         
-        public async Task<ActionResult<List<Trainer>>> GetTrainersByBranchIdAndCategoryId(int BranchId, int CategoryId)
-        {
-            var trainers = await _context.Trainers.Include(e=>e.Department).Include(e => e.CategoryTrainers).Where(e => e.CategoryTrainers.Any(e => e.CategoryId == CategoryId) && e.Department.BranchId== BranchId && e.IsActive).ToListAsync();
-            return Ok(trainers);
-        }
+        //public async Task<ActionResult<List<Trainer>>> GetTrainersByBranchIdAndCategoryId(int BranchId, int CategoryId)
+        //{
+        //    var trainers = await _context.Trainers.Include(e=>e.Department).Include(e => e.CategoryTrainers).Where(e => e.CategoryTrainers.Any(e => e.CategoryId == CategoryId) && e.Department.BranchId== BranchId && e.IsActive).ToListAsync();
+        //    return Ok(trainers);
+        //}
         #endregion
 
 

@@ -20,15 +20,10 @@ namespace Academy.Models
         public bool IsDeleted { get; set; }
         public DateTime SubscriptionDate { get; set; }
 
-        //[ForeignKey("Branch")]
-   
-        //public int BranchId { get; set; }
-        //public Branch Branch { get; set; }
-        ///Department Id
-        [ForeignKey("Department")]
-        
-        public int DepartmentId { get; set; }
-        public Department Department { get; set; }
+    
+        public int Branch { get; set; }
+       
+
         public ICollection<Absence> Absences { get; set; }= new List<Absence>();
         public ICollection<Exam> Exams { get; set; }=new List<Exam>();
         public ICollection<TrainerCategories> CategoryTrainers { get; set; }= new List<TrainerCategories>();

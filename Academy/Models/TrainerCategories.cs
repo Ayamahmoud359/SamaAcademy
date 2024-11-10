@@ -12,5 +12,7 @@ namespace Academy.Models
         public int TrainerId { get; set; }
         public Trainer Trainer { get; set; }
         public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; }
+
     }
 }

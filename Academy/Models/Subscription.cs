@@ -11,10 +11,18 @@ namespace Academy.Models
         public string? StartDate { get; set; }
         [DataType(DataType.Date)]
         public string? EndDate { get; set; }
+
+        ///Branch Id
+        [ForeignKey("Branch")]
+        public int BranchId { get; set; }
+        public Branch Branch { get; set; }
+
+
         //Trainee Id
         [ForeignKey("Trainee")]
         public int TraineeId { get; set; }
         public Trainee Trainee { get; set; }
+
       
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
@@ -23,12 +31,14 @@ namespace Academy.Models
         [ForeignKey("Category")]
         public int? CategoryId { get; set; }
         public Category? Category { get; set; }
+
         // Logs absences for this subscription
         public ICollection<Absence> Absences { get; set; }=new List<Absence>();
 
         // Logs exams for this subscription
         public ICollection<Exam> Exams { get; set; }= new List<Exam>();
         public bool IsDeleted { get; set; }
+        public bool IsActive { get; set; }
 
 
     }
