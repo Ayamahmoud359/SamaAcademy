@@ -18,15 +18,13 @@ namespace Academy.Models
         public string? Image { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
-        public DateTime SubscriptionDate { get; set; }
+        public DateOnly  SubscriptionDate { get; set; }
+        public int? CurrentBranch { get; set; }
 
-    
-        public int Branch { get; set; }
-       
-
+        public int? CurrentDepartment{ get; set; }
         public ICollection<Absence> Absences { get; set; }= new List<Absence>();
         public ICollection<Exam> Exams { get; set; }=new List<Exam>();
-        public ICollection<TrainerCategories> CategoryTrainers { get; set; }= new List<TrainerCategories>();
+        public ICollection<TrainerCategories> TrainerCategories { get; set; }= new List<TrainerCategories>();
        // public ICollection<SubCategoryTrainer> subCategoryTrainers { get; set; } = new List<SubCategoryTrainer>();
     }
 }

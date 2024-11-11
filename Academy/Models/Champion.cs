@@ -10,8 +10,8 @@ namespace Academy.Models
    
         public string ChampionDescription { get; set; }
      
-        [DataType(DataType.Date)]
-        public string ChampionDate { get; set; }
+
+        public DateOnly ChampionDate { get; set; }
         public bool IsActive { get; set; }
         public int? ChampionScore { get; set; }
         ///Department Id

@@ -56,7 +56,7 @@
                         </div><!--end col-->
 
                         <div class="mb-3">
-                            <label class="form-label" asp-for="@Model.Trainer.DepartmentId">Department</label>
+                            <label class="form-label" for="inlineFormSelectPref">Department</label>
                             <select onchange="GetDepartmentCategories(this.value)" asp-for="@Model.Trainer.DepartmentId" asp-items="@(new SelectList(Model.Departments, "DepartmentId", "DepartmentName"))" class="form-select" id="inlineFormSelectPref">
                                 <option selected disabled value="0">Choose...</option>
 
@@ -64,9 +64,9 @@
                             <span asp-validation-for="@Model.Trainer.DepartmentId" class="text-danger"></span>
                         </div><!--end col-->
 
-                        <div class="mb-3" id="CategoryDepartmentId">
+                        <div class="mb-3" id="Category">
                             <label for="CategoryId" class="form-label ">Categories</label>
-                            <select asp-for="@Model.SelectedCategories" class="form-control form-select custom-select" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))"
+                            <select asp-for="@Model.Trainer.SelectedCategories" class="form-control form-select custom-select" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))"
                                    multiple 
                                     id="CategoryId">
 
@@ -74,8 +74,8 @@
                                
                             </select>
 
-                            <span asp-validation-for="@Model.SelectedCategories" class="text-danger"></span>
-                            <span id="CategorySpanId" style="display:none" class="text-danger">Category Is Required</span>
+                            <span asp-validation-for="@Model.Trainer.SelectedCategories" class="text-danger"></span>
+                           
                         </div><!--end col-->
 
                         <div class="mb-3">
@@ -118,7 +118,7 @@
         console.log(value)
         // Send AJAX request to the controller's action method
         
-        if(value!=null&&value!=0){
+        if(value!=""&&value!=0){
             $.ajax({
                 url: "/admin/Trainers/Add?handler=GetDepartments", // Adjust for Razor Pages if needed
                 type: 'GET',
@@ -173,7 +173,7 @@
     function GetDepartmentCategories(departmentId) {
         console.log("GetDepartmentCategories");
         console.log(departmentId);
-        if (departmentId != null && departmentId != 0) {
+        if (departmentId != "" && departmentId != 0) {
             $.ajax({
                 url: "/admin/Trainers/Add?handler=CategoriesDepartment", // Adjust for Razor Pages if needed
                 type: 'GET',
@@ -182,7 +182,15 @@
                 success: function (data) {
                     console.log(data);
                     if (Array.isArray(data) && typeof data !== "string") {
-                        // Find the select element
+                          if(data.length==0){
+                            console.log(data.length);
+                            var categoryDiv = $('#Category');
+                            console.log(categoryDiv);
+                            $('#Category').hide();
+                            
+                        }
+                        else{
+                              // Find the select element
                         var select = $('#CategoryId');
                         console.log(select);
                         select.empty(); // Clear existing options
@@ -195,6 +203,8 @@
                             console.log(item)
                             select.append('<option value="' + item.CategoryId + '">' + item.CategoryName + '</option>');
                         });
+                        }
+                      
                     }
                          else {
                         console.log('Error loading options:', error);

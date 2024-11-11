@@ -9,12 +9,12 @@ namespace Academy.Models
         public DateTime AbsenceDate { get; set; }
         public string? Type { get; set; }
         public int SubscriptionId { get; set; }
-        public Subscription Subscription { get; set; }
+        public Subscription? Subscription { get; set; }
         public bool IsDeleted { get; set; }
         //Trainer Id
         [ForeignKey("Trainer")]
         public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }
+        public Trainer? Trainer { get; set; }
 
     }
 }

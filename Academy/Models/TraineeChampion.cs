@@ -7,10 +7,10 @@ namespace Academy.Models
         public int TraineeChampionId { get; set; }
         [ForeignKey("Champion")]
         public int ChampionId { get; set; }
-        public Champion Champion { get; set; }
+        public Champion? Champion { get; set; }
         [ForeignKey("Trainee")]
         public int TraineeId { get; set; }
-        public Trainee Trainee{ get; set; }
+        public Trainee? Trainee{ get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
     }

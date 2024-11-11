@@ -7,10 +7,10 @@ namespace Academy.Models
         public int TrainerCategoriesId { get; set; }
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
-        public Category Category { get; set; }
+        public Category? Category { get; set; }
         [ForeignKey("Trainer")]
         public int TrainerId { get; set; }
-        public Trainer Trainer { get; set; }
+        public Trainer? Trainer { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
 

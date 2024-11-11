@@ -35,5 +35,7 @@ namespace Academy.DTO
         ///Department Id
         [Required(ErrorMessage = "Department is required")]
         public int DepartmentId { get; set; }
+        [Required(ErrorMessage = "Please select at least one category.")]
+        public List<int> SelectedCategories { get; set; } = new List<int>();
     }
 }

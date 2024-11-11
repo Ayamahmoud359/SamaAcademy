@@ -1,4 +1,510 @@
 ﻿@page
 @model Academy.Areas.Admin.Pages.Trainees.IndexModel
 @{
+    ViewBag.Title = "Trainees";
+    // ViewBag.pTitle = "Trainees";
+    // ViewBag.pageTitle = "Home";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+
+<div class="row">
+    <div class="col-xxl-12 col-xl-12">
+        <div class="card card-height-100">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Trainees</h4>
+              
+            </div>
+            <!-- end card header -->
+            <!-- card body -->
+            <div class="card-body">
+                @(Html.DevExtreme().DataGrid<Academy.Models.Trainee>()
+                    .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetTrainees").Key("TraineeId"))
+                    .RemoteOperations(true)
+                    .ColumnHidingEnabled(true)
+                    .Width("100%")
+                    .Columns(columns =>
+                    {
+                        // Example column configuration
+                        columns.AddFor(m => m.TraineeName).Caption("Trainee Name");
+                        columns.AddFor(m => m.ParentId).Caption("Parent").Lookup(lookup => lookup
+                        .DataSource(ds => ds.WebApi().Controller("Data").LoadAction("ParentsLookup").Key("Value"))
+                        .ValueExpr("Value")
+                        .DisplayExpr("Text")
+                        );
+                        columns.AddFor(m => m.Nationality).Caption("Nationality");
+                        columns.Add().Caption("Status").CellTemplate(@<text>
+                    <span>
+                        <%= data.IsActive ? "Active" : "Not Active" %>
+                    </span>
+                </text>);
+                        columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                    <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
+                        <a href="/Admin/Trainees/View?Id=<%- data.TraineeId %>" class="text-primary d-inline-block">
+
+                            @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
+                        </a>
+
+                        @Html.DevExtreme().Button().Text("Add New SubScription").OnClick("function (e) { AddSubscription(data.TraineeId) }").Type(ButtonType.Success)
+
+                        <a href="/Admin/Trainees/Edit?Id=<%- data.TraineeId %>" class="text-primary d-inline-block">
+
+                            @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
+                        </a>
+
+                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.TraineeId) }").Type(ButtonType.Danger)
+
+                    </div>
+                </text>);
+                    })
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    //.Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    //.OnExporting("exporting")
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    //.Selection(s => s.Mode(SelectionMode.Multiple))
+                    .Paging(paging => paging.PageSize(5).Enabled(true))
+                    .WordWrapEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    //.ColumnChooser(c => c.Enabled(true))
+                    .ColumnFixing(c => c.Enabled(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .Pager(pager =>
+                    {
+                        pager.Visible(true);
+                        pager.DisplayMode(GridPagerDisplayMode.Full);
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new JS("[5,10,20,50,100,'all']"));
+                        pager.ShowInfo(true);
+                        pager.ShowNavigationButtons(true);
+                    })
+                    .SearchPanel(searchPanel => searchPanel
+                    .Visible(true)
+                    .Placeholder("SearchTxt"))
+                    .RemoteOperations(false)
+                    @*  .Summary(s => s
+                .TotalItems(totalItems =>
+                {
+                totalItems.AddFor(m => m.BranchId).SummaryType(SummaryType.Count);
+                })
+                .GroupItems(groupItems =>
+                {
+                groupItems.Add().SummaryType(SummaryType.Count);
+                })
+                ) *@
+                    )
+
+            </div>
+            <!-- End Card Body  -->
+            <!-- Start Delete Popup  -->
+            <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1"
+                 aria-labelledby="deleteRecordLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close" id="btn-close"></button>
+                        </div>
+                        <div class="modal-body p-5 text-center">
+                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json"
+                                       trigger="loop" colors="primary:#405189,secondary:#f06548"
+                                       style="width:90px;height:90px"></lord-icon>
+                            <div class="mt-4 text-center">
+
+
+                                <h4 class="fs-semibold">You are about to delete This Trainee </h4>
+                                <p class="text-muted fs-14 mb-4 pt-1">
+                                    Deleting This Trainee will remove all of its information .
+                                </p>
+                                <div class="hstack gap-2 justify-content-center remove">
+                                    <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close"
+                                            data-bs-dismiss="modal">
+                                        <i class="ri-close-line me-1 align-middle"></i>
+                                        Close
+                                    </button>
+                                    <form asp-area="Admin" asp-page="/Branchs/Index" asp-page-handler="DeleteTrainee">
+                                        <input asp-for="@Model.Traineeid" id="DeleteTrainee" hidden>
+                                        <button class="btn btn-danger" type="submit" id="delete-record">
+                                            Yes,
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Delete Popup  -->
+            <!-- Start Add subscription Popup  -->
+            <div class="modal fade" id="showModal" tabindex="-1"
+                 aria-labelledby="exampleModalLabel" aria-hidden="false">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content p-3">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close" id="btn-close" onclick="cancelButtonClick()"></button>
+                        </div>
+                        <form enctype="multipart/form-data" method="post" id="frm" onsubmit="return handleSubmit(event)">
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="text-danger" id="Err"></div>
+                            <div class="mb-3">
+                                <label class="form-label" asp-for="@Model.subscription.BranchId">Branch</label>
+                                <select onchange="GetBranchDepartments(this.value)"  asp-items="@(new SelectList(Model.Branches, "BranchId", "BranchName"))"   asp-for="@Model.subscription.BranchId" class="form-select ">
+                                    <option selected disabled value="0">Choose</option>
+                                    
+                                </select>
+
+                                <span asp-validation-for="@Model.subscription.BranchId" class="text-danger"></span>
+
+                            </div><!--end col-->
+
+                            <div class="mb-3">
+                                <label class="form-label" asp-for="@Model.subscription.DepartmentId">Department</label>
+                                <select onchange="GetDepartmentCategories(this.value)" asp-for="@Model.subscription.DepartmentId" asp-items="@(new SelectList(Model.Departments, "DepartmentId", "DepartmentName"))" class="form-select" >
+                                    <option selected disabled value="0">Choose...</option>
+
+                                </select>
+                                <span asp-validation-for="@Model.subscription.DepartmentId" class="text-danger"></span>
+                            </div><!--end col-->
+
+                            <div class="mb-3" id="Category">
+                                <label asp-for="@Model.subscription.CategoryId" class="form-label ">Category</label>
+                                <select asp-for="@Model.subscription.CategoryId" class="form-control form-select " asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))">
+
+                                    <option selected disabled value="0">Choose...</option>
+
+                                </select>
+
+                                <span asp-validation-for="@Model.subscription.CategoryId" class="text-danger"></span>
+                              
+                            </div><!--end col-->
+
+                             <div class="mb-3">
+                                <label asp-for="@Model.subscription.StartDate" class="form-label">StartDate</label>
+                                <input type="date" asp-for="@Model.subscription.StartDate" class="form-control" />
+                                <span asp-validation-for="@Model.subscription.StartDate" class="text-danger"></span>
+
+                            </div>
+                            <div class="mb-3">
+                                <label asp-for="@Model.subscription.EndDate" class="form-label"> EndDate</label>
+                                <input type="date" asp-for="@Model.subscription.EndDate" class="form-control"  />
+                                <span asp-validation-for="@Model.subscription.EndDate" class="text-danger"></span>
+
+                            </div>
+
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success" onclick="saveButtonClick()">Save</button>
+                                @*  @Html.DevExtreme().Button().Text("Save").Type(ButtonType.Success).OnClick("function (e) { saveButtonClick() }") *@
+                                @Html.DevExtreme().Button().Text("Cancel").OnClick("function (e) { cancelButtonClick() }")
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Add subscription Popup  -->
+        </div>
+    </div>
+
+    <script>
+               function Delete(Id) {
+
+            document.getElementById("DeleteTrainee").value = Id
+                 $('#deleteRecordModal').modal('show');
+
+         };
+
+        var currentKey;
+
+
+
+            function handleSubmit(event) {
+                console.log("submit")
+                // Trigger the client-side validation
+                var isValid = true;
+                // Validate form using ASP.NET Core's built-in validation
+                if (!event.target.checkValidity()) {
+                    isValid = false;  // If the form fails validation, prevent submission
+                }
+
+                if (!isValid) {
+                    event.preventDefault(); // Prevent form submission if validation fails
+                }
+
+                // Return false to prevent form from submitting even if valid
+                return false;
+            }
+        function AddSubscription(data) {
+                console.log(data)
+                currentKey=data
+         $('#showModal').modal('show');
+
+        }
+        function saveButtonClick() {
+
+                console.log("save")
+           var  Branch = document.getElementById("subscription_BranchId").value;
+         var    Department = document.getElementById("subscription_DepartmentId").value;
+         var    category = document.getElementById("subscription_CategoryId").value;
+          var   startDate = document.getElementById("subscription_StartDate").value;
+        var     EndDate = document.getElementById("subscription_EndDate").value;
+             console.log("BranchId="+Branch)
+              console.log("DepartmentId="+Department)
+            console.log("CategoryId="+category)
+            console.log("StartDate="+startDate)
+            console.log("EndDate="+EndDate)
+            if (Branch != 0 && Branch != "" && Department != 0 && Department != ""&& category != 0 && category != ""  && startDate != "" && EndDate != "") {
+                    var subscription = {
+                    TraineeId:currentKey,
+                    BranchId: Branch,
+                    DepartmentId: Department,
+                    CategoryId: category,
+                    StartDate: startDate,
+                    EndDate: EndDate
+                    };
+                var json = JSON.stringify(subscription);
+                    console.log(json)
+                    $.ajax({
+                        type: "POST",
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("XSRF-TOKEN",
+                                $('input:hidden[name="__RequestVerificationToken"]').val());
+                        }
+                        ,
+                        url: "/admin/Trainees/Index?handler=AddSubscription",
+                        //async: false,
+                        data: json,
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+
+                        success: function (response) {
+                            console.log(response)
+                            if (response == "Added") {
+                               console.log("close")
+                 document.getElementById("Err").innerHTML = "";
+                            var BranchSpan = document.getElementById("subscription_BranchId-error");
+                            var DepartmentSpan = document.getElementById("subscription_DepartmentId-error")
+                            var CategorySpan = document.getElementById("subscription_CategoryId-error")
+                            var StartDateSpan = document.getElementById("subscription_StartDate-error")
+                            var EndDateSpan = document.getElementById("subscription_EndDate-error")
+
+                            if (BranchSpan) {
+                                document.getElementById("subscription_BranchId-error").innerHTML = "";
+                    console.log("Branch span removed")
+                }
+                    if (DepartmentSpan) {
+                    document.getElementById("subscription_DepartmentId-error").innerHTML = "";
+                    console.log("Department span removed")
+                }
+                if (CategorySpan) {
+                    document.getElementById("subscription_CategoryId-error").innerHTML = "";
+                    console.log("category span removed")
+                }
+                if (StartDateSpan) {
+                    document.getElementById("subscription_StartDate-error").innerHTML = "";
+                    console.log("startdate span removed")
+                }
+                if (EndDateSpan) {
+                    document.getElementById("subscription_EndDate-error").innerHTML = "";
+                    console.log("enddate span removed")
+                }
+
+                document.getElementById("frm").reset();
+                 var Branchselect = $('#subscription_BranchId');
+                  
+                  
+                   var Departmentselect = $('#subscription_DepartmentId');
+                   if(Departmentselect){
+                          Departmentselect.empty(); // Clear existing options
+                    // Add a default option
+                   Departmentselect.append('<option selected disabled  value="0" >Choose ...</option>');
+
+                   }
+                
+                 var Categoryselect = $('#subscription_CategoryId');
+                 if(Categoryselect){
+                       Categoryselect.empty(); // Clear existing options
+                    // Add a default option
+                   Categoryselect.append('<option selected  disabled  value="0" >Choose ...</option>');
+
+
+                 }
+                 $('#showModal').modal('hide');
+                  currentKey = -1;
+                            }
+                        else if (response == "You have an active subscription on this department ,you can subscripe after your current subscription ended") {
+                            document.getElementById("Err").innerHTML = response;
+
+                        }
+                        else if(response=="EndDate must be greater than StartDate"){
+                            document.getElementById("Err").innerHTML = response;
+                        }
+                            else if (response=="SomeThing Went Wrong") {
+                                console.log(currentKey)
+                                document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time"
+                            }
+                         
+                            else{
+                                console.log(currentKey)
+                                document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
+                            }
+
+                        },
+                        failure: function (response) {
+                            document.getElementById("Err").innerHTML = response;
+                        }
+                    });
+
+                }
+
+        }
+        function cancelButtonClick() {
+            console.log("close")
+                 document.getElementById("Err").innerHTML = "";
+                 var BranchSpan=document.getElementById("subscription_BranchId-error");
+            var DepartmentSpan = document.getElementById("subscription_DepartmentId-error")
+            var CategorySpan = document.getElementById("subscription_CategoryId-error")
+            var StartDateSpan = document.getElementById("subscription_StartDate-error")
+            var EndDateSpan = document.getElementById("subscription_EndDate-error")
+                
+            if (BranchSpan) {
+                document.getElementById("subscription_BranchId-error").innerHTML = "";
+               console.log("Branch span removed")
+                            }
+            if (DepartmentSpan) {
+                document.getElementById("subscription_DepartmentId-error").innerHTML = "";
+                       console.log("Department span removed")
+                    }
+            if (CategorySpan) {
+                document.getElementById("subscription_CategoryId-error").innerHTML = "";
+                console.log("category span removed")
+            }
+            if (StartDateSpan) {
+                document.getElementById("subscription_StartDate-error").innerHTML = "";
+                       console.log("startdate span removed")
+                    }
+            if (EndDateSpan) {
+                document.getElementById("subscription_EndDate-error").innerHTML = "";
+                console.log("enddate span removed")
+            }
+
+                document.getElementById("frm").reset();
+                
+                   var Departmentselect = $('#subscription_DepartmentId');
+                   if(Departmentselect){
+                          Departmentselect.empty(); // Clear existing options
+                    // Add a default option
+                   Departmentselect.append('<option selected disabled  value="0" >Choose ...</option>');
+
+                   }
+                
+                 var Categoryselect = $('#subscription_CategoryId');
+                 if(Categoryselect){
+                       Categoryselect.empty(); // Clear existing options
+                    // Add a default option
+                   Categoryselect.append('<option selected disabled  value="0" >Choose ...</option>');
+
+
+                 }
+                 
+            $('#showModal').modal('hide');
+             currentKey = -1;
+
+        }
+        function GetBranchDepartments(value) {
+            console.log(value)
+            // Send AJAX request to the controller's action method
+
+            if (value != "" && value != 0) {
+                $.ajax({
+                    url: "/admin/Trainees/Index?handler=GetDepartments", // Adjust for Razor Pages if needed
+                    type: 'GET',
+                    data: { id: value },
+                    success: function (data) {
+                        console.log(data);
+                        if (Array.isArray(data) && typeof data !== "string") {
+                            // Find the select element
+                            var select = $('#subscription_DepartmentId');
+                            console.log(select);
+                            select.empty(); // Clear existing options
+
+                            // Add a default option
+                            select.append('<option selected disabled  value="0" >Choose ...</option>');
+
+                            // Loop through the data and append options
+                            $.each(data, function (index, item) {
+                                console.log(item)
+                                select.append('<option value="' + item.DepartmentId + '">' + item.DepartmentName + '</option>');
+                            });
+                        }
+                        else {
+                            console.log('Error loading options:', error);
+                        }
+
+                    },
+                    error: function (error) {
+                        console.log('Error loading options:', error);
+                    }
+                });
+            }
+
+
+        };
+
+        function GetDepartmentCategories(departmentId) {
+            console.log("GetDepartmentCategories");
+            console.log(departmentId);
+            if (departmentId !="" && departmentId != 0) {
+                $.ajax({
+                    url: "/admin/Trainees/Index?handler=CategoriesDepartment", // Adjust for Razor Pages if needed
+                    type: 'GET',
+                    data: { departmentId: departmentId }, // Include both value and userId in the data object,
+
+                    success: function (data) {
+                        console.log(data);
+                        if (Array.isArray(data) && typeof data !== "string") {
+                            
+                            
+                                // Find the select element
+                                var select = $('#subscription_CategoryId');
+                                console.log(select);
+                                select.empty(); // Clear existing options
+
+                                // Add a default option
+                                select.append('<option selected disabled  value="0" >Choose ...</option>');
+
+                                // Loop through the data and append options
+                                $.each(data, function (index, item) {
+                                    console.log(item)
+                                    select.append('<option value="' + item.CategoryId + '">' + item.CategoryName + '</option>');
+                                });
+                           
+
+                        }
+                        else {
+                            console.log('Error loading options:', error);
+                        }
+
+                    },
+                    failure: function (response) {
+                        console.log('Error loading options:', error);
+                    }
+                });
+            }
+
+
+        }
+
+      
+
+
+    </script>
+

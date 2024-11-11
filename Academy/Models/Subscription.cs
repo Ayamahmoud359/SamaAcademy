@@ -7,26 +7,18 @@ namespace Academy.Models
     {
 
         public int SubscriptionId { get; set; }
-        [DataType(DataType.Date)]
-        public string? StartDate { get; set; }
-        [DataType(DataType.Date)]
-        public string? EndDate { get; set; }
+      
+        public DateOnly StartDate { get; set; }
+       
+        public DateOnly EndDate { get; set; }
 
-        ///Branch Id
-        [ForeignKey("Branch")]
-        public int BranchId { get; set; }
-        public Branch Branch { get; set; }
+        public int? Branch { get; set; }
 
-
+        public int? Department { get; set; }
         //Trainee Id
         [ForeignKey("Trainee")]
         public int TraineeId { get; set; }
-        public Trainee Trainee { get; set; }
-
-      
-        [ForeignKey("Department")]
-        public int DepartmentId { get; set; }
-        public Department Department { get; set; }
+        public Trainee? Trainee { get; set; }
 
         [ForeignKey("Category")]
         public int? CategoryId { get; set; }

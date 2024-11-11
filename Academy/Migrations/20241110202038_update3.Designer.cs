@@ -4,6 +4,7 @@ using Academy.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Academy.Migrations
 {
     [DbContext(typeof(AcademyContext))]
-    partial class AcademyContextModelSnapshot : ModelSnapshot
+    [Migration("20241110202038_update3")]
+    partial class update3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -127,8 +130,9 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChampionId"));
 
-                    b.Property<DateOnly>("ChampionDate")
-                        .HasColumnType("date");
+                    b.Property<string>("ChampionDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ChampionDescription")
                         .IsRequired()
@@ -200,9 +204,6 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamId"));
 
-                    b.Property<DateOnly>("ExamDate")
-                        .HasColumnType("date");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -211,6 +212,9 @@ namespace Academy.Migrations
 
                     b.Property<int>("Score")
                         .HasColumnType("int");
+
+                    b.Property<string>("ScoreDate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("SubscriptionId")
                         .HasColumnType("int");
@@ -282,8 +286,8 @@ namespace Academy.Migrations
                     b.Property<int?>("Department")
                         .HasColumnType("int");
 
-                    b.Property<DateOnly>("EndDate")
-                        .HasColumnType("date");
+                    b.Property<string>("EndDate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -291,8 +295,8 @@ namespace Academy.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateOnly>("StartDate")
-                        .HasColumnType("date");
+                    b.Property<string>("StartDate")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TraineeId")
                         .HasColumnType("int");
@@ -314,8 +318,9 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TraineeId"));
 
-                    b.Property<DateOnly>("BirthDate")
-                        .HasColumnType("date");
+                    b.Property<string>("BirthDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -408,8 +413,8 @@ namespace Academy.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateOnly>("SubscriptionDate")
-                        .HasColumnType("date");
+                    b.Property<DateTime>("SubscriptionDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("TrainerAddress")
                         .IsRequired()
