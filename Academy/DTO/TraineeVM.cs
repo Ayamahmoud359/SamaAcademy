@@ -27,18 +27,20 @@ namespace Academy.DTO
         [Required(ErrorMessage = "Trainee Phone is required")]
         [Display(Name = "Trainee phone")]
         public string TraineePhone { get; set; }
-      
+
+        [Required(ErrorMessage = "Trainee Address is required")]
         [Display(Name = "Trainee Address")]
-        public string? TraineeAddress { get; set; }
+        public string TraineeAddress { get; set; }
         public int TraineeId { get; set; }
+
         [Required(ErrorMessage = "Trainee Name is required")]
         [Display(Name = "Trainee Name")]
         public string TraineeName { get; set; }
   
-        [DataType(DataType.Date)]
+       
         [Required(ErrorMessage = "Trainee Birthdate is required")]
         [Display(Name = "Trainee Birthdate")]
-        public string BirthDate { get; set; }
+        public DateOnly? BirthDate { get; set; }
 
         public string? Image { get; set; }
         [Required(ErrorMessage = "Trainee Nationality is required")]
@@ -51,29 +53,13 @@ namespace Academy.DTO
         public string ResidencyNumber { get; set; }
         public bool IsActive { get; set; }
 
+        [Display(Name = "Parent")]
+        [Required(ErrorMessage = "Trainee Parent is required")]
+
         public int ParentId { get; set; }
 
-        [Required(ErrorMessage = "Branch is required")]
-        [Display(Name = "Branch")]
-
-        public int BranchId { get; set; }
-
-        [DataType(DataType.Date)]
-        [Required(ErrorMessage = "Supsciption StartDate is required")]
-        [Display(Name = "StartDate")]
-        public string StartDate { get; set; }
-        [DataType(DataType.Date)]
-        [Required(ErrorMessage = "Supsciption EndDate is required")]
-        [Display(Name = "EndDate")]
-        public string EndDate { get; set; }
-
-        //[Required(ErrorMessage = "Department is required")]
-        [Display(Name = "Department")]
-        public int? DepartmentId { get; set; }
-
-        //[Required(ErrorMessage = "Category is required")]
-        [Display(Name = "Category")]
-        public int? CategoryId { get; set; }
+      
+       
 
     }
 }

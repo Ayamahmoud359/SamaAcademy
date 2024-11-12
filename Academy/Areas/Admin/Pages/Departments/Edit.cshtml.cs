@@ -71,7 +71,7 @@ namespace Academy.Areas.Admin.Pages.Departments
                 {
                     department.DepartmentName = Dept.DepartmentName;
                     department.DepartmentDescription = Dept.DepartmentDescription;
-                   // department.BranchId = Dept.BranchId;
+                  
                     department.IsActive = Dept.IsActive;
                     _context.Attach(department).State = EntityState.Modified;
                     await _context.SaveChangesAsync();

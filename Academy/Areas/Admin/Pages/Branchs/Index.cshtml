@@ -1,6 +1,10 @@
 ﻿@page
 @model Academy.Areas.Admin.Pages.Branchs.IndexModel
 @{
+    ViewBag.Title = "Branchs";
+    ViewBag.pTitle = "List";
+    ViewBag.pageTitle = "Branchs";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 <div class="row">
     <div class="col-xxl-12 col-xl-12">
@@ -24,7 +28,7 @@
                     .Columns(columns =>
                     {
                         // Example column configuration
-                        columns.AddFor(m => m.BranchName).Caption("Department Name");
+                        columns.AddFor(m => m.BranchName).Caption("Branch Name");
 
                         columns.Add().Caption("Status").CellTemplate(@<text>
                     <span>
@@ -179,7 +183,7 @@
                  <!-- End Add department Popup  -->
         </div>
     </div>
-
+</div>
     <script>
                 function Delete(Id) {
 
@@ -263,6 +267,10 @@
                   $('#showModal').modal('hide');
                    currentKey = -1;
                              }
+                            else if(response=="Sorry ,You can't add new Department in this Branch as This Branch isn't Active"){
+                                 document.getElementById("Err").innerHTML = response
+                             
+                            }
                              else if (response=="SomeThing Went Wrong") {
                                  console.log(currentKey)
                                  document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time"

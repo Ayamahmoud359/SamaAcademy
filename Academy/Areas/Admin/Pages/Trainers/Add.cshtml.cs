@@ -25,9 +25,8 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
         [Display(Name = "Email")]
         [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This email is already taken.")]
         public string Email { get; set; }
-        [BindProperty]
-        [Required(ErrorMessage = "Please select at least one category.")]
-        public List<int> SelectedCategories { get; set; }
+       
+        
         public List<Branch> Branches { get; set; }
         public List<Department> Departments { get; set; }
         public List<Category> Categories { get; set; }
@@ -48,7 +47,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
       
         public void OnGet()
         {
-            Branches = _context.Branches.Where(b => b.IsActive && !b.IsDeleted).ToList();
+            Branches = _context.Branches.Where(b =>!b.IsDeleted&& b.IsActive ).ToList();
             Departments = new List<Department>();
             Categories = new List<Category>();
         }
@@ -56,9 +55,9 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
      
         public async Task<IActionResult> OnPostAsync()
         {
-            Branches = _context.Branches.Where(b => b.IsActive && !b.IsDeleted ).ToList();
-            Departments =_context.Departments.Where(d=>d.IsActive&& !d.IsDeleted && d.BranchId== Trainer.BranchId).ToList();
-            Categories = _context.Categories.Where(d =>d.IsActive&&! d.IsDeleted&& d.DepartmentId == Trainer.DepartmentId).ToList();
+            Branches = _context.Branches.Where(b => !b.IsDeleted&& b.IsActive  ).ToList();
+            Departments =_context.Departments.Where(d=> !d.IsDeleted && d.IsActive&&  d.BranchId== Trainer.BranchId).ToList();
+            Categories = _context.Categories.Where(d => !d.IsDeleted && d.IsActive&& d.DepartmentId == Trainer.DepartmentId).ToList();
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -69,10 +68,10 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
                 {
                     TrainerName = Trainer.TrainerName,
                     TrainerAddress = Trainer.TrainerAddress,
-                    TrainerEmail =Email,
+                    TrainerEmail = Email,
                     TrainerPhone = Trainer.TrainerPhone,
-                   
-                    //DepartmentId = Trainer.DepartmentId,
+                    CurrentBranch = Trainer.BranchId,
+                    CurrentDepartment = Trainer.DepartmentId,
                     IsActive = true,
 
 
@@ -81,19 +80,19 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
                 _context.Trainers.Add(coach);
                 await _context.SaveChangesAsync();
        
-            var categoryTrainer = new List<TrainerCategories>();
-            if (SelectedCategories != null && SelectedCategories.Count != 0)
+            var TrainerCategories= new List<TrainerCategories>();
+            if (Trainer.SelectedCategories != null &&Trainer.SelectedCategories.Count != 0)
             {
-                foreach (var category in SelectedCategories)
+                foreach (var category in Trainer.SelectedCategories)
                 {
-                    categoryTrainer.Add(new TrainerCategories
+                        TrainerCategories.Add(new TrainerCategories
                     {
                         TrainerId = coach.TrainerId,
                         CategoryId = category
                     });
                 }
 
-                _context.CategoryTrainers.AddRange(categoryTrainer);
+                _context.CategoryTrainers.AddRange(TrainerCategories);
                 await _context.SaveChangesAsync();
             }
 
@@ -101,7 +100,6 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
             {
                 UserName = Email,
                 Email = Email,
-
                 PhoneNumber = Trainer.TrainerPhone,
                 EntityId = coach.TrainerId,
                 EntityName = "Trainer"
@@ -116,9 +114,9 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
             return RedirectToPage ("Index");
 
             }
-                if (categoryTrainer.Count != 0)
+                if (TrainerCategories.Count != 0)
                 {
-                    _context.CategoryTrainers.RemoveRange(categoryTrainer);
+                    _context.CategoryTrainers.RemoveRange(TrainerCategories);
                 }
             
             _context.Trainers.Remove(coach);
@@ -139,39 +137,16 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
         
         }
 
-        public async Task<IActionResult> OnGetCategoriesDepartment(int departmentId)
-        {
-            try
-            {
-
-                if (departmentId != 0)
-                {
-
-                    // Retrieve categories based on the department ID
-                    var categoriesInDepartment = _context.Categories
-                    .Where(e => e.IsActive && !e.IsDeleted && e.DepartmentId == departmentId).Select(c => new { c.CategoryId, c.CategoryName })
-                    .ToList();
-
-
-                    return new JsonResult(categoriesInDepartment);
-                }
-                return new JsonResult("SomeThing Went Wrong");
-            }
-            catch (Exception ex)
-            {
-                return new JsonResult(ex.Message); 
-            }
-        }
         public IActionResult OnGetGetDepartments(int id)
         {
             try
             {
-               
+
                 if (id != 0)
                 {
 
 
-                   var  departments = _context.Departments.Where(b =>b.IsActive && !b.IsDeleted && b.BranchId == id).Select(b=> new { b.DepartmentName, b.DepartmentId }).ToList();
+                    var departments = _context.Departments.Where(b => !b.IsDeleted && b.IsActive &&  b.BranchId == id).Select(b => new { b.DepartmentName, b.DepartmentId }).ToList();
 
 
                     return new JsonResult(departments);
@@ -186,6 +161,31 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
 
 
         }
+
+        public async Task<IActionResult> OnGetCategoriesDepartment(int departmentId)
+        {
+            try
+            {
+
+                if (departmentId != 0)
+                {
+
+                    // Retrieve categories based on the department ID
+                    var categoriesInDepartment = _context.Categories
+                    .Where(e => !e.IsDeleted && e.IsActive && e.DepartmentId == departmentId).Select(c => new { c.CategoryId, c.CategoryName })
+                    .ToList();
+
+
+                    return new JsonResult(categoriesInDepartment);
+                }
+                return new JsonResult("SomeThing Went Wrong");
+            }
+            catch (Exception ex)
+            {
+                return new JsonResult(ex.Message); 
+            }
+        }
+      
 
 
     }

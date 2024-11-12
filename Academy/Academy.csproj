@@ -70,6 +70,9 @@
 
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="wwwroot\Pages\" />
+    <Content Update="Pages\Shared\Partials\_sidebar.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 </Project>

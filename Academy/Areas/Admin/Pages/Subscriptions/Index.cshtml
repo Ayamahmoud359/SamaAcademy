@@ -1,0 +1,153 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Subscriptions.IndexModel
+@{
+    ViewBag.Title = "Subscriptions";
+     ViewBag.pTitle = "List";
+    ViewBag.pageTitle = "Subscriptions";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12 col-xl-12">
+        <div class="card card-height-100">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Subscriptions</h4>
+
+            </div>
+            <!-- end card header -->
+            <!-- card body -->
+            <div class="card-body">
+                @(Html.DevExtreme().DataGrid<Academy.DataGridVM.SubscriptionDataGridVM>()
+                    .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetSubscriptions").Key("SubscriptionId"))
+                    .RemoteOperations(true)
+                    .ColumnHidingEnabled(true)
+                    .Width("100%")
+                    .Columns(columns =>
+                    {
+                        // Example column configuration
+                        columns.AddFor(m => m.BranchName).Caption("Branch");
+                        columns.AddFor(m => m.DepartmentName).Caption("Department");
+                        columns.AddFor(m => m.CategoryName).Caption("Category");
+                        columns.AddFor(m => m.TraineeName).Caption("Trainee");
+                        columns.Add().Caption("Status").CellTemplate(@<text>
+                    <span>
+                        <%= data.IsActive ? "Active" : "Not Active" %>
+                    </span>
+                </text>);
+                        columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                    <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
+                        <a href="/Admin/Subscriptions/View?Id=<%- data.SubscriptionId %>" class="text-primary d-inline-block">
+
+                            @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
+                        </a>
+
+                       
+@* 
+                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.SubscriptionId) }").Type(ButtonType.Danger)
+ *@
+                    </div>
+                </text>);
+                    })
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    //.Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    //.OnExporting("exporting")
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    //.Selection(s => s.Mode(SelectionMode.Multiple))
+                    .Paging(paging => paging.PageSize(5).Enabled(true))
+                    .WordWrapEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    //.ColumnChooser(c => c.Enabled(true))
+                    .ColumnFixing(c => c.Enabled(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .Pager(pager =>
+                    {
+                        pager.Visible(true);
+                        pager.DisplayMode(GridPagerDisplayMode.Full);
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new JS("[5,10,20,50,100,'all']"));
+                        pager.ShowInfo(true);
+                        pager.ShowNavigationButtons(true);
+                    })
+                    .SearchPanel(searchPanel => searchPanel
+                    .Visible(true)
+                    .Placeholder("SearchTxt"))
+                    .RemoteOperations(false)
+                    @*  .Summary(s => s
+                .TotalItems(totalItems =>
+                {
+                totalItems.AddFor(m => m.BranchId).SummaryType(SummaryType.Count);
+                })
+                .GroupItems(groupItems =>
+                {
+                groupItems.Add().SummaryType(SummaryType.Count);
+                })
+                ) *@
+                    )
+
+            </div>
+            <!-- End Card Body  -->
+            <!-- Start Delete Popup  -->
+            <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1"
+                 aria-labelledby="deleteRecordLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close" id="btn-close"></button>
+                        </div>
+                        <div class="modal-body p-5 text-center">
+                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json"
+                                       trigger="loop" colors="primary:#405189,secondary:#f06548"
+                                       style="width:90px;height:90px"></lord-icon>
+                            <div class="mt-4 text-center">
+
+
+                                <h4 class="fs-semibold">You are about to delete This Subscription </h4>
+                                <p class="text-muted fs-14 mb-4 pt-1">
+                                    Deleting This Subscription will remove all of its information .
+                                </p>
+                                <div class="hstack gap-2 justify-content-center remove">
+                                    <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close"
+                                            data-bs-dismiss="modal">
+                                        <i class="ri-close-line me-1 align-middle"></i>
+                                        Close
+                                    </button>
+                                    <form asp-area="Admin" asp-page="/Subscriptions/Index" asp-page-handler="DeleteSubscription">
+                                        <input asp-for="@Model.Subscriptionid" id="DeleteSubscription" hidden>
+                                        <button class="btn btn-danger" type="submit" id="delete-record">
+                                            Yes,
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Delete Popup  -->
+        
+        </div>
+    </div>
+    </div>
+
+    <script>
+               function Delete(Id) {
+
+        document.getElementById("DeleteSubscription").value = Id
+                 $('#deleteRecordModal').modal('show');
+
+         };
+
+       
+
+
+    </script>
+

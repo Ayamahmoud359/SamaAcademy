@@ -4,22 +4,32 @@ namespace Academy.DTO
 {
     public class SubscriptionVM
     {
-        [DataType(DataType.Date)]
+
+        [Required(ErrorMessage = "Trainee is required")]
+        [Display(Name = "Trainee")]
+        public int TraineeId { get; set; }
+
+        [Required(ErrorMessage = "Branch is required")]
+        [Display(Name = "Branch")]
+        public int BranchId { get; set; }
+
+        
         [Required(ErrorMessage = "Supsciption StartDate is required")]
         [Display(Name = "StartDate")]
-        public string StartDate { get; set; }
-        [DataType(DataType.Date)]
+        public DateOnly? StartDate { get; set; }
+
+
         [Required(ErrorMessage = "Supsciption EndDate is required")]
         [Display(Name = "EndDate")]
-        public string EndDate { get; set; }
+        public DateOnly? EndDate { get; set; }
 
-        //[Required(ErrorMessage = "Department is required")]
+        [Required(ErrorMessage = "Department is required")]
         [Display(Name = "Department")]
-        public int? DepartmentId { get; set; }
+        public int DepartmentId { get; set; }
 
-        //[Required(ErrorMessage = "Category is required")]
+        [Required(ErrorMessage = "Category is required")]
         [Display(Name = "Category")]
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
     }
 }

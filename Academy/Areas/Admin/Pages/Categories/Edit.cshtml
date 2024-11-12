@@ -1,0 +1,63 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Categories.EditModel
+@{
+    ViewBag.Title = "Categories";
+    ViewBag.pTitle = "Edit Category";
+    ViewBag.pageTitle = "Categories";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Edit Category</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form method="post">
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.category.CategoryId" class="form-label">ID</label>
+                            <input asp-for="@Model.category.CategoryId" class="form-control" />
+                            <span asp-validation-for="@Model.category.CategoryId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.category.CategoryName" class="form-label">Category Name</label>
+                            <input asp-for="@Model.category.CategoryName" class="form-control" />
+                            <span asp-validation-for="@Model.category.CategoryName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.category.CategoryDescription" class="form-label">Category Description</label>
+                            <input asp-for="@Model.category.CategoryDescription" class="form-control" />
+                            <span asp-validation-for="@Model.category.CategoryDescription" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3" style="display:none">
+                            <label class="form-label" asp-for="@Model.category.DepartmentId">Department</label>
+                            <input asp-for="@Model.category.DepartmentId" class="form-control" />
+                            <span asp-validation-for="@Model.category.DepartmentId" class="text-danger"></span>
+
+                        </div><!--end col-->
+                        <div class="mb-3">
+                            @Html.CheckBoxFor(m => m.category.IsActive, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="Active">
+                                Is Active?
+                            </label>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Save </button>
+                            <a href="/Admin/Departments" class="text-primary d-inline-block">
+                                <button type="button" class="btn btn-primary">Back To List </button>
+                            </a>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -3,9 +3,9 @@
 @{
 }
 @{
-    ViewBag.Title = "Edit Department";
+    ViewBag.Title = "Departments";
     ViewBag.pTitle = "Edit Department";
-    ViewBag.pageTitle = "Edit";
+    ViewBag.pageTitle = "Departments";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
@@ -39,12 +39,9 @@
                         
                         <div class="mb-3" style="display:none">
                             <label class="form-label" asp-for="@Model.Dept.BranchId">Branch</label>
-                            <select asp-for="@Model.Dept.BranchId" asp-items="@(new SelectList(Model.Branches, "BranchId", "BranchName"))" class="form-control form-select" >
-                                <option selected disabled>Choose...</option>
-
-                            </select>
+                            <input asp-for="@Model.Dept.BranchId" class="form-control" />
                             <span asp-validation-for="@Model.Dept.BranchId" class="text-danger"></span>
-
+                          
                         </div><!--end col-->
                         <div class="mb-3">
                             @Html.CheckBoxFor(m => m.Dept.IsActive, new { @class = "form-check-input" })
@@ -65,5 +62,4 @@
             </div>
         </div>
     </div>
-
-
+</div>

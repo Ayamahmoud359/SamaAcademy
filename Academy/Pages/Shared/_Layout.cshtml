@@ -6,6 +6,7 @@
 <html lang="en" id="htmlRoot" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg">
 <head>
    
+   
     <style>
         .password-input {
             padding-right: 40px; /* Add space for the eye icon */
@@ -21,8 +22,6 @@
             border: none;
             cursor: pointer;
         }
-    </style>
-    <style>
         /* Custom style for the select box */
         .custom-select {
             background-color: #f8f9fa; /* Light background color */
@@ -158,7 +157,7 @@
 
             <div class="page-content">
                 <div class="container-fluid">
-                    @Html.Partial("~/Pages/Shared/Partials/_page_title.cshtml")
+                    @Html.Partial("~/Pages/Shared/Partials/_page_title.cshtml") 
                     @RenderBody()
                 </div>
             </div>
@@ -182,14 +181,7 @@
     @Html.Partial("~/Pages/Shared/_ValidationScriptsPartial.cshtml")
     @await Component.InvokeAsync("NToastNotify")
 
- <script>
-             $(document).ready(function() {
-            $('.form-select').select2({
-              //  placeholder: "Choose...",
-              //  allowClear:false
-            });
-        });
- </script>
+
 </body>
 </html>
 

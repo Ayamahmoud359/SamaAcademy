@@ -1,0 +1,107 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Trainees.EditModel
+
+@{
+    ViewBag.Title = "Trainees";
+    ViewBag.pTitle = "Edit Trainee Information";
+    ViewBag.pageTitle = "Trainees";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Edit Trainee</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Trainee.TraineeName" class="form-label">Trainee Name</label>
+                            <input asp-for="@Model.Trainee.TraineeName" class="form-control" />
+                            <span asp-validation-for="@Model.Trainee.TraineeName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Trainee.TraineeEmail" class="form-label">Trainee Email</label>
+                            <input asp-for="@Model.Trainee.TraineeEmail" class="form-control" />
+                            <span asp-validation-for="@Model.Trainee.TraineeEmail" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Trainee.TraineeId" class="form-label">ID</label>
+                            <input asp-for="@Model.Trainee.TraineeId" class="form-control" />
+                            <span asp-validation-for="@Model.Trainee.TraineeId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Trainee.ParentId" class="form-label">Trainee Parent</label>
+                            <input asp-for="@Model.Trainee.ParentId" class="form-control" />
+                            <span asp-validation-for="@Model.Trainee.ParentId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.Trainee.TraineePhone" class="form-label">Trainee Phone</label>
+                            <input asp-for="@Model.Trainee.TraineePhone" class="form-control" />
+                            <span asp-validation-for="@Model.Trainee.TraineePhone" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Trainee.TraineeAddress" class="form-label">Trainee Address</label>
+                            <input asp-for="@Model.Trainee.TraineeAddress" class="form-control" />
+                            <span asp-validation-for="@Model.Trainee.TraineeAddress" class="text-danger"></span>
+                        </div>
+                        @if (Model.Trainee.BirthDate != null)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model. Trainee.BirthDate" class="form-label">Trainee BirthDate</label>
+                                <input type="date" asp-for="@Model.Trainee.BirthDate" class="form-control" />
+                                <span asp-validation-for="@Model.Trainee.BirthDate" class="text-danger"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.Trainee.BirthDate" class="form-label">Trainee BirthDate</label>
+                                <input type="date" asp-for="@Model.Trainee.BirthDate" class="form-control" value="" />
+                                <span asp-validation-for="@Model.Trainee.BirthDate" class="text-danger"></span>
+                            </div>
+                        }
+                        <div class="mb-3">
+                            <label asp-for="@Model.Trainee.ResidencyNumber" class="form-label">Trainee ResidencyNumber</label>
+                            <input asp-for="@Model.Trainee.ResidencyNumber" class="form-control" />
+                            <span asp-validation-for="@Model.Trainee.ResidencyNumber" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" asp-for="@Model.Trainee.Nationality">Nationality</label>
+                            <select asp-for=" @Model.Trainee.Nationality" class="form-select">
+                                <option selected disabled value="0">Choose...</option>
+                                @foreach (var nationality in Model.Nationalities)
+                                {
+                                    <option value="@nationality.Value">
+                                        @nationality.Text
+                                    </option>
+                                }
+                            </select>
+
+                            <span asp-validation-for="@Model.Trainee.Nationality" class="text-danger"></span>
+
+                        </div><!--end col-->
+                        
+                        <div class="mb-3">
+                            @Html.CheckBoxFor(m => m.Trainee.IsActive, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="Active">
+                                Is Active?
+                            </label>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Add Parent</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div><!--end row-->

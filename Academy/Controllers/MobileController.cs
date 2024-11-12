@@ -117,7 +117,7 @@ namespace Academy.Controllers
         [Route("GetTrainersByCategoryId")]
         public async Task<ActionResult<List<Trainer>> > GetTrainersByCategoryId(int CategoryId)
         {
-            var trainers = await _context.Trainers.Include(e=>e.CategoryTrainers).Where(e => e.CategoryTrainers.Any(e=>e.CategoryId== CategoryId) && e.IsActive).ToListAsync();
+            var trainers = await _context.Trainers.Include(e=>e.TrainerCategories).Where(e => e.TrainerCategories.Any(e=>e.CategoryId== CategoryId) && e.IsActive).ToListAsync();
             return Ok(trainers);
         }
         #endregion

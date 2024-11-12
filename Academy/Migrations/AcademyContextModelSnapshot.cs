@@ -30,7 +30,7 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AbsenceId"));
 
-                    b.Property<DateTime>("AbsenceDate")
+                    b.Property<DateTime?>("AbsenceDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsAbsent")
@@ -42,9 +42,6 @@ namespace Academy.Migrations
                     b.Property<int>("SubscriptionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TraineeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TrainerId")
                         .HasColumnType("int");
 
@@ -54,8 +51,6 @@ namespace Academy.Migrations
                     b.HasKey("AbsenceId");
 
                     b.HasIndex("SubscriptionId");
-
-                    b.HasIndex("TraineeId");
 
                     b.HasIndex("TrainerId");
 
@@ -132,9 +127,8 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChampionId"));
 
-                    b.Property<string>("ChampionDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateOnly?>("ChampionDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("ChampionDescription")
                         .IsRequired()
@@ -206,6 +200,9 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExamId"));
 
+                    b.Property<DateOnly?>("ExamDate")
+                        .HasColumnType("date");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -215,23 +212,15 @@ namespace Academy.Migrations
                     b.Property<int>("Score")
                         .HasColumnType("int");
 
-                    b.Property<string>("ScoreDate")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("SubscriptionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TraineeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TrainerId")
+                    b.Property<int?>("TrainerId")
                         .HasColumnType("int");
 
                     b.HasKey("ExamId");
 
                     b.HasIndex("SubscriptionId");
-
-                    b.HasIndex("TraineeId");
 
                     b.HasIndex("TrainerId");
 
@@ -245,9 +234,6 @@ namespace Academy.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ParentId"));
-
-                    b.Property<int?>("BranchId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -276,8 +262,6 @@ namespace Academy.Migrations
 
                     b.HasKey("ParentId");
 
-                    b.HasIndex("BranchId");
-
                     b.ToTable("Parents");
                 });
 
@@ -289,17 +273,17 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionId"));
 
-                    b.Property<int>("BranchId")
+                    b.Property<int?>("Branch")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CategoryId")
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<int>("DepartmentId")
+                    b.Property<int?>("Department")
                         .HasColumnType("int");
 
-                    b.Property<string>("EndDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateOnly?>("EndDate")
+                        .HasColumnType("date");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -307,19 +291,15 @@ namespace Academy.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("StartDate")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateOnly?>("StartDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("TraineeId")
                         .HasColumnType("int");
 
                     b.HasKey("SubscriptionId");
 
-                    b.HasIndex("BranchId");
-
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("TraineeId");
 
@@ -334,9 +314,8 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TraineeId"));
 
-                    b.Property<string>("BirthDate")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateOnly?>("BirthDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -350,7 +329,7 @@ namespace Academy.Migrations
                     b.Property<string>("Nationality")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ParentId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("int");
 
                     b.Property<string>("ResidencyNumber")
@@ -414,11 +393,14 @@ namespace Academy.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerId"));
 
-                    b.Property<int>("Branch")
+                    b.Property<int?>("CurrentBranch")
                         .HasColumnType("int");
 
-                    b.Property<int?>("BranchId")
+                    b.Property<int?>("CurrentDepartment")
                         .HasColumnType("int");
+
+                    b.Property<DateOnly?>("HiringDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -428,9 +410,6 @@ namespace Academy.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime>("SubscriptionDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("TrainerAddress")
                         .IsRequired()
@@ -449,8 +428,6 @@ namespace Academy.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TrainerId");
-
-                    b.HasIndex("BranchId");
 
                     b.ToTable("Trainers");
                 });
@@ -491,10 +468,6 @@ namespace Academy.Migrations
                         .HasForeignKey("SubscriptionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Academy.Models.Trainee", null)
-                        .WithMany("Absences")
-                        .HasForeignKey("TraineeId");
 
                     b.HasOne("Academy.Models.Trainer", "Trainer")
                         .WithMany("Absences")
@@ -548,43 +521,20 @@ namespace Academy.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Academy.Models.Trainee", null)
-                        .WithMany("Exams")
-                        .HasForeignKey("TraineeId");
-
                     b.HasOne("Academy.Models.Trainer", "Trainer")
                         .WithMany("Exams")
-                        .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TrainerId");
 
                     b.Navigation("Subscription");
 
                     b.Navigation("Trainer");
                 });
 
-            modelBuilder.Entity("Academy.Models.Parent", b =>
-                {
-                    b.HasOne("Academy.Models.Branch", null)
-                        .WithMany("Parents")
-                        .HasForeignKey("BranchId");
-                });
-
             modelBuilder.Entity("Academy.Models.Subscription", b =>
                 {
-                    b.HasOne("Academy.Models.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Academy.Models.Category", "Category")
                         .WithMany("Subscriptions")
-                        .HasForeignKey("CategoryId");
-
-                    b.HasOne("Academy.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -594,11 +544,7 @@ namespace Academy.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Branch");
-
                     b.Navigation("Category");
-
-                    b.Navigation("Department");
 
                     b.Navigation("Trainee");
                 });
@@ -607,9 +553,7 @@ namespace Academy.Migrations
                 {
                     b.HasOne("Academy.Models.Parent", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
                 });
@@ -633,23 +577,16 @@ namespace Academy.Migrations
                     b.Navigation("Trainee");
                 });
 
-            modelBuilder.Entity("Academy.Models.Trainer", b =>
-                {
-                    b.HasOne("Academy.Models.Branch", null)
-                        .WithMany("Trainers")
-                        .HasForeignKey("BranchId");
-                });
-
             modelBuilder.Entity("Academy.Models.TrainerCategories", b =>
                 {
                     b.HasOne("Academy.Models.Category", "Category")
-                        .WithMany("CategoryTrainers")
+                        .WithMany("TrainerCategories")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Academy.Models.Trainer", "Trainer")
-                        .WithMany("CategoryTrainers")
+                        .WithMany("TrainerCategories")
                         .HasForeignKey("TrainerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -662,17 +599,13 @@ namespace Academy.Migrations
             modelBuilder.Entity("Academy.Models.Branch", b =>
                 {
                     b.Navigation("Departments");
-
-                    b.Navigation("Parents");
-
-                    b.Navigation("Trainers");
                 });
 
             modelBuilder.Entity("Academy.Models.Category", b =>
                 {
-                    b.Navigation("CategoryTrainers");
-
                     b.Navigation("Subscriptions");
+
+                    b.Navigation("TrainerCategories");
                 });
 
             modelBuilder.Entity("Academy.Models.Champion", b =>
@@ -701,10 +634,6 @@ namespace Academy.Migrations
 
             modelBuilder.Entity("Academy.Models.Trainee", b =>
                 {
-                    b.Navigation("Absences");
-
-                    b.Navigation("Exams");
-
                     b.Navigation("Subscriptions");
 
                     b.Navigation("TraineeChampions");
@@ -714,9 +643,9 @@ namespace Academy.Migrations
                 {
                     b.Navigation("Absences");
 
-                    b.Navigation("CategoryTrainers");
-
                     b.Navigation("Exams");
+
+                    b.Navigation("TrainerCategories");
                 });
 #pragma warning restore 612, 618
         }

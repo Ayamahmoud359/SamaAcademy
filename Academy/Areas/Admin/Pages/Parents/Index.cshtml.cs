@@ -1,6 +1,7 @@
 using Academy.Data;
 using Academy.DTO;
 using Academy.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -16,10 +17,12 @@ namespace Academy.Areas.Admin.Pages.Parents
         [BindProperty]
         public int Parentid { set; get; }
         private readonly IToastNotification _toastNotification;
-        public IndexModel(AcademyContext context, IToastNotification toastNotification)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public IndexModel(AcademyContext context, IToastNotification toastNotification, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _toastNotification = toastNotification;
+            _userManager = userManager;
         }
         public void OnGet()
         {
@@ -37,22 +40,29 @@ namespace Academy.Areas.Admin.Pages.Parents
                     parent.IsActive = false;
                     parent.IsDeleted = true;
                     _context.Attach(parent).State = EntityState.Modified;
+                    var user = await _userManager.FindByNameAsync(parent.ParentEmail);
+                    if (user != null)
+                    {
+                        var result = await _userManager.DeleteAsync(user);
+                        if (result.Succeeded)
+                        {
 
-                    await _context.SaveChangesAsync();
-                    _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                            await _context.SaveChangesAsync();
+                            _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                            return RedirectToPage("Index");
+                        }
+
+                    }
                 }
 
-                else
-                {
-                    _toastNotification.AddErrorToastMessage("Something went wrong");
-                }
+              
             }
             catch (Exception)
 
             {
                 _toastNotification.AddErrorToastMessage("Something went wrong");
             }
-
+            _toastNotification.AddErrorToastMessage("Something went wrong");
             return RedirectToPage("Index");
 
         }

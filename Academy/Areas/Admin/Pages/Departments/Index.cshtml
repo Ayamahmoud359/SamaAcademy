@@ -1,6 +1,10 @@
 ﻿@page
 @model Academy.Areas.Admin.Pages.Departments.IndexModel
-@{  
+@{
+    ViewBag.Title = "Departments";
+    ViewBag.pTitle = "List";
+    ViewBag.pageTitle = "Departments";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
 <div class="row">
@@ -8,29 +12,27 @@
         <div class="card card-height-100">
             <div class="card-header align-items-center d-flex">
                 <h4 class="card-title mb-0 flex-grow-1">Departments</h4>
-                <div class="flex-shrink-0">
+            @*     <div class="flex-shrink-0">
                     <a href="/admin/Departments/Add" class="btn btn-soft-primary">
                         Add Department
                     </a>
-                </div>
+                </div> *@
             </div>
             <!-- end card header -->
             <!-- card body -->
             <div class="card-body">
-                @(Html.DevExtreme().DataGrid<Academy.Models.Department>()
-                    .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetDepartments").Key("DepartmentId"))
-                    .RemoteOperations(true)
-                    .ColumnHidingEnabled(true)
-                    .Width("100%")
-                    .Columns(columns =>
-                    {
+                @(
+                    Html.DevExtreme().DataGrid<Academy.DataGridVM.DepartmentDataGridVM>()
+                        .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetDepartments").Key("DepartmentId"))
+                        .RemoteOperations(true)
+                        .ColumnHidingEnabled(true)
+                        .Width("100%")
+                        .Columns(columns =>
+                        {
                         // Example column configuration
                         columns.AddFor(m => m.DepartmentName).Caption("Department Name");
-                        columns.AddFor(m => m.BranchId).Caption("Branch").Lookup(lookup => lookup
-                        .DataSource(ds => ds.WebApi().Controller("Data").LoadAction("BranchsLookup").Key("Value"))
-                .ValueExpr("Value")
-                .DisplayExpr("Text")
-                );
+                        columns.AddFor(m => m.BranchName).Caption("Branch");
+                    
                         columns.Add().Caption("Status").CellTemplate(@<text>
                     <span>
                         <%= data.IsActive ? "Active" : "Not Active" %>
@@ -186,7 +188,8 @@
     </div>
 </div>
 
-                        <script>
+</div>
+<script>
            function Delete(Id) {
      
              document.getElementById("Deletedept").value = Id
@@ -196,15 +199,15 @@
 
     var currentKey;
 
-        $(document).ready(function () {
-            // Initialize jQuery validation (only if you're using jQuery Validation in the form)
-            // $("#frm").validate({
-            //     errorClass: 'text-danger',
-            //     validClass: 'text-success'
-            // });
-   $('#customPopup').dxPopup('instance').option('visible', true);
-    $('#customPopup').dxPopup('instance').option('visible', false);
-         });
+   //      $(document).ready(function () {
+   //          // Initialize jQuery validation (only if you're using jQuery Validation in the form)
+   //          // $("#frm").validate({
+   //          //     errorClass: 'text-danger',
+   //          //     validClass: 'text-success'
+   //          // });
+   // $('#customPopup').dxPopup('instance').option('visible', true);
+   //  $('#customPopup').dxPopup('instance').option('visible', false);
+   //       });
         //                     function onPopupShown() {
         //                         console.log("shown")
         //     var form = document.getElementById('frm');
@@ -272,6 +275,9 @@
                         console.log(response)
                         if (response == "Added") {
                             $('#customPopup').dxPopup('instance').option('visible', false);
+                        }
+                        else if (response=="Sorry ,You can't add new Category in this Department as This Department isn't Active or in Branch isn't Active"){
+                        document.getElementById("Err").innerHTML = response
                         }
                         else if (response=="SomeThing Went Wrong") {
                             console.log(currentKey)
