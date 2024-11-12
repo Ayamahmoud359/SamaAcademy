@@ -35,6 +35,11 @@ namespace Academy.Areas.Admin.Pages.Departments
                 //var category = JsonConvert.DeserializeObject<Category>(data);
                 if (category != null)
                 {
+                    var department = _context.Departments.Include(d=>d.Branch).FirstOrDefault(d=>d.DepartmentId==category.DepartmentId);
+                    if (department != null && (!department.IsActive||!department.Branch.IsActive))
+                    {
+                        return new JsonResult("Sorry ,You can't add new Category in this Department as This Department isn't Active or in Branch isn't Active");
+                    }
                     Category newCategory = new Category()
                     {
                         CategoryName=category.CategoryName,

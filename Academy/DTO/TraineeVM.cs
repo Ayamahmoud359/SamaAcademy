@@ -40,7 +40,7 @@ namespace Academy.DTO
        
         [Required(ErrorMessage = "Trainee Birthdate is required")]
         [Display(Name = "Trainee Birthdate")]
-        public DateOnly BirthDate { get; set; }
+        public DateOnly? BirthDate { get; set; }
 
         public string? Image { get; set; }
         [Required(ErrorMessage = "Trainee Nationality is required")]

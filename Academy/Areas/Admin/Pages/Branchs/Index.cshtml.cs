@@ -33,6 +33,11 @@ namespace Academy.Areas.Admin.Pages.Branchs
                 //var category = JsonConvert.DeserializeObject<Category>(data);
                 if (dept != null)
                 {
+                    var branch = _context.Branches.Find(dept.BranchId);
+                   if (branch!=null&&!branch.IsActive)
+                    {
+                        return new JsonResult("Sorry ,You can't add new Department in this Branch as This Branch isn't Active");
+                    }
                     Department department = new Department()
                     {
 

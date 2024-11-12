@@ -75,5 +75,13 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
-
+app.MapAreaControllerRoute(
+    name: "admin",
+    areaName: "Admin",
+    pattern: "admin/{controller=Home}/{action=Index}/{id?}"
+);
+app.MapGet("/", async context =>
+{
+   context.Response.Redirect("/admin");
+});
 app.Run();

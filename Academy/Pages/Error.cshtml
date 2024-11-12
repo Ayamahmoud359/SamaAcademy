@@ -1,9 +1,45 @@
 ﻿@page
 @model ErrorModel
 @{
-    ViewData["Title"] = "Error";
-    Layout = "~/Pages/Shared/_Layout.cshtml";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error </title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .error-container {
+            text-align: center;
+        }
+        .error-code {
+            font-size: 120px;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .error-message {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+        .btn-home {
+            margin-top: 30px;
+            padding: 12px 30px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
 <div class="container d-flex justify-content-center align-items-center min-vh-100">
     <div class="text-center">
         <!-- Error Code -->
@@ -19,3 +55,8 @@
     </div>
 </div>
 
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+</body>
+</html>

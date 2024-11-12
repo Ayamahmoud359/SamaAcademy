@@ -69,4 +69,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="Pages\Shared\Partials\_sidebar.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

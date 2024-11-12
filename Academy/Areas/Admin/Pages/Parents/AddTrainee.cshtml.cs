@@ -24,6 +24,7 @@ namespace Academy.Areas.Admin.Pages.Parents
 
         public List<SelectListItem> Nationalities { get; set; }
 
+
         private readonly AcademyContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -35,6 +36,16 @@ namespace Academy.Areas.Admin.Pages.Parents
             _userManager = userManager;
             _signInManager = signInManager;
 
+            Nationalities = new List<SelectListItem>
+                {
+            new SelectListItem { Text = "American", Value = "US" },
+            new SelectListItem { Text = "Canadian", Value = "CA" },
+            new SelectListItem { Text = "Mexican", Value = "MX" },
+            new SelectListItem { Text = "British", Value = "GB" },
+            new SelectListItem { Text = "German", Value = "DE" },
+            new SelectListItem { Text = "Indian", Value = "IN" },
+            new SelectListItem { Text = "Australian", Value = "AU" },
+        };
 
         }
 
@@ -48,16 +59,6 @@ namespace Academy.Areas.Admin.Pages.Parents
                 {
                     trainee.ParentId = id;
 
-                    Nationalities = new List<SelectListItem>
-                {
-            new SelectListItem { Text = "American", Value = "US" },
-            new SelectListItem { Text = "Canadian", Value = "CA" },
-            new SelectListItem { Text = "Mexican", Value = "MX" },
-            new SelectListItem { Text = "British", Value = "GB" },
-            new SelectListItem { Text = "German", Value = "DE" },
-            new SelectListItem { Text = "Indian", Value = "IN" },
-            new SelectListItem { Text = "Australian", Value = "AU" },
-        };
                     return Page();
                 }
                 return RedirectToPage("../Error");
@@ -84,7 +85,7 @@ namespace Academy.Areas.Admin.Pages.Parents
                     TraineeName = trainee.TraineeName,
                     TraineePhone=trainee.TraineePhone,
                     TraineeAddress=trainee.TraineeAddress,
-                    TraineeEmail=trainee.Email,
+                    TraineeEmail=Email,
                     BirthDate=trainee.BirthDate,
                     ParentId=trainee.ParentId,
                     Nationality=trainee.Nationality,
@@ -110,7 +111,7 @@ namespace Academy.Areas.Admin.Pages.Parents
 
                     if (result.Succeeded)
                     {
-                        return RedirectToPage("/Admin/Trainees/Index");
+                        return Redirect("~/Admin/Trainees/Index");
 
                     }
                    

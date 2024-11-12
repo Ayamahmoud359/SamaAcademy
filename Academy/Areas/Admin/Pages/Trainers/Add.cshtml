@@ -3,9 +3,9 @@
 @Html.AntiForgeryToken()
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @{
-    ViewBag.Title = "Add Trainer";
+    ViewBag.Title = "Trainers";
     ViewBag.pTitle = "Add Trainer";
-    ViewBag.pageTitle = "Add";
+    ViewBag.pageTitle = "Trainers";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
@@ -44,6 +44,23 @@
                             <input  asp-for="@Model.Trainer.TrainerAddress"  class="form-control" />
                             <span asp-validation-for="@Model.Trainer.TrainerAddress" class="text-danger"></span>   
                         </div>
+                        @if (Model.Trainer.HiringDate != null)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.Trainer.HiringDate" class="form-label">Trainer Hiring Date</label>
+                                <input type="date" asp-for="@Model.Trainer.HiringDate" class="form-control" />
+                                <span asp-validation-for="@Model.Trainer.HiringDate" class="text-danger"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.Trainer.HiringDate" class="form-label">Trainer Hiring Date</label>
+                                <input type="date" asp-for="@Model.Trainer.HiringDate" class="form-control" value="" />
+                                <span asp-validation-for="@Model.Trainer.HiringDate" class="text-danger"></span>
+                            </div>
+                        }
+
                         <div class="mb-3">
                             <label class="form-label" asp-for="@Model.Trainer.BranchId">Branch</label>
                             <select  onchange="GetBranchDepartments(this.value)" asp-for=" @Model.Trainer.BranchId" asp-items="@(new SelectList(Model.Branches, "BranchId", "BranchName"))" class="form-select"  >
@@ -114,6 +131,15 @@
 
 
 <script>
+
+  
+        $(document).ready(function() {
+            $('.custom-select').select2({
+                //  placeholder: "Choose...",
+                //  allowClear:false
+            });
+            });
+
     function GetBranchDepartments( value) {
         console.log(value)
         // Send AJAX request to the controller's action method
@@ -182,14 +208,8 @@
                 success: function (data) {
                     console.log(data);
                     if (Array.isArray(data) && typeof data !== "string") {
-                          if(data.length==0){
-                            console.log(data.length);
-                            var categoryDiv = $('#Category');
-                            console.log(categoryDiv);
-                            $('#Category').hide();
-                            
-                        }
-                        else{
+                         
+                        
                               // Find the select element
                         var select = $('#CategoryId');
                         console.log(select);
@@ -205,7 +225,7 @@
                         });
                         }
                       
-                    }
+                    
                          else {
                         console.log('Error loading options:', error);
                     }

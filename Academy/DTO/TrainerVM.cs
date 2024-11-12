@@ -29,6 +29,8 @@ namespace Academy.DTO
         public string TrainerPhone { get; set; }
         [Required(ErrorMessage = "Trainer Address is required")]
         public string TrainerAddress { get; set; }
+        [Required(ErrorMessage = "Trainer Hiring date Date is required")]
+        public DateOnly? HiringDate { get; set; }
 
         [Required(ErrorMessage = "Branch is required")]
         public int BranchId { get; set; }

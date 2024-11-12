@@ -18,7 +18,7 @@ namespace Academy.Models
         public string? Image { get; set; }
         public bool IsActive { get; set; }
         public bool IsDeleted { get; set; }
-        public DateOnly  SubscriptionDate { get; set; }
+        public DateOnly? HiringDate { get; set; }
         public int? CurrentBranch { get; set; }
 
         public int? CurrentDepartment{ get; set; }

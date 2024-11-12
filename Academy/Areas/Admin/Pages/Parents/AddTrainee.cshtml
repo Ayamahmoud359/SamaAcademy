@@ -5,9 +5,9 @@
 @Html.AntiForgeryToken()
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @{
-    ViewBag.Title = "Add Trainee";
+    ViewBag.Title = "Parents";
     ViewBag.pTitle = "Add Trainee";
-    ViewBag.pageTitle = "Add";
+    ViewBag.pageTitle = "Parents";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
@@ -46,12 +46,22 @@
                             <input asp-for="@Model.trainee.TraineeAddress" class="form-control" />
                             <span asp-validation-for="@Model.trainee.TraineeAddress" class="text-danger"></span>
                         </div>
-
-                        <div class="mb-3">
-                            <label asp-for="@Model.trainee.BirthDate" class="form-label">Trainee BirthDate</label>
-                            <input asp-for="@Model.trainee.BirthDate" class="form-control" />
-                            <span asp-validation-for="@Model.trainee.BirthDate" class="text-danger"></span>
-                        </div>
+                        @if(Model.trainee.BirthDate!=null){
+                            <div class="mb-3">
+                                <label asp-for="@Model.trainee.BirthDate" class="form-label">Trainee BirthDate</label>
+                                <input type="date" asp-for="@Model.trainee.BirthDate" class="form-control"  />
+                                <span asp-validation-for="@Model.trainee.BirthDate" class="text-danger"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.trainee.BirthDate" class="form-label">Trainee BirthDate</label>
+                                <input type="date" asp-for="@Model.trainee.BirthDate" class="form-control" value="" />
+                                <span asp-validation-for="@Model.trainee.BirthDate" class="text-danger"></span>
+                            </div>
+                        }
+                      
                         <div class="mb-3">
                             <label asp-for="@Model.trainee.ResidencyNumber" class="form-label">Trainee ResidencyNumber</label>
                             <input asp-for="@Model.trainee.ResidencyNumber" class="form-control" />

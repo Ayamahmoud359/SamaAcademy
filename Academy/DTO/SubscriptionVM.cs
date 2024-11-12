@@ -16,12 +16,12 @@ namespace Academy.DTO
         
         [Required(ErrorMessage = "Supsciption StartDate is required")]
         [Display(Name = "StartDate")]
-        public DateOnly StartDate { get; set; }
+        public DateOnly? StartDate { get; set; }
 
 
         [Required(ErrorMessage = "Supsciption EndDate is required")]
         [Display(Name = "EndDate")]
-        public DateOnly EndDate { get; set; }
+        public DateOnly? EndDate { get; set; }
 
         [Required(ErrorMessage = "Department is required")]
         [Display(Name = "Department")]
@@ -29,7 +29,7 @@ namespace Academy.DTO
 
         [Required(ErrorMessage = "Category is required")]
         [Display(Name = "Category")]
-        public int? CategoryId { get; set; }
+        public int CategoryId { get; set; }
 
     }
 }

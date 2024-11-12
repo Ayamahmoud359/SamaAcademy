@@ -14,7 +14,7 @@ namespace Academy.Models
         //Department Id
         [ForeignKey("Department")]
         public int DepartmentId { get; set; }
-        public Department? Department { get; set; }
+        public Department? Department { get; set; } 
         ///list of SubCategory
        // public ICollection<SubCategory> SubCategories { get; set; } = new List<SubCategory>();
         public ICollection<TrainerCategories> TrainerCategories { get; set; } = new List<TrainerCategories>();

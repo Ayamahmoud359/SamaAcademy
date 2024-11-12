@@ -1,6 +1,7 @@
 using Academy.Data;
 using Academy.DTO;
 using Academy.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -18,10 +19,12 @@ namespace Academy.Areas.Admin.Pages.Trainees
         public List<Branch> Branches { get; set; }
         public List<Department> Departments { get; set; }
         public List<Category> Categories { get; set; }
-        public IndexModel(AcademyContext context, IToastNotification toastNotification)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public IndexModel(AcademyContext context, IToastNotification toastNotification, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _toastNotification = toastNotification;
+            _userManager = userManager;
         }
         public void OnGet()
         {
@@ -36,6 +39,11 @@ namespace Academy.Areas.Admin.Pages.Trainees
             {
                 if (subscription != null)
                 {
+                    var traineee = _context.Trainees.FirstOrDefault(d => d.TraineeId == subscription.TraineeId);
+                    if (traineee != null && !traineee.IsActive )
+                    {
+                        return new JsonResult("Sorry ,You can't add new Supscription for This Trianee as This Trainee isn't Active");
+                    }
                     Subscription newsubscription = new Subscription()
                     {
 
@@ -54,10 +62,19 @@ namespace Academy.Areas.Admin.Pages.Trainees
                         return new JsonResult("EndDate must be greater than StartDate");
                     }
                 
-                    if(_context.Subscriptions.Any(s=>s.Branch==newsubscription.Branch
+                    if(_context.Subscriptions.Any(s=>
+                    (!s.IsDeleted
+                    &&s.TraineeId==newsubscription.TraineeId
+                    && s.Branch==newsubscription.Branch
                     &&s.Department==newsubscription.Department
                    && s.CategoryId==newsubscription.CategoryId
-                    && s.EndDate>newsubscription.StartDate))
+                   )
+                   &&
+                   (
+                   s.EndDate > newsubscription.StartDate
+                   ||s.EndDate>DateOnly.FromDateTime(DateTime.Now))
+                    
+                    ))
                     {
                         return new JsonResult("You have an active subscription on this department ,you can subscripe after your current subscription ended");
                     }
@@ -89,21 +106,29 @@ namespace Academy.Areas.Admin.Pages.Trainees
                     trainee.IsActive = false;
                     trainee.IsDeleted = true;
                     _context.Attach(trainee).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-                    _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                    var user = await _userManager.FindByNameAsync(trainee.TraineeEmail);
+                    if (user != null)
+                    {
+                        var result = await _userManager.DeleteAsync(user);
+                        if (result.Succeeded)
+                        {
+
+                            await _context.SaveChangesAsync();
+                            _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                            return RedirectToPage("Index");
+                        }
+
+                    }
+                   
                 }
 
-                else
-                {
-                    _toastNotification.AddErrorToastMessage("Something went wrong");
-                }
             }
             catch (Exception)
 
             {
                 _toastNotification.AddErrorToastMessage("Something went wrong");
             }
-
+            _toastNotification.AddErrorToastMessage("Something went wrong");
             return RedirectToPage("Index");
 
         }

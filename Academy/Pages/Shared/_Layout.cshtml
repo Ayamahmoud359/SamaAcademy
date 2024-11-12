@@ -157,7 +157,7 @@
 
             <div class="page-content">
                 <div class="container-fluid">
-                    @Html.Partial("~/Pages/Shared/Partials/_page_title.cshtml")
+                    @Html.Partial("~/Pages/Shared/Partials/_page_title.cshtml") 
                     @RenderBody()
                 </div>
             </div>
@@ -181,14 +181,7 @@
     @Html.Partial("~/Pages/Shared/_ValidationScriptsPartial.cshtml")
     @await Component.InvokeAsync("NToastNotify")
 
- <script>
-             $(document).ready(function() {
-            $('.custom-select').select2({
-              //  placeholder: "Choose...",
-              //  allowClear:false
-            });
-        });
- </script>
+
 </body>
 </html>
 
