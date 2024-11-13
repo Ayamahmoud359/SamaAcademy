@@ -17,11 +17,11 @@ namespace Academy.DTO
         [StringLength(10, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
+        public string? ConfirmPassword { get; set; }
 
         [Required(ErrorMessage = "Trainer Name is required")]
         public string TrainerName { get; set; }
@@ -39,5 +39,7 @@ namespace Academy.DTO
         public int DepartmentId { get; set; }
         [Required(ErrorMessage = "Please select at least one category.")]
         public List<int> SelectedCategories { get; set; } = new List<int>();
+
+        public bool IsActive { set; get; }
     }
 }

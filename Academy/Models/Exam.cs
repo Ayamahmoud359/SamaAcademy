@@ -12,7 +12,7 @@ namespace Academy.Models
         public DateOnly? ExamDate  { get; set; }
         public string? Review { get; set; }
         public int SubscriptionId { get; set; }
-        public Subscription Subscription { get; set; } = new Subscription();
+        public Subscription? Subscription { get; set; } 
         //Trainer Id
         [ForeignKey("Trainer")]
         public int? TrainerId { get; set; }

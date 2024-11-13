@@ -1,4 +1,5 @@
 using Academy.Data;
+using Academy.DTO;
 using Academy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +14,10 @@ namespace Academy.Areas.Admin.Pages.Trainers
         private readonly AcademyContext _context;
         [BindProperty]
         public int Trainerid { set; get; }
+       
         private readonly IToastNotification _toastNotification;
         private readonly UserManager<ApplicationUser> _userManager;
+     
         public IndexModel(AcademyContext context, IToastNotification toastNotification, UserManager<ApplicationUser> userManager)
         {
             _context = context;
@@ -23,10 +26,10 @@ namespace Academy.Areas.Admin.Pages.Trainers
         }
         public void OnGet()
         {
-
+          
         }
 
-
+      
         public async Task<IActionResult> OnPostDeleteParent()
         {
             try
@@ -63,5 +66,7 @@ namespace Academy.Areas.Admin.Pages.Trainers
             return RedirectToPage("Index");
 
         }
+
+      
     }
 }

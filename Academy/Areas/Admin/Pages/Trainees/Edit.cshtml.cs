@@ -78,7 +78,7 @@ namespace Academy.Areas.Admin.Pages.Trainees
                 TraineeToEdit.BirthDate = Trainee.BirthDate;
                 _context.Attach(TraineeToEdit).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return RedirectToPage("Index");
+                return Redirect("Index");
 
             }
             catch (Exception e)

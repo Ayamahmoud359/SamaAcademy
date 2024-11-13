@@ -1,4 +1,206 @@
 ﻿@page
 @model Academy.Areas.Admin.Pages.Trainers.EditModel
+@Html.AntiForgeryToken()
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @{
+    ViewBag.Title = "Trainers";
+    ViewBag.pTitle = "Edit Trainer Information";
+    ViewBag.pageTitle = "Trainers";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Edit Trainer</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Trainer.TrainerName" class="form-label">Trainer Name</label>
+                            <input asp-for="@Model.Trainer.TrainerName" class="form-control" />
+                            <span asp-validation-for="@Model.Trainer.TrainerName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Trainer.TrainerEmail" class="form-label">Trainer Id</label>
+                            <input asp-for="@Model.Trainer.TrainerEmail" class="form-control" />
+                            <span asp-validation-for="@Model.Trainer.TrainerEmail" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Trainer.TrainerId" class="form-label">Trainer Id</label>
+                            <input asp-for="@Model.Trainer.TrainerId" class="form-control" />
+                            <span asp-validation-for="@Model.Trainer.TrainerId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.Trainer.TrainerPhone" class="form-label">Trainer Phone</label>
+                            <input asp-for="@Model.Trainer.TrainerPhone" class="form-control" />
+                            <span asp-validation-for="@Model.Trainer.TrainerPhone" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Trainer.TrainerAddress" class="form-label">Trainer Address</label>
+                            <input asp-for="@Model.Trainer.TrainerAddress" class="form-control" />
+                            <span asp-validation-for="@Model.Trainer.TrainerAddress" class="text-danger"></span>
+                        </div>
+                        @if (Model.Trainer.HiringDate != null)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.Trainer.HiringDate" class="form-label">Trainer Hiring Date</label>
+                                <input type="date" asp-for="@Model.Trainer.HiringDate" class="form-control" />
+                                <span asp-validation-for="@Model.Trainer.HiringDate" class="text-danger"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.Trainer.HiringDate" class="form-label">Trainer Hiring Date</label>
+                                <input type="date" asp-for="@Model.Trainer.HiringDate" class="form-control" value="" />
+                                <span asp-validation-for="@Model.Trainer.HiringDate" class="text-danger"></span>
+                            </div>
+                        }
+
+                     
+                        <div class="mb-3">
+                            @Html.CheckBoxFor(m => m.Trainer.IsActive, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="Active">
+                                Is Active?
+                            </label>
+                        </div>
+                     
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                             <a href="/Admin/Trainers" class="text-primary d-inline-block">
+                                <button type="button" class="btn btn-primary">Back To List </button>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div><!--end row-->
+
+
+
+<script>
+
+
+    $(document).ready(function () {
+        $('.custom-select').select2({
+            //  placeholder: "Choose...",
+            //  allowClear:false
+        });
+    });
+
+    function GetBranchDepartments(value) {
+        console.log(value)
+        // Send AJAX request to the controller's action method
+
+        if (value != "" && value != 0) {
+            $.ajax({
+                url: "/admin/Trainers/Edit?handler=GetDepartments", // Adjust for Razor Pages if needed
+                type: 'GET',
+                data: { id: value },
+                success: function (data) {
+                    console.log(data);
+                    if (Array.isArray(data) && typeof data !== "string") {
+                        // Find the select element
+                        var select = $('#inlineFormSelectPref');
+                        console.log(select);
+                        select.empty(); // Clear existing options
+
+                        // Add a default option
+                        select.append('<option selected disabled  value="0" >Choose ...</option>');
+
+                        // Loop through the data and append options
+                        $.each(data, function (index, item) {
+                            console.log(item)
+                            select.append('<option value="' + item.DepartmentId + '">' + item.DepartmentName + '</option>');
+                        });
+                    }
+                    else {
+                        console.log('Error loading options:', error);
+                    }
+
+                },
+                error: function (error) {
+                    console.log('Error loading options:', error);
+                }
+            });
+        }
+
+
+    };
+    
+    function GetDepartmentCategories(departmentId) {
+        console.log("GetDepartmentCategories");
+        console.log(departmentId);
+        if (departmentId != "" && departmentId != 0) {
+            $.ajax({
+                url: "/admin/Trainers/Edit?handler=CategoriesDepartment", // Adjust for Razor Pages if needed
+                type: 'GET',
+                data: { departmentId: departmentId }, // Include both value and userId in the data object,
+
+                success: function (data) {
+                    console.log(data);
+                    if (Array.isArray(data) && typeof data !== "string") {
+
+
+                        // Find the select element
+                        var select = $('#CategoryId');
+                        console.log(select);
+                        select.empty(); // Clear existing options
+
+                        // Add a default option
+                        select.append('<option  disabled  value="0" >Choose ...</option>');
+
+                        // Loop through the data and append options
+                        $.each(data, function (index, item) {
+                            console.log(item)
+                            select.append('<option value="' + item.CategoryId + '">' + item.CategoryName + '</option>');
+                        });
+                    }
+
+
+                    else {
+                        console.log('Error loading options:', error);
+                    }
+
+                },
+                failure: function (response) {
+                    console.log('Error loading options:', error);
+                }
+            });
+        }
+
+
+    }
+    
+
+
+
+    // function validateForm() {
+
+    //     var CatId = document.getElementById("CategoryId").value
+    //     console.log(CatId)
+    //     var CatSpanId = document.getElementById("CategorySpanId")
+
+    //     if (CatId == 0) {
+    //         CatSpanId.style.display = "flex";
+    //         return false;
+    //     }
+
+    //     CatSpanId.style.display = "none";
+    //     return true;
+    // }
+</script>
