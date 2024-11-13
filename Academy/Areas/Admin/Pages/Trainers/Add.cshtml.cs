@@ -72,6 +72,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
                     TrainerPhone = Trainer.TrainerPhone,
                     CurrentBranch = Trainer.BranchId,
                     CurrentDepartment = Trainer.DepartmentId,
+                    HiringDate = Trainer.HiringDate,
                     IsActive = true,
 
 
@@ -88,7 +89,8 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
                         TrainerCategories.Add(new TrainerCategories
                     {
                         TrainerId = coach.TrainerId,
-                        CategoryId = category
+                        CategoryId = category,
+                        IsActive=true
                     });
                 }
 

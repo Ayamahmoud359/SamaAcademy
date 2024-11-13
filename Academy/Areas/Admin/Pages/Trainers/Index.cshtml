@@ -49,8 +49,12 @@
 
                             @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
                         </a>
+                         <a href="/Admin/Trainers/AssignNewCategory?Id=<%- data.TrainerId %>" class="text-primary d-inline-block">
 
-                      
+                                 @Html.DevExtreme().Button().Text("Assign New Category").Type(ButtonType.Success)
+                        </a>
+
+                   
                         <a href="/Admin/Trainers/Edit?Id=<%- data.TrainerId %>" class="text-primary d-inline-block">
 
                             @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
@@ -102,8 +106,7 @@
                     )
             </div>
 
-            @{
-            }
+           
 
 
             <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1"
@@ -148,21 +151,20 @@
                 </div>
             </div>
             <!-- end card body -->
-         
-
+           
         </div>
     </div>
 
 </div>
 <script>
+
+     
+
     function Delete(Id) {
 
         document.getElementById("DeleteTrainer").value = Id
         $('#deleteRecordModal').modal('show');
 
     };
-
-  
-
 
 </script>

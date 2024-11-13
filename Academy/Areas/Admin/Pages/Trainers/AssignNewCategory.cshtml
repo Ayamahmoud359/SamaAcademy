@@ -1,0 +1,172 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Trainers.AssignNewCategoryModel
+@{
+    ViewBag.Title = "Trainers";
+    ViewBag.pTitle = "Assign T";
+    ViewBag.pageTitle = "Trainers";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Add Trainer</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form method="post">
+
+                       
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div class="text-danger" id="Err"></div>
+                            <div class="mb-3">
+                                <label class="form-label" asp-for="@Model.TrainerCategoryVM.BranchId">Branch</label>
+                                <select onchange="GetBranchDepartments(this.value)" asp-items="@(new SelectList(Model.Branches, "BranchId", "BranchName"))" asp-for="@Model.TrainerCategoryVM.BranchId" class="form-select ">
+                                    <option selected disabled value="0">Choose</option>
+
+                                </select>
+
+                                <span asp-validation-for="@Model.TrainerCategoryVM.BranchId" class="text-danger"></span>
+
+                            </div><!--end col-->
+
+                            <div class="mb-3">
+                                <label class="form-label" asp-for="@Model.TrainerCategoryVM.DepartmentId">Department</label>
+                                <select onchange="GetDepartmentCategories(this.value)" asp-for="@Model.TrainerCategoryVM.DepartmentId" asp-items="@(new SelectList(Model.Departments, "DepartmentId", "DepartmentName"))" class="form-select">
+                                    <option selected disabled value="0">Choose...</option>
+
+                                </select>
+                                <span asp-validation-for="@Model.TrainerCategoryVM.DepartmentId" class="text-danger"></span>
+                            </div><!--end col-->
+
+                            <div class="mb-3" id="Category">
+                                <label asp-for="@Model.TrainerCategoryVM.SelectedCategories" class="form-label ">Category</label>
+                            <select asp-for="@Model.TrainerCategoryVM.SelectedCategories" class="form-control form-select custom-select" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))"
+                                    multiple
+                                    >
+
+                                <option disabled value="0">Choose...</option>
+
+                            </select>
+
+                                <span asp-validation-for="@Model.TrainerCategoryVM.SelectedCategories" class="text-danger"></span>
+
+                            </div><!--end col-->
+
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.TrainerCategoryVM.TrainerId" class="form-label">Trainer</label>
+                            <input asp-for="@Model.TrainerCategoryVM.TrainerId" class="form-control" />
+                            <span asp-validation-for="@Model.TrainerCategoryVM.TrainerId" class="text-danger"></span>
+                        </div>
+
+                           
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Assign</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div><!--end row-->
+<script>
+       $(document).ready(function() {
+            $('.custom-select').select2({
+                //  placeholder: "Choose...",
+                //  allowClear:false
+            });
+            });
+
+     
+    function GetBranchDepartments(value) {
+           console.log(value)
+           // Send AJAX request to the controller's action method
+
+           if (value != "" && value != 0) {
+               $.ajax({
+                   url: "/admin/Trainers/AssignNewCategory?handler=GetDepartments", // Adjust for Razor Pages if needed
+                   type: 'GET',
+                   data: { id: value },
+                   success: function (data) {
+                       console.log(data);
+                       if (Array.isArray(data) && typeof data !== "string") {
+                           // Find the select element
+                           var select = $('#TrainerCategoryVM_DepartmentId');
+                           console.log(select);
+                           select.empty(); // Clear existing options
+
+                           // Add a default option
+                           select.append('<option selected disabled  value="0" >Choose ...</option>');
+
+                           // Loop through the data and append options
+                           $.each(data, function (index, item) {
+                               console.log(item)
+                               select.append('<option value="' + item.DepartmentId + '">' + item.DepartmentName + '</option>');
+                           });
+                       }
+                       else {
+                           console.log('Error loading options:', error);
+                       }
+
+                   },
+                   error: function (error) {
+                       console.log('Error loading options:', error);
+                   }
+               });
+           }
+
+
+       };
+
+       function GetDepartmentCategories(departmentId) {
+           console.log("GetDepartmentCategories");
+           console.log(departmentId);
+           if (departmentId !="" && departmentId != 0) {
+               $.ajax({
+                   url: "/admin/Trainers/AssignNewCategory?handler=CategoriesDepartment", // Adjust for Razor Pages if needed
+                   type: 'GET',
+                   data: { departmentId: departmentId }, // Include both value and userId in the data object,
+
+                   success: function (data) {
+                       console.log(data);
+                       if (Array.isArray(data) && typeof data !== "string") {
+
+
+                               // Find the select element
+                               var select = $('#TrainerCategoryVM_SelectedCategories');
+                               console.log(select);
+                               select.empty(); // Clear existing options
+
+                               // Add a default option
+                               select.append('<option  disabled  value="0" >Choose ...</option>');
+
+                               // Loop through the data and append options
+                               $.each(data, function (index, item) {
+                                   console.log(item)
+                                   select.append('<option value="' + item.CategoryId + '">' + item.CategoryName + '</option>');
+                               });
+
+
+                       }
+                       else {
+                           console.log('Error loading options:', error);
+                       }
+
+                   },
+                   failure: function (response) {
+                       console.log('Error loading options:', error);
+                   }
+               });
+           }
+
+
+       }
+
+
+</script>

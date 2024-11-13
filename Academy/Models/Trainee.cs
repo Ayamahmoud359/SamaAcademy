@@ -23,7 +23,8 @@ namespace Academy.Models
          /// List of Champion
           public ICollection<TraineeChampion> TraineeChampions{ get; set; } = new List<TraineeChampion>();
         // A trainee can have many subscriptions (to multiple departments and categories)
-        public ICollection<Subscription> Subscriptions { get; set; }
+        public ICollection<Subscription> Subscriptions { get; set; }= new List<Subscription> 
+            ();
       
         public bool IsDeleted { get; set; }
      
