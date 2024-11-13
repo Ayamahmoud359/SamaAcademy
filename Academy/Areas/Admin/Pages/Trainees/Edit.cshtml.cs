@@ -61,6 +61,8 @@ namespace Academy.Areas.Admin.Pages.Trainees
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            ModelState.Remove("Trainee.Subscriptions");
+            ModelState.Remove("Subscriptions");
             if (!ModelState.IsValid)
             {
                 return Page();

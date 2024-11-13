@@ -21,6 +21,8 @@ namespace Academy.Data
         
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<CompetitionTeam> CompetitionTeam { get; set; }
+        public virtual DbSet<CompetitionDepartment> CompetitionDepartment { get; set; }
         public virtual DbSet<Trainee> Trainees { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Parent> Parents { get; set; }
