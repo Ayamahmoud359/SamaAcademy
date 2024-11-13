@@ -4,6 +4,7 @@ using Academy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 
@@ -103,10 +104,47 @@ namespace Academy.Areas.Admin.Pages.Trainees
                 var trainee = _context.Trainees.Find(Traineeid);
                 if (trainee != null)
                 {
+                    List<Absence> Absences = new List<Absence>();
+                    Absences = _context.Abscenses.Include(a => a.Subscription)
+                       .ThenInclude(a => a.Trainee)
+                       .Where(a => a.Subscription.Trainee.TraineeId == Traineeid).ToList();
+                    foreach (var item in Absences)
+                    {
+                        item.IsDeleted = true;
+                    }
+                    List<Exam> Exams = new List<Exam>();
+                    Exams = _context.Exams.Include(a => a.Subscription)
+                       .ThenInclude(a => a.Trainee)
+                      
+                       .Where(a => a.Subscription.Trainee.TraineeId == Traineeid).ToList();
+                    foreach (var item in Exams)
+                    {
+                        item.IsDeleted = true;
+                    }
+                    List<Subscription> subscriptions = new List<Subscription>();
+                    subscriptions = _context.Subscriptions.Include(a =>a.Trainee)
+               
+                       .Where(a => a.Trainee.TraineeId==Traineeid).ToList();
+                    foreach (var item in subscriptions)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    
+                   
+                    List<TraineeChampion> traineeChampions = new List<TraineeChampion>();
+                    traineeChampions = _context.TraineeChampions.Include(a => a.Trainee)
+                        .Where(a => a.Trainee.TraineeId==Traineeid).ToList();
+                    foreach (var item in traineeChampions)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
                     trainee.IsActive = false;
                     trainee.IsDeleted = true;
+                  
                     _context.Attach(trainee).State = EntityState.Modified;
-                    var user = await _userManager.FindByNameAsync(trainee.TraineeEmail);
+                    var user = await _userManager.FindByNameAsync(trainee.UserName);
                     if (user != null)
                     {
                         var result = await _userManager.DeleteAsync(user);

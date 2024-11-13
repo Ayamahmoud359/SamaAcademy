@@ -28,7 +28,7 @@
                             <span asp-validation-for="@Model.Trainer.TrainerName" class="text-danger"></span>
                         </div>
                         <div class="mb-3" style="display:none">
-                            <label asp-for="@Model.Trainer.TrainerEmail" class="form-label">Trainer Id</label>
+                            <label asp-for="@Model.Trainer.TrainerEmail" class="form-label">Trainer Email</label>
                             <input asp-for="@Model.Trainer.TrainerEmail" class="form-control" />
                             <span asp-validation-for="@Model.Trainer.TrainerEmail" class="text-danger"></span>
                         </div>
@@ -37,6 +37,11 @@
                             <label asp-for="@Model.Trainer.TrainerId" class="form-label">Trainer Id</label>
                             <input asp-for="@Model.Trainer.TrainerId" class="form-control" />
                             <span asp-validation-for="@Model.Trainer.TrainerId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Trainer.UserName" class="form-label">User Name</label>
+                            <input asp-for="@Model.Trainer.UserName" class="form-control" />
+                            <span asp-validation-for="@Model.Trainer.UserName" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
                             <label asp-for="@Model.Trainer.TrainerPhone" class="form-label">Trainer Phone</label>

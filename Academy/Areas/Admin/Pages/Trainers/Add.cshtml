@@ -21,18 +21,22 @@
                 <div class="live-preview">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <form method="post" >
-                        
+                        <div class="mb-3">
+                            <label asp-for="@Model.UserName" class="form-label">User Name</label>
+                            <input asp-for="@Model.UserName" class="form-control" />
+                            <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+                        </div>
                         <div class="mb-3">
                             <label asp-for="@Model.Trainer.TrainerName" class="form-label">Trainer Name</label>
                             <input  asp-for="@Model.Trainer.TrainerName"  class="form-control" />
                             <span asp-validation-for="@Model.Trainer.TrainerName" class="text-danger"></span>   
                         </div>
+                        
                         <div class="mb-3">
-                            <label asp-for="@Model.Email" class="form-label">Trainer Email</label>
-                            <input  asp-for="@Model.Email"  class="form-control" />
-                            <span asp-validation-for="@Model.Email" class="text-danger"></span>   
+                            <label asp-for="@Model.Trainer.TrainerEmail" class="form-label">Trainer Email</label>
+                            <input asp-for="@Model.Trainer.TrainerEmail" class="form-control" />
+                            <span asp-validation-for="@Model.Trainer.TrainerEmail" class="text-danger"></span>
                         </div>
-
                          <div class="mb-3">
                             <label asp-for="@Model.Trainer.TrainerPhone" class="form-label">Trainer Phone</label>
                             <input  asp-for="@Model.Trainer.TrainerPhone"  class="form-control" />

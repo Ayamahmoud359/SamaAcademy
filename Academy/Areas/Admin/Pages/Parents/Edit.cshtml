@@ -33,6 +33,11 @@
                             <span asp-validation-for="@Model.Parent.ParentEmail" class="text-danger"></span>
                         </div>
                         <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Parent.UserName" class="form-label">Parent UserName</label>
+                            <input asp-for="@Model.Parent.UserName" class="form-control" />
+                            <span asp-validation-for="@Model.Parent.UserName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
                             <label asp-for="@Model.Parent.ParentId" class="form-label">Parent Email</label>
                             <input asp-for="@Model.Parent.ParentId" class="form-control" />
                             <span asp-validation-for="@Model.Parent.ParentId" class="text-danger"></span>

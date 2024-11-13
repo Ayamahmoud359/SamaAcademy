@@ -4,6 +4,7 @@ using Academy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 
@@ -37,10 +38,19 @@ namespace Academy.Areas.Admin.Pages.Trainers
                 var trainer = _context.Trainers.FirstOrDefault(t=>t.TrainerId==Trainerid);
                 if (trainer != null)
                 {
+                    List<TrainerCategories> trainerCategories = new List<TrainerCategories>();
+                    trainerCategories = _context.CategoryTrainers.Include(a => a.Trainer)
+
+                        .Where(a => a.Trainer.TrainerId ==Trainerid).ToList();
+                    foreach (var item in trainerCategories)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
                     trainer.IsActive = false;
                     trainer.IsDeleted = true;
-                    _context.Attach(trainer).State = EntityState.Modified;
-                    var user = await _userManager.FindByNameAsync(trainer.TrainerEmail);
+
+                    var user = await _userManager.FindByNameAsync(trainer.UserName);
                     if (user != null)
                     {
                         var result = await _userManager.DeleteAsync(user);

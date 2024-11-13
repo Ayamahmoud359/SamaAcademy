@@ -33,8 +33,46 @@ namespace Academy.Areas.Admin.Pages.Categories
                 var category = _context.Categories.Find(Catid);
                 if (category != null)
                 {
+                    List<Absence> Absences = new List<Absence>();
+                    Absences = _context.Abscenses.Include(a => a.Subscription)
+                       .ThenInclude(a => a.Category)
+                       
+                       .Where(a => a.Subscription.Category.CategoryId==Catid).ToList();
+                    foreach (var item in Absences)
+                    {
+                        item.IsDeleted = true;
+                    }
+                    List<Exam> Exams = new List<Exam>();
+                    Exams = _context.Exams.Include(a => a.Subscription)
+                       .ThenInclude(a => a.Category)
+                       
+                       .Where(a => a.Subscription.Category.CategoryId ==Catid).ToList();
+                    foreach (var item in Exams)
+                    {
+                        item.IsDeleted = true;
+                    }
+                    List<Subscription> subscriptions = new List<Subscription>();
+                    subscriptions = _context.Subscriptions.Include(a => a.Category)
+
+                       .Where(a => a.Category.CategoryId==Catid).ToList();
+                    foreach (var item in subscriptions)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    List<TrainerCategories> trainerCategories = new List<TrainerCategories>();
+                    trainerCategories = _context.CategoryTrainers.Include(a => a.Category)
+
+                        .Where(a => a.Category.CategoryId==Catid).ToList();
+                    foreach (var item in trainerCategories)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
                     category.IsActive = false;
                     category.IsDeleted = true;
+
+                
                     _context.Attach(category).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Deleted Successfull");

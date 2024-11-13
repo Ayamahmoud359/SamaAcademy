@@ -3,6 +3,7 @@ using Academy.DTO;
 using Academy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using NToastNotify;
@@ -72,16 +73,81 @@ namespace Academy.Areas.Admin.Pages.Departments
                 var dept = _context.Departments.Find(deptid);
                 if (dept != null)
                 {
+                    List<Absence> Absences = new List<Absence>();
+                    Absences = _context.Abscenses.Include(a => a.Subscription)
+                       .ThenInclude(a => a.Category)
+                       .ThenInclude(a => a.Department)
+                       .Where(a => a.Subscription.Category.Department.DepartmentId==deptid).ToList();
+                    foreach (var item in Absences)
+                    {
+                        item.IsDeleted = true;
+                    }
+                    List<Exam> Exams = new List<Exam>();
+                    Exams = _context.Exams.Include(a => a.Subscription)
+                       .ThenInclude(a => a.Category)
+                       .ThenInclude(a => a.Department)
+                       .Where(a => a.Subscription.Category.Department.DepartmentId==deptid).ToList();
+                    foreach (var item in Exams)
+                    {
+                        item.IsDeleted = true;
+                    }
+                    List<Subscription> subscriptions = new List<Subscription>();
+                    subscriptions = _context.Subscriptions.Include(a => a.Category)
+
+                       .ThenInclude(a => a.Department)
+                       .Where(a => a.Category.Department.DepartmentId==deptid).ToList();
+                    foreach (var item in subscriptions)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    List<TrainerCategories> trainerCategories = new List<TrainerCategories>();
+                    trainerCategories = _context.CategoryTrainers.Include(a => a.Category)
+
+                        .ThenInclude(a => a.Department)
+                        .Where(a => a.Category.Department.DepartmentId==deptid).ToList();
+                    foreach (var item in trainerCategories)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    List<Category> categories = new List<Category>();
+                    categories = _context.Categories.Include(a => a.Department)
+                        .Where(a => a.Department.DepartmentId==deptid).ToList();
+                    foreach (var item in categories)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    List<TraineeChampion> traineeChampions = new List<TraineeChampion>();
+                    traineeChampions = _context.TraineeChampions.Include(a => a.Champion)
+                       .ThenInclude(a => a.Department)
+                    
+                       .Where(a => a.Champion.Department.DepartmentId==deptid).ToList();
+                    foreach (var item in traineeChampions)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    List<Champion> champions = new List<Champion>();
+                    champions = _context.Champions.Include(a => a.Department)
+                        .Where(a => a.Department.DepartmentId==deptid).ToList();
+                    foreach (var item in champions)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+
+
                     dept.IsActive = false;
-                    dept.IsDeleted=true;
+                  
                     _context.Attach(dept).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Deleted Successfull");
+
+                    return RedirectToPage("Index");
                 }
-                else
-                {
-                    _toastNotification.AddErrorToastMessage("Something went wrong");
-                }
+               
             }
             catch (Exception)
 
@@ -89,6 +155,8 @@ namespace Academy.Areas.Admin.Pages.Departments
                 _toastNotification.AddErrorToastMessage("Something went wrong");
             }
 
+            _toastNotification.AddErrorToastMessage("Something went wrong");
+        
             return RedirectToPage("Index");
 
         }

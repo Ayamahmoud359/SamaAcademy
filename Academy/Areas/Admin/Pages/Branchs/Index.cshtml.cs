@@ -69,27 +69,104 @@ namespace Academy.Areas.Admin.Pages.Branchs
         {
             try
             {
+               
                 var branch = _context.Branches.Find(Branchid);
                 if (branch != null)
                 {
+                    List<Absence> Absences = new List<Absence>();
+                    Absences = _context.Abscenses.Include(a => a.Subscription)
+                       .ThenInclude(a => a.Category)
+                       .ThenInclude(a => a.Department).ThenInclude(a => a.Branch)
+                       .Where(a => a.Subscription.Category.Department.Branch.BranchId == Branchid).ToList();
+                    foreach(var item in Absences)
+                    {
+                        item.IsDeleted = true;
+                    }
+                    List<Exam> Exams = new List<Exam>();
+                    Exams = _context.Exams.Include(a => a.Subscription)
+                       .ThenInclude(a => a.Category)
+                       .ThenInclude(a => a.Department).ThenInclude(a => a.Branch)
+                       .Where(a => a.Subscription.Category.Department.Branch.BranchId == Branchid).ToList();
+                    foreach (var item in Exams)
+                    {
+                        item.IsDeleted = true;
+                    }
+                    List<Subscription> subscriptions = new List<Subscription>();
+                    subscriptions = _context.Subscriptions.Include(a => a.Category)
+                       
+                       .ThenInclude(a => a.Department).ThenInclude(a => a.Branch)
+                       .Where(a => a.Category.Department.Branch.BranchId == Branchid).ToList();
+                    foreach (var item in subscriptions)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    List<TrainerCategories> trainerCategories = new List<TrainerCategories>();
+                   trainerCategories = _context.CategoryTrainers.Include(a => a.Category)
+
+                       .ThenInclude(a => a.Department).ThenInclude(a => a.Branch)
+                       .Where(a => a.Category.Department.Branch.BranchId == Branchid).ToList();
+                    foreach (var item in trainerCategories)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    List<Category> categories = new List<Category>();
+                    categories = _context.Categories.Include(a => a.Department).ThenInclude(a => a.Branch)
+                        .Where(a => a.Department.Branch.BranchId == Branchid).ToList();
+                    foreach (var item in categories)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    List<TraineeChampion> traineeChampions = new List<TraineeChampion>();
+                    traineeChampions = _context.TraineeChampions.Include(a => a.Champion)
+                       .ThenInclude(a => a.Department)
+                       .ThenInclude(a => a.Branch)
+                       .Where(a => a.Champion.Department.Branch.BranchId == Branchid).ToList();
+                    foreach (var item in traineeChampions)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+                    List<Champion> champions = new List<Champion>();
+                    champions= _context.Champions.Include(a => a.Department).ThenInclude(a => a.Branch)
+                        .Where(a => a.Department.Branch.BranchId == Branchid).ToList();
+                    foreach (var item in champions)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+
+
+                    List<Department> departments = new List<Department>();
+                    departments = _context.Departments.Include(a => a.Branch)
+                        .Where(a => a.Branch.BranchId == Branchid).ToList();
+                    foreach (var item in departments)
+                    {
+                        item.IsDeleted = true;
+                        item.IsActive = false;
+                    }
+
+
                     branch.IsActive = false;
                     branch.IsDeleted = true;
+                  
                     _context.Attach(branch).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                    return RedirectToPage("Index");
                 }
 
-                else
-                {
-                    _toastNotification.AddErrorToastMessage("Something went wrong");
-                }
+               
             }
             catch (Exception)
 
             {
                _toastNotification.AddErrorToastMessage("Something went wrong");
             }
-
+            _toastNotification.AddErrorToastMessage("Something went wrong");
+        
             return RedirectToPage("Index");
 
         }

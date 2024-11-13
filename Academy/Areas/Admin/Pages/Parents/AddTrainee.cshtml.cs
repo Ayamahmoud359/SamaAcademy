@@ -16,11 +16,11 @@ namespace Academy.Areas.Admin.Pages.Parents
         public TraineeVM trainee { get; set; }
 
         [BindProperty]
-        [Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "User Name is required")]
         [EmailAddress]
-        [Display(Name = "Email")]
-        [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This email is already taken.")]
-        public string Email { get; set; }
+        [Display(Name = "User Name")]
+        [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This User Name is already taken.")]
+        public string UserName { get; set; }
 
         public List<SelectListItem> Nationalities { get; set; }
 
@@ -83,13 +83,14 @@ namespace Academy.Areas.Admin.Pages.Parents
                 var newtrainee = new Trainee
                 {
                     TraineeName = trainee.TraineeName,
-                    TraineePhone=trainee.TraineePhone,
-                    TraineeAddress=trainee.TraineeAddress,
-                    TraineeEmail=Email,
-                    BirthDate=trainee.BirthDate,
-                    ParentId=trainee.ParentId,
-                    Nationality=trainee.Nationality,
-                    ResidencyNumber=trainee.ResidencyNumber,
+                    TraineePhone = trainee.TraineePhone,
+                    TraineeAddress = trainee.TraineeAddress,
+                    TraineeEmail = trainee.TraineeEmail,
+                    BirthDate = trainee.BirthDate,
+                    ParentId = trainee.ParentId,
+                    Nationality = trainee.Nationality,
+                    ResidencyNumber = trainee.ResidencyNumber,
+                    UserName = UserName,
                     IsActive = true
                 };
 
@@ -98,8 +99,8 @@ namespace Academy.Areas.Admin.Pages.Parents
               
                     var user = new ApplicationUser
                     {
-                        UserName = Email,
-                        Email = Email,
+                        UserName = UserName,
+                        Email = trainee.TraineeEmail==null?"":trainee.TraineeEmail,
                         PhoneNumber = trainee.TraineePhone,
                         EntityId = newtrainee.TraineeId,
                         EntityName = "Trainee"

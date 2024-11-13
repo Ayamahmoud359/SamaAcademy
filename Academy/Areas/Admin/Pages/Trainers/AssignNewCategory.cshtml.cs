@@ -69,22 +69,70 @@ namespace Academy.Areas.Admin.Pages.Trainers
                     c.TrainerId == Trainer.TrainerId &&
                     c.Category.Department.DepartmentId == Trainer.CurrentDepartment
                     && c.Category.Department.Branch.BranchId == Trainer.CurrentBranch).ToList();
-                    List<int> assignedCategoriesIdS = new List<int>();
-                    foreach (var item in assignedCategories)
-                    {
 
-                    }
+                  
+                    List<TrainerCategories> trainerCategories = new List<TrainerCategories>();
                     if (TrainerCategoryVM.BranchId == Trainer.CurrentBranch && TrainerCategoryVM.DepartmentId == Trainer.CurrentDepartment)
                     {
+                        if (TrainerCategoryVM.SelectedCategories != null && TrainerCategoryVM.SelectedCategories.Count() != 0)
+                        {
+                           
+                            foreach(var item in TrainerCategoryVM.SelectedCategories)
+                            {
+                               if(!assignedCategories.Any(a => a.CategoryId == item))
+                                {
+                                    trainerCategories.Add(new TrainerCategories()
+                                    {
+                                        CategoryId = item,
+                                        TrainerId = TrainerCategoryVM.TrainerId,
+                                        IsActive = true
 
+                                    });
+                                }
+                              
+                            }
+                            _context.CategoryTrainers.AddRange(trainerCategories);
+                            _context.SaveChanges();
+                            return Redirect("~/Admin/TrainerCategoriesManagment/Index");
+                           
+                        }
                     }
                     else
                     {
+                        Trainer.CurrentBranch = TrainerCategoryVM.BranchId;
+                        Trainer.CurrentDepartment = TrainerCategoryVM.DepartmentId;
+                        if (assignedCategories != null && assignedCategories.Count() != 0)
+                        {
+                            foreach(var item in assignedCategories)
+                            {
+                                item.IsActive = false;
+                                item.IsDeleted = true;
+                            }
+                        }
 
+                        if (TrainerCategoryVM.SelectedCategories != null && TrainerCategoryVM.SelectedCategories.Count() != 0)
+                        {
+
+                            foreach (var item in TrainerCategoryVM.SelectedCategories)
+                            {
+                                trainerCategories.Add(new TrainerCategories()
+                                {
+                                    CategoryId = item,
+                                    TrainerId = TrainerCategoryVM.TrainerId,
+                                    IsActive = true
+
+                                });
+                            }
+                            _context.CategoryTrainers.AddRange(trainerCategories);
+
+                        }
+                        _context.SaveChanges();
+                        return Redirect("~/Admin/TrainerCategoriesManagment/Index");
                     }
 
-                   
-                }
+
+                    }
+                return RedirectToPage("../NotFound");
             }
             catch (Exception ex)
             {
@@ -92,7 +140,7 @@ namespace Academy.Areas.Admin.Pages.Trainers
                 return Page();
             }
 
-            return Page();
+         
         }
 
         public IActionResult OnGetGetDepartments(int id)

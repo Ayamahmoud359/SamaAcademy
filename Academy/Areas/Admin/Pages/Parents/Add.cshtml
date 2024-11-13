@@ -21,6 +21,11 @@
                 <div class="live-preview">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <form method="post">
+                        <div class="mb-3">
+                            <label asp-for="@Model.UserName" class="form-label">User Name</label>
+                            <input asp-for="@Model.UserName" class="form-control" />
+                            <span asp-validation-for="@Model.UserName" class="text-danger"></span>
+                        </div>
 
                         <div class="mb-3">
                             <label asp-for="@Model.ParentVM.ParentName" class="form-label">Parent Name</label>
@@ -28,9 +33,9 @@
                             <span asp-validation-for="@Model.ParentVM.ParentName" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                            <label asp-for="@Model.Email" class="form-label">Parent Email</label>
-                            <input asp-for="@Model.Email" class="form-control" />
-                            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                            <label asp-for="@Model.ParentVM.ParentEmail" class="form-label">Parent Email</label>
+                            <input asp-for="@Model.ParentVM.ParentEmail" class="form-control" />
+                            <span asp-validation-for="@Model.ParentVM.ParentEmail" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">

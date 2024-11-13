@@ -10,8 +10,8 @@ namespace Academy.DTO
         public int TrainerId { get; set; }
         [EmailAddress]
         [Display(Name = "Email")]
-        [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This email is already taken.")]
-        public string? Email { get; set; }
+      
+        public string? TrainerEmail { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         [StringLength(10, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]

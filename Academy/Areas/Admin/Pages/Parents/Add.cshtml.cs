@@ -14,11 +14,11 @@ namespace Academy.Areas.Admin.Pages.Parents
         public ParentVM ParentVM { get; set; }
      
         [BindProperty]
-        [Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "User Name  is required")]
         [EmailAddress]
-        [Display(Name = "Email")]
-        [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This email is already taken.")]
-        public string Email { get; set; }
+        [Display(Name = "User Name")]
+        [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This User Name is already taken.")]
+        public string UserName { get; set; }
 
         private readonly AcademyContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -49,10 +49,11 @@ namespace Academy.Areas.Admin.Pages.Parents
                 {
 
                     IsActive = true,
-                    ParentEmail = Email,
+                    ParentEmail = ParentVM.ParentEmail,
                     ParentName = ParentVM.ParentName,
                     ParentAddress = ParentVM.ParentAddress,
                     ParentPhone = ParentVM.ParentPhone,
+                    UserName=UserName
 
                 };
 
@@ -62,8 +63,8 @@ namespace Academy.Areas.Admin.Pages.Parents
 
                 var user = new ApplicationUser
                 {
-                    UserName = Email,
-                    Email = Email,
+                    UserName = UserName,
+                    Email = ParentVM.ParentEmail==null?"":ParentVM.ParentEmail,
                     PhoneNumber = ParentVM.ParentPhone,
                     EntityId = parent.ParentId,
                     EntityName = "Parent"

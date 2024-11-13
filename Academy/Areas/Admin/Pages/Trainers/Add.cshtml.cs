@@ -20,11 +20,11 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
         public TrainerVM Trainer { get; set; }
         // Property to hold the selected values
         [BindProperty]
-        [Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "UserName is required")]
         [EmailAddress]
-        [Display(Name = "Email")]
-        [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This email is already taken.")]
-        public string Email { get; set; }
+        [Display(Name = "UserName")]
+        [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This User Name is already taken.")]
+        public string UserName { get; set; }
        
         
         public List<Branch> Branches { get; set; }
@@ -68,11 +68,12 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
                 {
                     TrainerName = Trainer.TrainerName,
                     TrainerAddress = Trainer.TrainerAddress,
-                    TrainerEmail = Email,
+                    TrainerEmail = Trainer.TrainerEmail,
                     TrainerPhone = Trainer.TrainerPhone,
                     CurrentBranch = Trainer.BranchId,
                     CurrentDepartment = Trainer.DepartmentId,
                     HiringDate = Trainer.HiringDate,
+                    UserName=UserName,
                     IsActive = true,
 
 
@@ -100,8 +101,8 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
 
             var user = new ApplicationUser
             {
-                UserName = Email,
-                Email = Email,
+                UserName = UserName,
+                Email = Trainer.TrainerEmail==null?"":Trainer.TrainerEmail,
                 PhoneNumber = Trainer.TrainerPhone,
                 EntityId = coach.TrainerId,
                 EntityName = "Trainer"

@@ -208,5 +208,33 @@ namespace Academy.Controllers
 
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTrainerCategories(DataSourceLoadOptions loadOptions)
+        {
+
+            IQueryable<TrainerCategoryDataGridVM> TrainerCategories =
+                _context.CategoryTrainers.Include(d=>d.Trainer)
+                .Include(d=>d.Category).ThenInclude(d=>d.Department)
+                .ThenInclude(d=>d.Branch)
+                .Where(d => !d.IsDeleted&&d.IsActive&&!d.Category.IsDeleted
+                &&d.Category.IsActive&&!d.Category.Department.IsDeleted
+                &&d.Category.Department.IsActive &&!d.Category.Department.Branch.IsDeleted
+            &&d.Category.Department.Branch.IsActive&&!d.Trainer.IsDeleted
+            &&d.Trainer.IsActive)
+                .Select(i => new TrainerCategoryDataGridVM()
+            {
+              TrainerCategoriesId=i.TrainerCategoriesId,
+              TrainerName=i.Trainer.TrainerName,
+              CategoryName=i.Category.CategoryName,
+              BranchName=i.Category.Department.Branch.BranchName,
+              DepartmentName=i.Category.Department.DepartmentName,
+              IsActive=i.IsActive
+
+            });
+
+            return Json(await DataSourceLoader.LoadAsync(TrainerCategories, loadOptions));
+
+        }
+        }
     }
-}

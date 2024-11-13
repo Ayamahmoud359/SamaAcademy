@@ -8,9 +8,9 @@ namespace Academy.Models
         public int TrainerId { get; set; }
   
         public string TrainerName { get; set; }
+        public string? UserName { get; set; }
 
-       
-        public string TrainerEmail { get; set; }
+        public string? TrainerEmail { get; set; }
     
         public string TrainerPhone { get; set; }
        

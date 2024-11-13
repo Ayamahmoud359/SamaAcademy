@@ -31,6 +31,11 @@
                             <span asp-validation-for="@Model.Trainee.TraineeEmail" class="text-danger"></span>
                         </div>
                         <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Trainee.UserName" class="form-label">UserName</label>
+                            <input asp-for="@Model.Trainee.UserName" class="form-control" />
+                            <span asp-validation-for="@Model.Trainee.UserName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
                             <label asp-for="@Model.Trainee.TraineeId" class="form-label">ID</label>
                             <input asp-for="@Model.Trainee.TraineeId" class="form-control" />
                             <span asp-validation-for="@Model.Trainee.TraineeId" class="text-danger"></span>
