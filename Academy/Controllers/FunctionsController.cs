@@ -19,10 +19,10 @@ namespace Academy.Controllers
         }
      
         [HttpGet]
-        public JsonResult IsEmailAvailable(string Email )
+        public JsonResult IsEmailAvailable(string UserName )
         {
             // Check if the email already exists in the database
-            var emailExists = _context.Users.Any(e=>e.Email==Email);
+            var emailExists = _context.Users.Any(e=>e.UserName==UserName);
            
             
                 return new JsonResult(!emailExists);

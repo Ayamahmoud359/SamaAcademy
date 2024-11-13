@@ -31,7 +31,7 @@ namespace Academy.Areas.Admin.Pages.Trainers
         }
 
       
-        public async Task<IActionResult> OnPostDeleteParent()
+        public async Task<IActionResult> OnPostDeleteTrainer()
         {
             try
             {

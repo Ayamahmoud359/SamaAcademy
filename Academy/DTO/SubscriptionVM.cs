@@ -4,6 +4,7 @@ namespace Academy.DTO
 {
     public class SubscriptionVM
     {
+        public int SubscriptionId { get; set; }
 
         [Required(ErrorMessage = "Trainee is required")]
         [Display(Name = "Trainee")]
@@ -30,6 +31,7 @@ namespace Academy.DTO
         [Required(ErrorMessage = "Category is required")]
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
+        public bool IsActive { get; set; }
 
     }
 }

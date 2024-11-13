@@ -61,8 +61,8 @@ namespace Academy.Areas.Admin.Pages.Trainees
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            ModelState.Remove("Trainee.Subscriptions");
-            ModelState.Remove("Subscriptions");
+        //    ModelState.Remove("Trainee.Subscriptions");
+        //    ModelState.Remove("Subscriptions");
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -80,7 +80,7 @@ namespace Academy.Areas.Admin.Pages.Trainees
                 TraineeToEdit.BirthDate = Trainee.BirthDate;
                 _context.Attach(TraineeToEdit).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return Redirect("Index");
+                return RedirectToPage("Index");
 
             }
             catch (Exception e)

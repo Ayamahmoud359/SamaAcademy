@@ -15,7 +15,7 @@ namespace Academy.Areas.Admin.Pages.Parents
      
         [BindProperty]
         [Required(ErrorMessage = "User Name  is required")]
-        [EmailAddress]
+    
         [Display(Name = "User Name")]
         [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This User Name is already taken.")]
         public string UserName { get; set; }

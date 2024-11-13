@@ -1,0 +1,79 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Subscriptions.EditModel
+@{
+    ViewBag.Title = "Subscriptions";
+    ViewBag.pTitle = "Edit Subscription Information";
+    ViewBag.pageTitle = "Subscriptions";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Edit Subscription</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form method="post">
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.Subscription.StartDate" class="form-label">Start Date</label>
+                            <input type="date" asp-for="@Model.Subscription.StartDate" class="form-control" />
+                            <span asp-validation-for="@Model.Subscription.StartDate" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Subscription.TraineeId" class="form-label">Trainee</label>
+                            <input asp-for="@Model.Subscription.TraineeId" class="form-control" />
+                            <span asp-validation-for="@Model.Subscription.TraineeId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Subscription.CategoryId" class="form-label">Category</label>
+                            <input asp-for="@Model.Subscription.CategoryId" class="form-control" />
+                            <span asp-validation-for="@Model.Subscription.CategoryId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Subscription.SubscriptionId" class="form-label">ID</label>
+                            <input asp-for="@Model.Subscription.SubscriptionId" class="form-control" />
+                            <span asp-validation-for="@Model.Subscription.SubscriptionId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Subscription.DepartmentId" class="form-label">Department</label>
+                            <input asp-for="@Model.Subscription.DepartmentId" class="form-control" />
+                            <span asp-validation-for="@Model.Subscription.DepartmentId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.Subscription.BranchId" class="form-label">Branch</label>
+                            <input  asp-for="@Model.Subscription.BranchId" class="form-control" />
+                            <span asp-validation-for="@Model.Subscription.BranchId" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.Subscription.EndDate" class="form-label">End Date</label>
+                            <input type="date" asp-for="@Model.Subscription.EndDate" class="form-control" />
+                            <span asp-validation-for="@Model.Subscription.EndDate" class="text-danger"></span>
+                        </div>
+
+                      
+                       
+                        <div class="mb-3">
+                            @Html.CheckBoxFor(m => m.Subscription.IsActive, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="Active">
+                                Is Active?
+                            </label>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="/Admin/Subscriptions" class="text-primary d-inline-block">
+                                <button type="button" class="btn btn-primary">Back To List </button>
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div><!--end row-->

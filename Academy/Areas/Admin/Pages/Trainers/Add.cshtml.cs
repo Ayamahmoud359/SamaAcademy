@@ -21,7 +21,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
         // Property to hold the selected values
         [BindProperty]
         [Required(ErrorMessage = "UserName is required")]
-        [EmailAddress]
+      
         [Display(Name = "UserName")]
         [Remote("IsEmailAvailable", "Functions", ErrorMessage = "This User Name is already taken.")]
         public string UserName { get; set; }

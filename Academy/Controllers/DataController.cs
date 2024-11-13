@@ -21,7 +21,7 @@ namespace Academy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDepartments(DataSourceLoadOptions loadOptions)
         {
-            IQueryable<DepartmentDataGridVM> Depts = _context.Departments.Include(d=>d.Branch).Where(d=>!d.IsDeleted&&!d.Branch.IsDeleted).Select(i => new DepartmentDataGridVM()
+            IQueryable<DepartmentDataGridVM> Depts = _context.Departments.Include(d=>d.Branch).Where(d=>!d.IsDeleted&&!d.Branch.IsDeleted&&d.Branch.IsActive).Select(i => new DepartmentDataGridVM()
             {
               DepartmentName=  i.DepartmentName,
               DepartmentId=   i.DepartmentId,
@@ -88,7 +88,7 @@ namespace Academy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetTrainees(DataSourceLoadOptions loadOptions)
         {
-            IQueryable<TraineeDataGridVM> trainees = _context.Trainees.Include(e=>e.Parent).Where(d => !d.IsDeleted).Select(i => new TraineeDataGridVM()
+            IQueryable<TraineeDataGridVM> trainees = _context.Trainees.Include(e=>e.Parent).Where(d => !d.IsDeleted&&!d.Parent.IsDeleted&&d.Parent.IsActive).Select(i => new TraineeDataGridVM()
             {
               TraineeName=  i.TraineeName,
               TraineeAddress=  i.TraineeAddress,
@@ -135,16 +135,18 @@ namespace Academy.Controllers
                     {
                         item.IsActive = false;
                     }
+               
+              
                 }
                 _context.SaveChanges();
 
                 IQueryable<SubscriptionDataGridVM> subscriptions = _context.Subscriptions.Include(s => s.Trainee)
                     .Include(s => s.Category).ThenInclude(s => s.Department)
                     .ThenInclude(s => s.Branch).Where(d =>
-                    !d.IsDeleted && !d.Trainee.IsDeleted
-                    && !d.Category.IsDeleted
-                    && !d.Category.Department.IsDeleted
-                    && !d.Category.Department.Branch.IsDeleted
+                    !d.IsDeleted && !d.Trainee.IsDeleted&&d.Trainee.IsActive
+                    && !d.Category.IsDeleted&&d.Category.IsActive
+                    && !d.Category.Department.IsDeleted&&d.Category.Department.IsActive
+                    && !d.Category.Department.Branch.IsDeleted&&d.Category.Department.Branch.IsActive
                 ).Select(i => new SubscriptionDataGridVM()
                 {
                     SubscriptionId = i.SubscriptionId,
@@ -171,7 +173,11 @@ namespace Academy.Controllers
         public async Task<IActionResult> GetCategories(DataSourceLoadOptions loadOptions)
         {
         
-            var Categories = _context.Categories.Include(s => s.Department).ThenInclude(c=>c.Branch).Where(d => !d.IsDeleted && !d.Department.IsDeleted&&!d.Department.Branch.IsDeleted).Select(i => new
+            var Categories = _context.Categories.Include(s => s.Department)
+                .ThenInclude(c=>c.Branch)
+                .Where(d => !d.IsDeleted 
+                && !d.Department.IsDeleted&&d.Department.IsActive
+                &&!d.Department.Branch.IsDeleted&&d.Department.Branch.IsActive).Select(i => new
             {
                i.CategoryName,
                i.CategoryId,
@@ -190,7 +196,8 @@ namespace Academy.Controllers
         public async Task<IActionResult> GetTrainers(DataSourceLoadOptions loadOptions)
         {
 
-           IQueryable<TrainerDataGridVM>  Trainers = _context.Trainers.Where(d => !d.IsDeleted).Select(i => new TrainerDataGridVM()
+           IQueryable<TrainerDataGridVM>  Trainers = _context.Trainers
+                .Where(d => !d.IsDeleted).Select(i => new TrainerDataGridVM()
             {
               TrainerName=  i.TrainerName,
               TrainerId=  i.TrainerId,
