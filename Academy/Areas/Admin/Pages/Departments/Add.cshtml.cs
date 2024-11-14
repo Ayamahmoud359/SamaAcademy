@@ -3,6 +3,7 @@ using Academy.Models;
 using Academy.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NToastNotify;
 
 namespace Academy.Areas.Admin.Pages.Departments
 {
@@ -13,9 +14,12 @@ namespace Academy.Areas.Admin.Pages.Departments
         public List<Branch> Branches { get; set; } = new List<Branch>();
 
         private readonly AcademyContext _context;
-        public AddModel(AcademyContext context)
+        private readonly IToastNotification _toastNotification;
+
+        public AddModel(AcademyContext context,IToastNotification toastNotification)
         {
             _context = context;
+           _toastNotification = toastNotification;
         }
         public void OnGet()
         {
@@ -27,6 +31,7 @@ namespace Academy.Areas.Admin.Pages.Departments
             Branches = _context.Branches.Where(b=>b.IsActive&&!b.IsDeleted).ToList();
             if (!ModelState.IsValid)
             {
+                _toastNotification.AddErrorToastMessage("Something Went Wrong");
                 return Page();
             }
             Department department = new Department()
@@ -44,11 +49,13 @@ namespace Academy.Areas.Admin.Pages.Departments
             {
                 _context.Departments.Add(department);
                 _context.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Department Added Successfully");
                 return RedirectToPage("Index");
             }
             catch (Exception exc)
             {
                 ModelState.AddModelError(string.Empty, exc.Message);
+                _toastNotification.AddErrorToastMessage("Something Went Wrong");
                 return Page();
             }
 

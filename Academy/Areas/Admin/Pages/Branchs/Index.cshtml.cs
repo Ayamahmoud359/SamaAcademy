@@ -163,7 +163,7 @@ namespace Academy.Areas.Admin.Pages.Branchs
             catch (Exception)
 
             {
-               _toastNotification.AddErrorToastMessage("Something went wrong");
+               
             }
             _toastNotification.AddErrorToastMessage("Something went wrong");
         

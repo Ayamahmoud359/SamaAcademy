@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using System.ComponentModel.DataAnnotations;
 
 namespace Academy.Areas.Admin.Pages.Parents
@@ -28,14 +29,19 @@ namespace Academy.Areas.Admin.Pages.Parents
         private readonly AcademyContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AddTraineeModel(AcademyContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly IToastNotification _toastNotification;
+
+        public AddTraineeModel(AcademyContext context
+            , UserManager<ApplicationUser> userManager
+            , SignInManager<ApplicationUser> signInManager
+            ,IToastNotification toastNotification)
         {
             trainee = new TraineeVM();
 
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
-
+            _toastNotification = toastNotification;
             Nationalities = new List<SelectListItem>
                 {
             new SelectListItem { Text = "American", Value = "US" },
@@ -76,6 +82,7 @@ namespace Academy.Areas.Admin.Pages.Parents
             {
                 if (!ModelState.IsValid)
                 {
+                _toastNotification.AddErrorToastMessage("Something Went Wrong");
                     return Page();
                 }
                 try
@@ -112,7 +119,8 @@ namespace Academy.Areas.Admin.Pages.Parents
 
                     if (result.Succeeded)
                     {
-                        return Redirect("~/Admin/Trainees/Index");
+                    _toastNotification.AddSuccessToastMessage("Trainee Added Successfully");
+                    return Redirect("~/Admin/Trainees/Index");
 
                     }
                    
@@ -122,17 +130,18 @@ namespace Academy.Areas.Admin.Pages.Parents
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
-                    return Page();
+                    
 
 
                 }
                 catch (Exception e)
                 {
                     ModelState.AddModelError(string.Empty, e.Message);
-                    return Page();
+                  
                 }
-
-            }
+            _toastNotification.AddErrorToastMessage("Something Went Wrong");
+            return Page();
+        }
 
           
 

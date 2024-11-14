@@ -4,19 +4,19 @@ using Academy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 
 namespace Academy.Areas.Admin.Pages.Branchs
 {
     public class EditModel : PageModel
     {
         private readonly AcademyContext _context;
+        private readonly IToastNotification _toastNotification;
 
-
-
-        public EditModel(AcademyContext context)
+        public EditModel(AcademyContext context,IToastNotification toastNotification)
         {
             _context = context;
-
+            _toastNotification = toastNotification;
         }
         [BindProperty]
 
@@ -75,18 +75,21 @@ namespace Academy.Areas.Admin.Pages.Branchs
                     branch.IsActive = Branch.IsActive;
                     _context.Attach(branch).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
+                    _toastNotification.AddSuccessToastMessage("Branch Edited Successfully");
                     return RedirectToPage("Index");
                 }
+                
                 ModelState.AddModelError(string.Empty, "SomeThing Went Wrong");
 
-                return Page();
+                
             }
             catch (Exception e)
             {
                 ModelState.AddModelError(string.Empty, e.Message);
-                return Page();
+                
             }
-
+            _toastNotification.AddErrorToastMessage("Somthing went Error");
+            return Page();
         }
     }
 }

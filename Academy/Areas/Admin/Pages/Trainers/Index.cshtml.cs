@@ -70,7 +70,7 @@ namespace Academy.Areas.Admin.Pages.Trainers
             catch (Exception)
 
             {
-                _toastNotification.AddErrorToastMessage("Something went wrong");
+              
             }
             _toastNotification.AddErrorToastMessage("Something went wrong");
             return RedirectToPage("Index");

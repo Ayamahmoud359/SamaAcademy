@@ -52,18 +52,18 @@ namespace Academy.Areas.Admin.Pages.Subscriptions
                     _context.Attach(sub).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+
+                    return RedirectToPage("Index");
                 }
 
-                else
-                {
-                    _toastNotification.AddErrorToastMessage("Something went wrong");
-                }
+     
             }
             catch (Exception)
 
             {
-                _toastNotification.AddErrorToastMessage("Something went wrong");
+                
             }
+            _toastNotification.AddErrorToastMessage("Something went wrong");
 
             return RedirectToPage("Index");
 

@@ -4,6 +4,7 @@ using Academy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 
 namespace Academy.Areas.Admin.Pages.Categories
 {
@@ -11,14 +12,13 @@ namespace Academy.Areas.Admin.Pages.Categories
     {
       
             private readonly AcademyContext _context;
+        private readonly IToastNotification _toastNotification;
 
-
-
-            public EditModel(AcademyContext context)
+        public EditModel(AcademyContext context,IToastNotification toastNotification)
             {
                 _context = context;
-
-            }
+            _toastNotification = toastNotification;
+        }
             [BindProperty]
 
             public Category category { get; set; }
@@ -54,7 +54,8 @@ namespace Academy.Areas.Admin.Pages.Categories
 
             if (!ModelState.IsValid)
                 {
-                    return Page();
+                _toastNotification.AddErrorToastMessage("Something Went Wrong");
+                return Page();
                 }
 
                 try
@@ -67,18 +68,19 @@ namespace Academy.Areas.Admin.Pages.Categories
                     categoryToEdit.IsActive = category.IsActive;
                         _context.Attach(categoryToEdit).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
+                    _toastNotification.AddSuccessToastMessage("Category Edited Successfully");
                         return RedirectToPage("Index");
                     }
                     ModelState.AddModelError(string.Empty, "SomeThing Went Wrong");
-
-                    return Page();
+              
                 }
                 catch (Exception e)
                 {
                     ModelState.AddModelError(string.Empty, e.Message);
-                    return Page();
+                    
                 }
-
-            }
+            _toastNotification.AddErrorToastMessage("Something Went Wrong");
+            return Page();
+        }
         }
 }

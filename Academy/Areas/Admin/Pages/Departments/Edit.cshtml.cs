@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using System.Security.Claims;
 
 namespace Academy.Areas.Admin.Pages.Departments
@@ -12,13 +13,12 @@ namespace Academy.Areas.Admin.Pages.Departments
     public class EditModel : PageModel
     {
         private readonly AcademyContext _context;
-     
-        
+        private readonly IToastNotification _toastNotification;
 
-        public EditModel(AcademyContext context)
+        public EditModel(AcademyContext context,IToastNotification toastNotification)
         {
             _context = context;
-           
+            _toastNotification = toastNotification;
         }
         [BindProperty]
 
@@ -61,7 +61,9 @@ namespace Academy.Areas.Admin.Pages.Departments
             Branches = _context.Branches.Where(b => b.IsActive && !b.IsDeleted).ToList();
             if (!ModelState.IsValid)
             {
+                _toastNotification.AddErrorToastMessage("Something Went Wrong");
                 return Page();
+
             }
 
             try
@@ -75,18 +77,20 @@ namespace Academy.Areas.Admin.Pages.Departments
                     department.IsActive = Dept.IsActive;
                     _context.Attach(department).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
+                    _toastNotification.AddSuccessToastMessage("Deparment Edited Successfully");
                     return RedirectToPage("Index");
                 }
                 ModelState.AddModelError(string.Empty, "SomeThing Went Wrong");
 
-                return Page();
+            
             }
             catch (Exception e)
             {
                 ModelState.AddModelError(string.Empty, e.Message);
-                return Page();
+                
             }
-
+            _toastNotification.AddErrorToastMessage("Something Went Wrong");
+            return Page();
         }
     }
 }

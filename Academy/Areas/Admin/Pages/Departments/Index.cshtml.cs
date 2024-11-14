@@ -152,7 +152,7 @@ namespace Academy.Areas.Admin.Pages.Departments
             catch (Exception)
 
             {
-                _toastNotification.AddErrorToastMessage("Something went wrong");
+               
             }
 
             _toastNotification.AddErrorToastMessage("Something went wrong");

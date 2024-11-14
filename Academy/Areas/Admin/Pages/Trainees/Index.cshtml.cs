@@ -164,7 +164,7 @@ namespace Academy.Areas.Admin.Pages.Trainees
             catch (Exception)
 
             {
-                _toastNotification.AddErrorToastMessage("Something went wrong");
+               
             }
             _toastNotification.AddErrorToastMessage("Something went wrong");
             return RedirectToPage("Index");

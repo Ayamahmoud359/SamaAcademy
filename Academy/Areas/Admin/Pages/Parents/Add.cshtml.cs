@@ -4,6 +4,7 @@ using Academy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NToastNotify;
 using System.ComponentModel.DataAnnotations;
 
 namespace Academy.Areas.Admin.Pages.Parents
@@ -23,12 +24,18 @@ namespace Academy.Areas.Admin.Pages.Parents
         private readonly AcademyContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AddModel(AcademyContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        private readonly IToastNotification _toastNotification;
+
+        public AddModel(AcademyContext context
+            , UserManager<ApplicationUser> userManager
+            , SignInManager<ApplicationUser> signInManager
+            ,IToastNotification toastNotification)
         {
             ParentVM = new ParentVM();
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+           _toastNotification = toastNotification;
         }
         public void OnGet()
         {
@@ -41,7 +48,9 @@ namespace Academy.Areas.Admin.Pages.Parents
            
             if (!ModelState.IsValid)
             {
+                _toastNotification.AddErrorToastMessage("Something Went Wrong");
                 return Page();
+
             }
             try
             {
@@ -75,7 +84,8 @@ namespace Academy.Areas.Admin.Pages.Parents
 
                 if (result.Succeeded)
                 {
-                   return RedirectToPage("Index"); 
+                    _toastNotification.AddSuccessToastMessage("Parent Added Successfullly");
+                    return RedirectToPage("Index"); 
 
                 }
                 _context.Parents.Remove(parent);
@@ -84,17 +94,18 @@ namespace Academy.Areas.Admin.Pages.Parents
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
                 // If we got this far, something failed, redisplay form
-                return Page();
+               
             }
 
             catch (Exception exc)
             {
                 ModelState.AddModelError(string.Empty, exc.Message);
-                return Page();
+                
 
 
             }
-
+            _toastNotification.AddErrorToastMessage("Something Went Wrong");
+            return Page();
 
         }
           

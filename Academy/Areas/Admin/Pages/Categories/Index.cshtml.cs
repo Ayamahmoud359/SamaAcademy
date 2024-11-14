@@ -77,16 +77,16 @@ namespace Academy.Areas.Admin.Pages.Categories
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Deleted Successfull");
                 }
-                else
-                {
-                    _toastNotification.AddErrorToastMessage("Something went wrong");
-                }
+               
+                    
             }
             catch (Exception)
 
             {
-                _toastNotification.AddErrorToastMessage("Something went wrong");
+               
             }
+            _toastNotification.AddErrorToastMessage("Something went wrong");
+        
 
             return RedirectToPage("Index");
 

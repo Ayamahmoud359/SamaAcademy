@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 using System.ComponentModel.DataAnnotations;
 
 namespace Academy.Areas.Admin.Pages.Trainers
@@ -17,12 +18,13 @@ namespace Academy.Areas.Admin.Pages.Trainers
         
 
         private readonly AcademyContext _context;
+        private readonly IToastNotification _toastNotification;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public EditModel(AcademyContext context)
+        public EditModel(AcademyContext context,IToastNotification toastNotification)
         {
             _context = context;
-        
+           _toastNotification = toastNotification;
         }
 
 
@@ -52,6 +54,7 @@ namespace Academy.Areas.Admin.Pages.Trainers
            
             if (!ModelState.IsValid)
             {
+                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
                 return Page();
             }
             try
@@ -64,12 +67,14 @@ namespace Academy.Areas.Admin.Pages.Trainers
                 TrainerToEdit.IsActive = Trainer.IsActive;
                 _context.Attach(TrainerToEdit).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                _toastNotification.AddSuccessToastMessage("Trainer Information Edited Suuccessfully");
                 return Redirect("Index");
 
             }
             catch (Exception e)
             {
                 ModelState.AddModelError(string.Empty, e.Message);
+                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
                 return Page();
             }
 

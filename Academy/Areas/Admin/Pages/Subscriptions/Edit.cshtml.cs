@@ -5,17 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 
 namespace Academy.Areas.Admin.Pages.Subscriptions
 {
     public class EditModel : PageModel
     {
         private readonly AcademyContext _context;
+        private readonly IToastNotification _toastNotification;
 
-
-        public EditModel(AcademyContext context)
+        public EditModel(AcademyContext context,IToastNotification toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
             Subscription = new SubscriptionVM();
          
 
@@ -63,6 +65,7 @@ namespace Academy.Areas.Admin.Pages.Subscriptions
           
             if (!ModelState.IsValid)
             {
+                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
                 return Page();
             }
 
@@ -89,12 +92,14 @@ namespace Academy.Areas.Admin.Pages.Subscriptions
 
                 _context.Attach(SubscriptionToEdit).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                _toastNotification.AddSuccessToastMessage("Subscription Edited Successfully");
                 return  RedirectToPage("Index");
 
             }
             catch (Exception e)
             {
                 ModelState.AddModelError(string.Empty, e.Message);
+                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
                 return Page();
             }
 

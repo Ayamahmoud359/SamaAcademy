@@ -107,7 +107,6 @@ namespace Academy.Areas.Admin.Pages.Parents
             catch (Exception)
 
             {
-                _toastNotification.AddErrorToastMessage("Something went wrong");
             }
             _toastNotification.AddErrorToastMessage("Something went wrong");
             return RedirectToPage("Index");

@@ -213,6 +213,17 @@
     </div>
 </div>
     <script>
+
+        
+        function toastNotify(type, message) {
+    // Available types: 'info', 'success', 'warning', 'error'
+    var toastType = type || 'info'; // Default to 'info'
+
+    // Show toast notification
+    window.toastNotify(toastType, message);
+}
+
+
                function Delete(Id) {
 
             document.getElementById("DeleteTrainee").value = Id
@@ -337,6 +348,7 @@
                  }
                  $('#showModal').modal('hide');
                   currentKey = -1;
+                        toastNotify("success", "Subscription Added successfully!");
                             }
                     else if (response == "Sorry ,You can't add new Supscription for This Trianee as This Trainee isn't Active"){
                         document.getElementById("Err").innerHTML = response;

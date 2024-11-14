@@ -4,18 +4,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NToastNotify;
 
 namespace Academy.Areas.Admin.Pages.Trainees
 {
     public class EditModel : PageModel
     {
         private readonly AcademyContext _context;
-
+        private readonly IToastNotification _toastNotification;
 
         public List<SelectListItem> Nationalities { get; set; }
-        public EditModel(AcademyContext context)
+        public EditModel(AcademyContext context,IToastNotification toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
             Nationalities = new List<SelectListItem>
                 {
             new SelectListItem { Text = "American", Value = "US" },
@@ -65,6 +67,7 @@ namespace Academy.Areas.Admin.Pages.Trainees
         //    ModelState.Remove("Subscriptions");
             if (!ModelState.IsValid)
             {
+                _toastNotification.AddErrorToastMessage("SomeThing Went Error");
                 return Page();
             }
 
@@ -80,12 +83,14 @@ namespace Academy.Areas.Admin.Pages.Trainees
                 TraineeToEdit.BirthDate = Trainee.BirthDate;
                 _context.Attach(TraineeToEdit).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
+                _toastNotification.AddSuccessToastMessage("Trainee Information Edited Successfully");
                 return RedirectToPage("Index");
 
             }
             catch (Exception e)
             {
                 ModelState.AddModelError(string.Empty, e.Message);
+                _toastNotification.AddErrorToastMessage("SomeThing Went Error");
                 return Page();
             }
 

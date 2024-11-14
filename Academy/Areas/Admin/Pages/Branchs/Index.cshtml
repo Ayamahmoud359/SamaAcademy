@@ -185,6 +185,15 @@
     </div>
 </div>
     <script>
+
+
+        function toastNotify(type, message) {
+    // Available types: 'info', 'success', 'warning', 'error'
+    var toastType = type || 'info'; // Default to 'info'
+
+    // Show toast notification
+    window.toastNotify(toastType, message);
+}
                 function Delete(Id) {
 
                   document.getElementById("DeleteBranch").value = Id
@@ -266,23 +275,26 @@
                  document.getElementById("frm").reset();
                   $('#showModal').modal('hide');
                    currentKey = -1;
+                  toastNotify("success", "Department Added successfully!");
                              }
                             else if(response=="Sorry ,You can't add new Department in this Branch as This Branch isn't Active"){
                                  document.getElementById("Err").innerHTML = response
+                                 //toastNotify("error", "An error occurred: " + response);
                              
                             }
-                             else if (response=="SomeThing Went Wrong") {
-                                 console.log(currentKey)
-                                 document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time"
-                             }
+                           
                              else{
                                  console.log(currentKey)
                                  document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
+                                  //toastNotify("error", "An error occurred: " + "Data havn't been sent Correctly ,Please try in another time");
                              }
 
                          },
                          failure: function (response) {
-                             document.getElementById("Err").innerHTML = response;
+                               console.log(response)
+                             document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
+                              //toastNotify("error", "An error occurred: " + "Data havn't been sent Correctly ,Please try in another time")
+
                          }
                      });
 

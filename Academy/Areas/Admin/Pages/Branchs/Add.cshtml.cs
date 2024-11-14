@@ -3,6 +3,8 @@ using Academy.Models;
 using Academy.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NToastNotify;
+
 
 namespace Academy.Areas.Admin.Pages.Branchs
 {
@@ -12,9 +14,12 @@ namespace Academy.Areas.Admin.Pages.Branchs
         public BranchVM BranchVM { get; set; }
 
         private readonly AcademyContext _context;
-        public AddModel(AcademyContext context)
+        private readonly IToastNotification _toastNotification;
+
+        public AddModel(AcademyContext context, IToastNotification toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
         }
         public void OnGet()
         {
@@ -32,11 +37,13 @@ namespace Academy.Areas.Admin.Pages.Branchs
             {
                 _context.Branches.Add(branch);
                 _context.SaveChanges();
+                _toastNotification.AddSuccessToastMessage("Branch Added Successfully");
                 return RedirectToPage("Index");
             }
             catch(Exception exc)
             {
                 ModelState.AddModelError(string.Empty, exc.Message);
+                _toastNotification.AddErrorToastMessage("Somthing went Error");
                 return Page();
             }
 

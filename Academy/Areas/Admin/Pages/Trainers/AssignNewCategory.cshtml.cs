@@ -15,9 +15,12 @@ namespace Academy.Areas.Admin.Pages.Trainers
         [BindProperty]
         public TrainerCategoryVM TrainerCategoryVM{ set; get; }
         private readonly AcademyContext _context;
-        public AssignNewCategoryModel(AcademyContext context)
+        private readonly IToastNotification _toastNotification;
+
+        public AssignNewCategoryModel(AcademyContext context,IToastNotification toastNotification)
         {
             _context = context;
+            _toastNotification = toastNotification;
             TrainerCategoryVM = new TrainerCategoryVM();
             
         }
@@ -93,6 +96,7 @@ namespace Academy.Areas.Admin.Pages.Trainers
                             }
                             _context.CategoryTrainers.AddRange(trainerCategories);
                             _context.SaveChanges();
+                            _toastNotification.AddSuccessToastMessage("Trainer Is Assigned To categories Successfully");
                             return Redirect("~/Admin/TrainerCategoriesManagment/Index");
                            
                         }
@@ -127,16 +131,19 @@ namespace Academy.Areas.Admin.Pages.Trainers
 
                         }
                         _context.SaveChanges();
+                        _toastNotification.AddSuccessToastMessage("Trainer Is Assigned To categories Successfully");
                         return Redirect("~/Admin/TrainerCategoriesManagment/Index");
                     }
 
 
                     }
+                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
                 return RedirectToPage("../NotFound");
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
+                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
                 return Page();
             }
 

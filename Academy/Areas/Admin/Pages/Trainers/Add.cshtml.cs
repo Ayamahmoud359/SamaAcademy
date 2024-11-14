@@ -11,6 +11,7 @@ using Academy.Data;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using System.ComponentModel.DataAnnotations;
+using NToastNotify;
 
 namespace Academy.Areas.Admin.Pages.AddTrainer
 {
@@ -34,14 +35,18 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
         private readonly AcademyContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        public AddModel(AcademyContext context, UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager)
+        private readonly IToastNotification _toastNotification;
+
+        public AddModel(AcademyContext context
+            , UserManager<ApplicationUser> userManager
+            ,SignInManager<ApplicationUser> signInManager
+            ,IToastNotification toastNotification)
         {
             Trainer = new TrainerVM();
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
-           
-
+           _toastNotification = toastNotification;
         }
        
       
@@ -60,6 +65,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
             Categories = _context.Categories.Where(d => !d.IsDeleted && d.IsActive&& d.DepartmentId == Trainer.DepartmentId).ToList();
             if (!ModelState.IsValid)
             {
+                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
                 return Page();
             }
             try
@@ -114,7 +120,8 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
 
             if (result.Succeeded)
             {
-            return RedirectToPage ("Index");
+                    _toastNotification.AddSuccessToastMessage("Trainer Added Successfully");
+                    return RedirectToPage ("Index");
 
             }
                 if (TrainerCategories.Count != 0)
@@ -128,16 +135,17 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
-                return Page();
                
 
             }
             catch(Exception e)
             {
                 ModelState.AddModelError(string.Empty, e.Message);
-                return Page();
+                
             }
-        
+            _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
+            return Page();
+
         }
 
         public IActionResult OnGetGetDepartments(int id)

@@ -190,6 +190,14 @@
 
 </div>
 <script>
+
+    function toastNotify(type, message) {
+        // Available types: 'info', 'success', 'warning', 'error'
+        var toastType = type || 'info'; // Default to 'info'
+
+        // Show toast notification
+        window.toastNotify(toastType, message);
+    }
            function Delete(Id) {
      
              document.getElementById("Deletedept").value = Id
@@ -275,14 +283,12 @@
                         console.log(response)
                         if (response == "Added") {
                             $('#customPopup').dxPopup('instance').option('visible', false);
+                        toastNotify("success", "Category Added successfully!");
                         }
                         else if (response=="Sorry ,You can't add new Category in this Department as This Department isn't Active or in Branch isn't Active"){
                         document.getElementById("Err").innerHTML = response
                         }
-                        else if (response=="SomeThing Went Wrong") {
-                            console.log(currentKey)
-                            document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time"
-                        }
+                       
                         else{
                             console.log(currentKey)
                             document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
@@ -290,6 +296,7 @@
                        
                     },
                     failure: function (response) {
+                    console.log(response)
                         document.getElementById("Err").innerHTML = response;
                     }
                 });

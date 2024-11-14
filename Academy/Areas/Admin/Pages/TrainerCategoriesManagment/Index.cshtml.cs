@@ -45,7 +45,7 @@ namespace Academy.Areas.Admin.Pages.TrainerCategoriesManagment
             catch (Exception)
 
             {
-                _toastNotification.AddErrorToastMessage("Something went wrong");
+                
             }
             _toastNotification.AddErrorToastMessage("Something went wrong");
         
