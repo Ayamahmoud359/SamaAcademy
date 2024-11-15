@@ -21,5 +21,6 @@ namespace Academy.Models
         // A category can have many trainees (through subscriptions)
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
         public bool IsDeleted { get; set; }
+        public string? image { get; set; }
     }
 }

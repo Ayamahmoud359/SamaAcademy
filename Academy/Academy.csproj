@@ -4,7 +4,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>aspnet-Academy-ad085e47-a2d8-41a1-be1e-ac645803bda2</UserSecretsId>
-   
   </PropertyGroup>
   <ItemGroup>
     <None Include="Areas\Identity\Pages\_ViewStart.cshtml" />
@@ -58,8 +57,8 @@
     <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExtreme.AspNet.Data" Version="2.8.6" />
-    <PackageReference Include="DevExtreme.AspNet.Core" Version="22.1.6" />
+    <PackageReference Include="DevExtreme.AspNet.Data" Version="4.0.2" />
+    <PackageReference Include="DevExtreme.AspNet.Core" Version="24.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
@@ -67,12 +66,14 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
     <PackageReference Include="NToastNotify" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-
   </ItemGroup>
   <ItemGroup>
     <Content Update="Pages\Shared\Partials\_sidebar.cshtml">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\Branchs\" />
   </ItemGroup>
 </Project>

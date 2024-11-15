@@ -30,6 +30,15 @@
                         .Columns(columns =>
                         {
                         // Example column configuration
+                         columns.AddFor(m => m.image).Width(100).Caption("Photo")
+                .AllowFiltering(false)
+                .AllowSorting(false)
+
+                        .CellTemplate(@<text>
+                            <div>
+                                <img src="/<%- value %>" alt="" width="35" height="35" />
+                            </div>
+                        </text>);
                         columns.AddFor(m => m.DepartmentName).Caption("Department Name");
                         columns.AddFor(m => m.BranchName).Caption("Branch");
                     
@@ -44,14 +53,15 @@
 
                             @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
                         </a>
+                        &nbsp;
                        
                         @Html.DevExtreme().Button().Text("Add Category").OnClick("function (e) { AddCategory(data.DepartmentId) }").Type(ButtonType.Success)
-
+                        &nbsp;
                         <a href="/Admin/Departments/Edit?Id=<%- data.DepartmentId %>"  class="text-primary d-inline-block">
                             
                             @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
                         </a>
-
+                        &nbsp;
                         @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.DepartmentId) }").Type(ButtonType.Danger)
                       
                     </div>
@@ -144,7 +154,7 @@
     </div>
     </div>
             <!-- end card body -->
-            @(Html.DevExtreme().Popup().ID("customPopup").MaxHeight(300)
+            @(Html.DevExtreme().Popup().ID("customPopup").MaxHeight(400)
                 .Title("Add Category")
                 .Visible(false)
                 .OnHiding("closeButtonClick")
@@ -152,7 +162,7 @@
                 .ContentTemplate(@<text>
                <div class="card-body">
                     <div class="live-preview">
-                        <div asp-validation-summary="ModelOnly" class="text-danger" ></div>
+                        <div asp-validation-summary="All" class="text-danger" ></div>
                         <div  class="text-danger" id="Err"></div>
                         <form method="post" id="frm" onsubmit="return handleSubmit(event)">
                             <div class="mb-3">
@@ -167,6 +177,18 @@
                                 <span asp-validation-for="@Model.cat.CategoryDescription" class="text-danger"></span>
 
                             </div>
+                               <div class="mb-3">
+                          
+                                   
+                                        <label for="fileUpload" class="form-label">Choose an Image</label>
+                                        <div class="input-group">
+                                    <input type="file" accept=".png, .jpg, .jpeg" class="form-control" id="fileUpload" name="fileUpload" />
+                                       
+                                        </div>
+                                   
+
+                               
+                        </div>
                        
                             <div class="text-end">
                                 <button type="submit" class="btn btn-success" onclick="saveButtonClick()">Save</button>
@@ -191,13 +213,7 @@
 </div>
 <script>
 
-    function toastNotify(type, message) {
-        // Available types: 'info', 'success', 'warning', 'error'
-        var toastType = type || 'info'; // Default to 'info'
 
-        // Show toast notification
-        window.toastNotify(toastType, message);
-    }
            function Delete(Id) {
      
              document.getElementById("Deletedept").value = Id
@@ -257,15 +273,28 @@
             console.log("save")
         Name = document.getElementById("cat_CategoryName").value;
         Description= document.getElementById("cat_CategoryDescription").value ;
-            if (Name && Description!=""){
-                var category = {
-                    CategoryName: Name,
-                    CategoryDescription: Description,
-                    DepartmentId: currentKey
+            if (Name!="" && Description!=""){
+                // var category = {
+                //    CategoryName: Name,
+                //     CategoryDescription: Description,
+                //     DepartmentId: currentKey
 
-                };
-                var json = JSON.stringify(category);
-                console.log(json)
+                // };
+                // var json = JSON.stringify(category);
+                    var formData = new FormData();
+            formData.append("CategoryName",Name);
+            formData.append("CategoryDescription", Description);
+            formData.append("DepartmentId", currentKey);
+            formData.append("fileUpload", $("#fileUpload")[0].files[0]);  
+
+            for (let [key, value] of formData.entries()) {
+  // Check if the value is a File (for fileUpload)
+  if (value instanceof File) {
+    console.log(`${key}: File [${value.name}]`); // Logs the filename
+  } else {
+    console.log(`${key}: ${value}`); // Logs the text values
+  }
+}
                 $.ajax({
                     type: "POST",
                     beforeSend: function (xhr) {
@@ -275,15 +304,14 @@
                     ,
                     url: "/admin/Departments/Index?handler=AddCategory",
                     //async: false,
-                    data: json,
-                    dataType: "json",
-                    contentType: "application/json; charset=utf-8",
-
+                         data: formData,
+                          processData: false,
+                         contentType: false,
                     success: function (response) {
                         console.log(response)
                         if (response == "Added") {
                             $('#customPopup').dxPopup('instance').option('visible', false);
-                        toastNotify("success", "Category Added successfully!");
+                        toastr.success("Category Added successfully!");
                         }
                         else if (response=="Sorry ,You can't add new Category in this Department as This Department isn't Active or in Branch isn't Active"){
                         document.getElementById("Err").innerHTML = response

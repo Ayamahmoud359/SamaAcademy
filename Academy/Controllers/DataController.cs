@@ -26,7 +26,8 @@ namespace Academy.Controllers
               DepartmentName=  i.DepartmentName,
               DepartmentId=   i.DepartmentId,
               BranchName=  i.Branch==null ? "":i.Branch.BranchName,
-              IsActive=  i.IsActive
+              IsActive=  i.IsActive,
+              image=i.Image
 
             });
             
@@ -59,7 +60,8 @@ namespace Academy.Controllers
                 i.BranchName,
                 i.BranchAddress,
                 i.BranchId,
-                i.IsActive
+                i.IsActive,
+                i.Image
                 
             });
             return Json(await DataSourceLoader.LoadAsync(Branchs, loadOptions));
@@ -77,7 +79,8 @@ namespace Academy.Controllers
                 i.ParentId,
                 i.ParentPhone,
                 i.IsActive,
-                i.ParentEmail
+                i.ParentEmail,
+                i.Image
                 
             });
             return Json(await DataSourceLoader.LoadAsync(barents, loadOptions));
@@ -99,7 +102,9 @@ namespace Academy.Controllers
               Nationality=  i.Nationality,
               BirthDate=  i.BirthDate,
               ResidencyNumber=  i.ResidencyNumber,
-               TraineeId= i.TraineeId
+               TraineeId= i.TraineeId,
+               image=i.Image
+               
 
             });
             return Json(await DataSourceLoader.LoadAsync(trainees, loadOptions));
@@ -173,17 +178,19 @@ namespace Academy.Controllers
         public async Task<IActionResult> GetCategories(DataSourceLoadOptions loadOptions)
         {
         
-            var Categories = _context.Categories.Include(s => s.Department)
+            IQueryable<CategoryDataGridVM> Categories = _context.Categories.Include(s => s.Department)
                 .ThenInclude(c=>c.Branch)
                 .Where(d => !d.IsDeleted 
                 && !d.Department.IsDeleted&&d.Department.IsActive
-                &&!d.Department.Branch.IsDeleted&&d.Department.Branch.IsActive).Select(i => new
+                &&!d.Department.Branch.IsDeleted&&d.Department.Branch.IsActive).Select(i => new CategoryDataGridVM()
             {
-               i.CategoryName,
-               i.CategoryId,
-               i.Department.DepartmentName,
-               i.Department.Branch.BranchName,
-                i.IsActive
+              CategoryName= i.CategoryName,
+             CategoryId=  i.CategoryId,
+             DepartmentName=  i.Department.DepartmentName,
+             BranchName=  i.Department.Branch.BranchName,
+              IsActive=  i.IsActive,
+              image=i.image
+
 
             });
 
@@ -207,7 +214,8 @@ namespace Academy.Controllers
                TrainerEmail= i.TrainerEmail,
                CurrentBranchName=_context.Branches.FirstOrDefault(b=>b.BranchId==i.CurrentBranch)==null?"": _context.Branches.FirstOrDefault(b => b.BranchId == i.CurrentBranch).BranchName,
               CurrentDepartmentName=_context.Departments.FirstOrDefault(d=>d.DepartmentId==i.CurrentDepartment)==null?"": _context.Departments.FirstOrDefault(d => d.DepartmentId == i.CurrentDepartment).DepartmentName,
-              IsActive=  i.IsActive
+              IsActive=  i.IsActive,
+              image=i.Image
 
             });
 

@@ -1,11 +1,14 @@
 using Academy.Data;
 using Academy.DTO;
 using Academy.Models;
+using Azure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using NToastNotify;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,11 +33,13 @@ namespace Academy.Areas.Admin.Pages.Parents
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IToastNotification _toastNotification;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
         public AddTraineeModel(AcademyContext context
             , UserManager<ApplicationUser> userManager
             , SignInManager<ApplicationUser> signInManager
-            ,IToastNotification toastNotification)
+            ,IToastNotification toastNotification
+            ,IWebHostEnvironment hostEnvironment)
         {
             trainee = new TraineeVM();
 
@@ -42,21 +47,25 @@ namespace Academy.Areas.Admin.Pages.Parents
             _userManager = userManager;
             _signInManager = signInManager;
             _toastNotification = toastNotification;
-            Nationalities = new List<SelectListItem>
-                {
-            new SelectListItem { Text = "American", Value = "US" },
-            new SelectListItem { Text = "Canadian", Value = "CA" },
-            new SelectListItem { Text = "Mexican", Value = "MX" },
-            new SelectListItem { Text = "British", Value = "GB" },
-            new SelectListItem { Text = "German", Value = "DE" },
-            new SelectListItem { Text = "Indian", Value = "IN" },
-            new SelectListItem { Text = "Australian", Value = "AU" },
-        };
+           _hostEnvironment = hostEnvironment;
+
+      
 
         }
+ 
 
+public class Country
+{
+    public Name Name { get; set; }
+    public string Cca2 { get; set; }
+}
 
-        public async Task<IActionResult> OnGet(int id)
+public class Name
+{
+    public string Common { get; set; }
+}
+
+public async Task<IActionResult> OnGet(int id)
         {
             try
             {
@@ -64,9 +73,23 @@ namespace Academy.Areas.Admin.Pages.Parents
                 if (id != 0)
                 {
                     trainee.ParentId = id;
+                    using (var client = new HttpClient())
+                    {
+                        var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                        var countries = JsonConvert.DeserializeObject<List<Country>>(response);
 
+                        Nationalities = countries.Select(c => new SelectListItem
+                        {
+                            Text = c.Name.Common,
+                            Value = c.Cca2
+                        }).ToList();
+                        
+                    }
                     return Page();
                 }
+
+                
+                
                 return RedirectToPage("../Error");
             }
             catch (Exception e)
@@ -78,9 +101,21 @@ namespace Academy.Areas.Admin.Pages.Parents
         }
     
 
-            public async Task<IActionResult> OnPostAsync()
+            public async Task<IActionResult> OnPostAsync(IFormFile? fileUpload)
             {
-                if (!ModelState.IsValid)
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+
+                Nationalities = countries.Select(c => new SelectListItem
+                {
+                    Text = c.Name.Common,
+                    Value = c.Cca2
+                }).ToList();
+
+            }
+            if (!ModelState.IsValid)
                 {
                 _toastNotification.AddErrorToastMessage("Something Went Wrong");
                     return Page();
@@ -100,7 +135,12 @@ namespace Academy.Areas.Admin.Pages.Parents
                     UserName = UserName,
                     IsActive = true
                 };
+                if (fileUpload != null && fileUpload.Length > 0)
+                {
+                    string folder = "uploads/Trainees/";
+                    newtrainee.Image = await UploadImage(folder, fileUpload);
 
+                }
                 _context.Trainees.Add(newtrainee);
                     await _context.SaveChangesAsync();
               
@@ -143,7 +183,24 @@ namespace Academy.Areas.Admin.Pages.Parents
             return Page();
         }
 
-          
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
 
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+
+            var directory = Path.GetDirectoryName(serverFolder);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return folderPath;
         }
+
+
     }
+}

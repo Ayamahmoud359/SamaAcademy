@@ -20,7 +20,7 @@ namespace Academy.Areas.Admin.Pages.Branchs
         }
         
 
-        public int BranchId { get; set; }
+        public static int BranchId { get; set; }
 
 
 

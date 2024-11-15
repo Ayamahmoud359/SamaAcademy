@@ -26,6 +26,15 @@
                         .Columns(columns =>
                         {
                         // Example column configuration
+                            columns.AddFor(m => m.image).Width(100).Caption("Photo")
+                        .AllowFiltering(false)
+                        .AllowSorting(false)
+
+                        .CellTemplate(@<text>
+                    <div>
+                        <img src="/<%- value %>" alt="" width="35" height="35" />
+                    </div>
+                </text>);
                         columns.AddFor(m => m.TraineeName).Caption("Trainee Name");
                         columns.AddFor(m => m.ParentName).Caption("Parent");
                             
@@ -41,13 +50,14 @@
 
                             @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
                         </a>
-
+                        &nbsp;
                         @Html.DevExtreme().Button().Text("Add New SubScription").OnClick("function (e) { AddSubscription(data.TraineeId) }").Type(ButtonType.Success)
-
+                        &nbsp;
                         <a href="/Admin/Trainees/Edit?Id=<%- data.TraineeId %>" class="text-primary d-inline-block">
 
                             @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
                         </a>
+                        &nbsp;
 
                         @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.TraineeId) }").Type(ButtonType.Danger)
 
@@ -149,7 +159,7 @@
                                     aria-label="Close" id="btn-close" onclick="cancelButtonClick()"></button>
                         </div>
                         <form enctype="multipart/form-data" method="post" id="frm" onsubmit="return handleSubmit(event)">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                            <div asp-validation-summary="All" class="text-danger"></div>
                             <div class="text-danger" id="Err"></div>
                             <div class="mb-3">
                                 <label class="form-label" asp-for="@Model.subscription.BranchId">Branch</label>
@@ -215,13 +225,8 @@
     <script>
 
         
-        function toastNotify(type, message) {
-    // Available types: 'info', 'success', 'warning', 'error'
-    var toastType = type || 'info'; // Default to 'info'
+      
 
-    // Show toast notification
-    window.toastNotify(toastType, message);
-}
 
 
                function Delete(Id) {
@@ -348,7 +353,7 @@
                  }
                  $('#showModal').modal('hide');
                   currentKey = -1;
-                        toastNotify("success", "Subscription Added successfully!");
+                        toastr.success("Subscription Added successfully!");
                             }
                     else if (response == "Sorry ,You can't add new Supscription for This Trianee as This Trainee isn't Active"){
                         document.getElementById("Err").innerHTML = response;

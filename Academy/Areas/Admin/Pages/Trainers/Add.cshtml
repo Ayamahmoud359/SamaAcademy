@@ -19,8 +19,8 @@
             </div><!-- end card header -->
             <div class="card-body">
                 <div class="live-preview">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <form method="post" >
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form method="post" enctype="multipart/form-data" >
                         <div class="mb-3">
                             <label asp-for="@Model.UserName" class="form-label">User Name</label>
                             <input asp-for="@Model.UserName" class="form-control" />
@@ -119,6 +119,18 @@
                                 </span>
                             </div>
                             <span asp-validation-for="@Model.Trainer.ConfirmPassword" class="text-danger"></span>
+                        </div>
+                         <div class="mb-3">
+                          
+                                   
+                                        <label for="fileUpload" class="form-label">Choose an Image</label>
+                                        <div class="input-group">
+                                    <input type="file" accept=".png, .jpg, .jpeg" class="form-control" id="fileUpload" name="fileUpload" />
+                                       
+                                        </div>
+                                   
+
+                               
                         </div>
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">Add Trainer</button>

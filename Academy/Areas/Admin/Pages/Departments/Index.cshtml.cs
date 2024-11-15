@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using NToastNotify;
 using static Azure.Core.HttpHeader;
@@ -19,17 +20,22 @@ namespace Academy.Areas.Admin.Pages.Departments
         [BindProperty]
         public int deptid { set; get; }
         private readonly IToastNotification _toastNotification;
-        public IndexModel(AcademyContext context , IToastNotification toastNotification)
+        private readonly IWebHostEnvironment _hostEnvironment;
+
+        public IndexModel(AcademyContext context 
+            , IToastNotification toastNotification
+            ,IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _toastNotification = toastNotification;
+            _hostEnvironment = hostEnvironment;
         }
         public void OnGet()
         {
 
         }
 
-        public IActionResult OnPostAddCategory([FromBody] Category category)
+        public async Task<IActionResult> OnPostAddCategoryAsync([FromForm] Category category, IFormFile? fileUpload)
         {
             try
             {
@@ -49,6 +55,12 @@ namespace Academy.Areas.Admin.Pages.Departments
                         IsActive=true
 
                     };
+                    if (fileUpload != null && fileUpload.Length > 0)
+                    {
+                        string folder = "uploads/Categories/";
+                        newCategory.image = await UploadImage(folder, fileUpload);
+
+                    }
 
                     _context.Categories.Add(newCategory);
                     _context.SaveChanges();
@@ -138,7 +150,7 @@ namespace Academy.Areas.Admin.Pages.Departments
                         item.IsActive = false;
                     }
 
-
+                    dept.IsDeleted = true;
                     dept.IsActive = false;
                   
                     _context.Attach(dept).State = EntityState.Modified;
@@ -159,6 +171,24 @@ namespace Academy.Areas.Admin.Pages.Departments
         
             return RedirectToPage("Index");
 
+        }
+
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+
+            var directory = Path.GetDirectoryName(serverFolder);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return folderPath;
         }
     }
 }

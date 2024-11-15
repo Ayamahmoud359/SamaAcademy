@@ -28,7 +28,16 @@
                     .Columns(columns =>
                     {
                         // Example column configuration
-                        columns.AddFor(m => m.BranchName).Caption("Branch Name");
+                      columns.AddFor(m => m.Image).Width(100).Caption("Photo")
+                .AllowFiltering(false)
+                .AllowSorting(false)
+
+                        .CellTemplate(@<text>
+                            <div>
+                                <img src="/<%- value %>" alt="" width="35" height="35" />
+                            </div>
+                        </text>);
+       columns.AddFor(m => m.BranchName).Caption("Branch Name");
 
                         columns.Add().Caption("Status").CellTemplate(@<text>
                     <span>
@@ -41,16 +50,19 @@
 
                             @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
                         </a>
-
-                        @Html.DevExtreme().Button().Text("Add Department").OnClick("function (e) { AddDepartment(data.BranchId) }").Type(ButtonType.Success)
-
-                        <a href="/Admin/Branchs/Edit?Id=<%- data.BranchId %>" class="text-primary d-inline-block">
+                        &nbsp;
+                     
+                            @Html.DevExtreme().Button().Text("Add Department").OnClick("function (e) { AddDepartment(data.BranchId) }").Type(ButtonType.Success)
+                           
+                        &nbsp;
+                        <a href="/Admin/Branchs/Edit?Id=<%- data.BranchId %>" class="text-primary d-inline-block ">
 
                             @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
                         </a>
-
-                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.BranchId) }").Type(ButtonType.Danger)
-
+                        &nbsp;
+                      
+                            @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.BranchId) }").Type(ButtonType.Danger)
+                            
                     </div>
                 </text>);
                     })
@@ -152,8 +164,8 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close" id="btn-close" onclick="cancelButtonClick()"></button>
                         </div>
-                        <form method="post" id="frm" onsubmit="return handleSubmit(event)">
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <form method="post" id="frm" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
+                            <div asp-validation-summary="All" class="text-danger"></div>
                             <div class="text-danger" id="Err"></div>
                             <div class="mb-3">
 
@@ -167,7 +179,18 @@
                                 <span asp-validation-for="@Model.Dept.DepartmentDescription" class="text-danger"></span>
 
                             </div>
+                             <div class="mb-3">
+                          
+                                   
+                                        <label for="fileUpload" class="form-label">Choose a File</label>
+                                        <div class="input-group">
+                                    <input type="file" accept=".png, .jpg, .jpeg" class="form-control" id="fileUpload" name="fileUpload" />
+                                       
+                                        </div>
+                                   
 
+                               
+                        </div>
                             <div class="text-end">
                                 <button type="submit" class="btn btn-success" onclick="saveButtonClick()">Save</button>
                                 @*  @Html.DevExtreme().Button().Text("Save").Type(ButtonType.Success).OnClick("function (e) { saveButtonClick() }") *@
@@ -186,20 +209,13 @@
 </div>
     <script>
 
+          function Delete(Id) {
+     
+             document.getElementById("DeleteBranch").value = Id
+             $('#deleteRecordModal').modal('show');
 
-        function toastNotify(type, message) {
-    // Available types: 'info', 'success', 'warning', 'error'
-    var toastType = type || 'info'; // Default to 'info'
+     };
 
-    // Show toast notification
-    window.toastNotify(toastType, message);
-}
-                function Delete(Id) {
-
-                  document.getElementById("DeleteBranch").value = Id
-                  $('#deleteRecordModal').modal('show');
-
-          };
 
          var currentKey;
 
@@ -232,15 +248,23 @@
                  console.log("save")
              Name = document.getElementById("Dept_DepartmentName").value;
              Description= document.getElementById("Dept_DepartmentDescription").value ;
-                 if (Name && Description!=""){
-                     var dept = {
-                         DepartmentName: Name,
-                         DepartmentDescription: Description,
-                        BranchId: currentKey
+                 if (Name!="" && Description!=""){
+                   
+                     var formData = new FormData();
+            formData.append("DepartmentName",Name);
+            formData.append("DepartmentDescription", Description);
+            formData.append("BranchId", currentKey);
+            formData.append("fileUpload", $("#fileUpload")[0].files[0]);  
 
-                     };
-                     var json = JSON.stringify(dept);
-                     console.log(json)
+            for (let [key, value] of formData.entries()) {
+  // Check if the value is a File (for fileUpload)
+  if (value instanceof File) {
+    console.log(`${key}: File [${value.name}]`); // Logs the filename
+  } else {
+    console.log(`${key}: ${value}`); // Logs the text values
+  }
+}
+                     
                      $.ajax({
                          type: "POST",
                          beforeSend: function (xhr) {
@@ -250,9 +274,9 @@
                          ,
                          url: "/admin/Branchs/Index?handler=AddDepartment",
                          //async: false,
-                         data: json,
-                         dataType: "json",
-                         contentType: "application/json; charset=utf-8",
+                         data: formData,
+                          processData: false,
+                         contentType: false,
 
                          success: function (response) {
                              console.log(response)
@@ -275,7 +299,7 @@
                  document.getElementById("frm").reset();
                   $('#showModal').modal('hide');
                    currentKey = -1;
-                  toastNotify("success", "Department Added successfully!");
+                           toastr.success('Department Added Successfully');
                              }
                             else if(response=="Sorry ,You can't add new Department in this Branch as This Branch isn't Active"){
                                  document.getElementById("Err").innerHTML = response

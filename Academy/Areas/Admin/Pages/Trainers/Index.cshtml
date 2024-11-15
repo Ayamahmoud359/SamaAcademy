@@ -32,6 +32,15 @@
                     .Columns(columns =>
                     {
                         // Example column configuration
+                            columns.AddFor(m => m.image).Width(100).Caption("Photo")
+                        .AllowFiltering(false)
+                        .AllowSorting(false)
+
+                        .CellTemplate(@<text>
+                    <div>
+                        <img src="/<%- value %>" alt="" width="35" height="35" />
+                    </div>
+                </text>);
                         columns.AddFor(m => m.TrainerName).Caption("Tariner Name");
                         columns.AddFor(m => m.CurrentBranchName).Caption("Branch");
                         columns.AddFor(m => m.CurrentDepartmentName).Caption("Department");
@@ -49,17 +58,18 @@
 
                             @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
                         </a>
+                        &nbsp;
                          <a href="/Admin/Trainers/AssignNewCategory?Id=<%- data.TrainerId %>" class="text-primary d-inline-block">
 
                                  @Html.DevExtreme().Button().Text("Assign New Category").Type(ButtonType.Success)
                         </a>
-
+                        &nbsp;
                    
                         <a href="/Admin/Trainers/Edit?Id=<%- data.TrainerId %>" class="text-primary d-inline-block">
 
                             @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
                         </a>
-
+                        &nbsp;
                         @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.TrainerId) }").Type(ButtonType.Danger)
 
                     </div>

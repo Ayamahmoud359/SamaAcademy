@@ -11,5 +11,6 @@
          public string        CurrentBranchName { set; get; }
          public string      CurrentDepartmentName { set; get; }
            public bool     IsActive { set; get; }
+        public string? image { get; set; }
     }
 }

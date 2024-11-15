@@ -4,6 +4,7 @@ using Academy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using NToastNotify;
 
 namespace Academy.Areas.Admin.Pages.Branchs
@@ -16,22 +17,26 @@ namespace Academy.Areas.Admin.Pages.Branchs
         [BindProperty]
         public int Branchid { set; get; }
         private readonly IToastNotification _toastNotification;
-        public IndexModel(AcademyContext context, IToastNotification toastNotification)
+        private readonly IWebHostEnvironment _hostEnvironment;
+
+        public IndexModel(AcademyContext context
+            , IToastNotification toastNotification
+            ,IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _toastNotification = toastNotification;
+            _hostEnvironment = hostEnvironment;
         }
         public void OnGet()
         {
 
         }
-
-        public IActionResult OnPostAddDepartment([FromBody] Department dept)
+      
+        public async Task<IActionResult> OnPostAddDepartmentAsync([FromForm] Department dept, IFormFile? fileUpload)
         {
             try
             {
-                //var category = JsonConvert.DeserializeObject<Category>(data);
-                if (dept != null)
+                if (dept!=null)
                 {
                     var branch = _context.Branches.Find(dept.BranchId);
                    if (branch!=null&&!branch.IsActive)
@@ -42,12 +47,17 @@ namespace Academy.Areas.Admin.Pages.Branchs
                     {
 
                         IsActive = true,
-                        DepartmentName = dept.DepartmentName,
+                        DepartmentName =dept.DepartmentName,
                         DepartmentDescription = dept.DepartmentDescription,
                         BranchId = dept.BranchId
 
                     };
+                    if (fileUpload != null && fileUpload.Length > 0)
+                    {
+                        string folder = "uploads/Departments/";
+                        department.Image = await UploadImage(folder, fileUpload);
 
+                    }
                     _context.Departments.Add(department);
                      _context.SaveChanges();
                      
@@ -170,5 +180,24 @@ namespace Academy.Areas.Admin.Pages.Branchs
             return RedirectToPage("Index");
 
         }
+
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+
+            var directory = Path.GetDirectoryName(serverFolder);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return folderPath;
+        }
+
     }
 }

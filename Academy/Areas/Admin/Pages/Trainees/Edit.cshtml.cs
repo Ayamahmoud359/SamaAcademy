@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using NToastNotify;
 
 namespace Academy.Areas.Admin.Pages.Trainees
@@ -18,24 +19,23 @@ namespace Academy.Areas.Admin.Pages.Trainees
         {
             _context = context;
             _toastNotification = toastNotification;
-            Nationalities = new List<SelectListItem>
-                {
-            new SelectListItem { Text = "American", Value = "US" },
-            new SelectListItem { Text = "Canadian", Value = "CA" },
-            new SelectListItem { Text = "Mexican", Value = "MX" },
-            new SelectListItem { Text = "British", Value = "GB" },
-            new SelectListItem { Text = "German", Value = "DE" },
-            new SelectListItem { Text = "Indian", Value = "IN" },
-            new SelectListItem { Text = "Australian", Value = "AU" },
-        };
+           
 
         }
         [BindProperty]
 
         public Trainee Trainee { get; set; }
 
+        public class Country
+        {
+            public Name Name { get; set; }
+            public string Cca2 { get; set; }
+        }
 
-
+        public class Name
+        {
+            public string Common { get; set; }
+        }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
 
@@ -45,7 +45,18 @@ namespace Academy.Areas.Admin.Pages.Trainees
                Trainee= await _context.Trainees.FirstOrDefaultAsync(m => m.TraineeId == id);
                 if (Trainee != null)
                 {
+                    using (var client = new HttpClient())
+                    {
+                        var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                        var countries = JsonConvert.DeserializeObject<List<Country>>(response);
 
+                        Nationalities = countries.Select(c => new SelectListItem
+                        {
+                            Text = c.Name.Common,
+                            Value = c.Cca2
+                        }).ToList();
+
+                    }
                     return Page();
                 }
                 return RedirectToPage("../NotFound");
@@ -63,8 +74,20 @@ namespace Academy.Areas.Admin.Pages.Trainees
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-        //    ModelState.Remove("Trainee.Subscriptions");
-        //    ModelState.Remove("Subscriptions");
+            using (var client = new HttpClient())
+            {
+                var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+
+                Nationalities = countries.Select(c => new SelectListItem
+                {
+                    Text = c.Name.Common,
+                    Value = c.Cca2
+                }).ToList();
+
+            }
+            //    ModelState.Remove("Trainee.Subscriptions");
+            //    ModelState.Remove("Subscriptions");
             if (!ModelState.IsValid)
             {
                 _toastNotification.AddErrorToastMessage("SomeThing Went Error");

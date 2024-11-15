@@ -13,5 +13,6 @@
              public string   ResidencyNumber { set; get; }
               public int   TraineeId { set; get; }
         public bool IsActive { set; get; }
+        public string? image { get; set; }
     }
 }

@@ -12,6 +12,7 @@ using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
 using System.ComponentModel.DataAnnotations;
 using NToastNotify;
+using Microsoft.Extensions.Hosting;
 
 namespace Academy.Areas.Admin.Pages.AddTrainer
 {
@@ -36,17 +37,20 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IToastNotification _toastNotification;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
         public AddModel(AcademyContext context
             , UserManager<ApplicationUser> userManager
             ,SignInManager<ApplicationUser> signInManager
-            ,IToastNotification toastNotification)
+            ,IToastNotification toastNotification
+            ,IWebHostEnvironment hostEnvironment)
         {
             Trainer = new TrainerVM();
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
            _toastNotification = toastNotification;
+            _hostEnvironment = hostEnvironment;
         }
        
       
@@ -58,7 +62,7 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
         }
        
      
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(IFormFile? fileUpload)
         {
             Branches = _context.Branches.Where(b => !b.IsDeleted&& b.IsActive  ).ToList();
             Departments =_context.Departments.Where(d=> !d.IsDeleted && d.IsActive&&  d.BranchId== Trainer.BranchId).ToList();
@@ -84,7 +88,12 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
 
 
                 };
+                if (fileUpload != null && fileUpload.Length > 0)
+                {
+                    string folder = "uploads/Trainers/";
+                    coach.Image = await UploadImage(folder, fileUpload);
 
+                }
                 _context.Trainers.Add(coach);
                 await _context.SaveChangesAsync();
        
@@ -147,7 +156,23 @@ namespace Academy.Areas.Admin.Pages.AddTrainer
             return Page();
 
         }
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
 
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+
+            var directory = Path.GetDirectoryName(serverFolder);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return folderPath;
+        }
         public IActionResult OnGetGetDepartments(int id)
         {
             try
