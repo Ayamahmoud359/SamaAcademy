@@ -8,7 +8,7 @@ namespace Academy.Models
         public int ExamId { get; set; }
         public bool IsDeleted { get; set; }
         public int Score { get; set; }
-        [DataType(DataType.Date)]
+       
         public DateOnly? ExamDate  { get; set; }
         public string? Review { get; set; }
         public int SubscriptionId { get; set; }
