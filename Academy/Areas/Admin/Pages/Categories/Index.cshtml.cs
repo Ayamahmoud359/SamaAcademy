@@ -76,6 +76,8 @@ namespace Academy.Areas.Admin.Pages.Categories
                     _context.Attach(category).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Deleted Successfull");
+
+                    return RedirectToPage("Index");
                 }
                
                     

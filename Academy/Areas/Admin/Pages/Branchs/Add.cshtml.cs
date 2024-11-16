@@ -32,6 +32,11 @@ namespace Academy.Areas.Admin.Pages.Branchs
         {
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    _toastNotification.AddErrorToastMessage("Somthing went Error");
+                    return Page();
+                }
 
 
                 Branch branch = new Branch()

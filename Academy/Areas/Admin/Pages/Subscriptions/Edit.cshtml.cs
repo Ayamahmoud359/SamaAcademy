@@ -63,11 +63,7 @@ namespace Academy.Areas.Admin.Pages.Subscriptions
         public async Task<IActionResult> OnPostAsync()
         {
           
-            if (!ModelState.IsValid)
-            {
-                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
-                return Page();
-            }
+           
 
             try
             {

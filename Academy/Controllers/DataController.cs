@@ -329,5 +329,29 @@ namespace Academy.Controllers
             return Json(await DataSourceLoader.LoadAsync(Evaluations, loadOptions));
 
         }
+        [HttpGet]
+        public async Task<IActionResult> GetChampions(DataSourceLoadOptions loadOptions)
+        {
+
+            IQueryable<ChampionDataGridVM> champions = _context.Champions.Include(s => s.Department)
+                .ThenInclude(c => c.Branch)
+                .Where(d => !d.IsDeleted
+                && !d.Department.IsDeleted && d.Department.IsActive
+                && !d.Department.Branch.IsDeleted && d.Department.Branch.IsActive).Select(i => new ChampionDataGridVM()
+                {
+                    ChampionName = i.ChampionName,
+                   ChampionId = i.ChampionId,
+                   ChampionDate=i.ChampionDate,
+                   ChampionDescription=i.ChampionDescription,
+                   ChampionScore=i.ChampionScore,
+                    DepartmentName = i.Department.DepartmentName,
+                    BranchName = i.Department.Branch.BranchName,
+                    IsActive = i.IsActive
+                });
+
+            return Json(await DataSourceLoader.LoadAsync(champions, loadOptions));
+
+
+        }
     }
 }

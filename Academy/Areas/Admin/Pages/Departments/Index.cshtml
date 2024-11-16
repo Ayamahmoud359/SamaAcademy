@@ -173,7 +173,7 @@
                             </div>
                             <div class="mb-3">
                                 <label asp-for="@Model.cat.CategoryDescription" class="form-label">Category Description</label>
-                                <input asp-for="@Model.cat.CategoryDescription" class="form-control" required />
+                                <textarea asp-for="@Model.cat.CategoryDescription" class="form-control" required ></textarea>
                                 <span asp-validation-for="@Model.cat.CategoryDescription" class="text-danger"></span>
 
                             </div>

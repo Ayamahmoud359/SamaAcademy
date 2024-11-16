@@ -12,7 +12,7 @@ namespace Academy.DTO
         public string DepartmentName { get; set; }
         [Required(ErrorMessage = "Department Description is required")]
         [Display(Name = "Department Description")]
-        public string DepartmentDescription { get; set; }
+        public string? DepartmentDescription { get; set; }
 
         public string? Image { get; set; }
         public bool IsActive { get; set; }

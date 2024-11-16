@@ -51,12 +51,7 @@ namespace Academy.Areas.Admin.Pages.Parents
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
-                return Page();
-            }
-
+           
             try
             {
                 var ParentToEdit = await _context.Parents.FirstOrDefaultAsync(m => m.ParentId == Parent.ParentId);

@@ -8,7 +8,7 @@ namespace Academy.Models
         public int ChampionId { get; set; }
         public string ChampionName { get; set; }
    
-        public string ChampionDescription { get; set; }
+        public string? ChampionDescription { get; set; }
      
 
         public DateOnly? ChampionDate { get; set; }

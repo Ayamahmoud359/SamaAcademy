@@ -52,11 +52,7 @@ namespace Academy.Areas.Admin.Pages.Trainers
         public async Task<IActionResult> OnPostAsync()
         {
            
-            if (!ModelState.IsValid)
-            {
-                _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
-                return Page();
-            }
+        
             try
             {
                 var TrainerToEdit = await _context.Trainers.FirstOrDefaultAsync(m => m.TrainerId == Trainer.TrainerId);

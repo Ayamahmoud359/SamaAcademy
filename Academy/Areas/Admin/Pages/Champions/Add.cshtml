@@ -1,0 +1,138 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Champions.AddModel
+@{
+    ViewBag.Title = "Champions";
+    ViewBag.pTitle = "Add Champion";
+    ViewBag.pageTitle = "Champions";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Add Champion</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label" asp-for="@Model.ChampionVM.BranchId">Branch</label>
+                            <select onchange=" GetBranchDepartments(this.value)" asp-for="@Model.ChampionVM.BranchId" asp-items="@(new SelectList(Model.Branches, "BranchId", "BranchName"))" class="form-control form-select">
+                                <option selected disabled>Choose...</option>
+
+                            </select>
+                            <span asp-validation-for="@Model.ChampionVM.BranchId" class="text-danger"></span>
+
+                        </div><!--end col-->
+                        <div class="mb-3">
+                            <label class="form-label" asp-for="@Model.ChampionVM.DepartmentId">Department</label>
+                            <select asp-for="@Model.ChampionVM.DepartmentId" asp-items="@(new SelectList(Model.Departments,"DepartmentId", "DepartmentName"))" class="form-control form-select">
+                                <option selected disabled>Choose...</option>
+
+                            </select>
+                            <span asp-validation-for="@Model.ChampionVM.DepartmentId" class="text-danger"></span>
+
+                        </div><!--end col-->
+
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.ChampionVM.ChampionName" class="form-label">Champion Name</label>
+                            <input asp-for="@Model.ChampionVM.ChampionName" class="form-control" />
+                            <span asp-validation-for="@Model.ChampionVM.ChampionName" class="text-danger"></span>
+                        </div>
+                        @if (Model.ChampionVM.ChampionDate != null)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.ChampionVM.ChampionDate" class="form-label">Champion Date</label>
+                                <input type="date" asp-for="@Model.ChampionVM.ChampionDate" class="form-control" />
+                                <span asp-validation-for="@Model.ChampionVM.ChampionDate" class="text-danger"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.ChampionVM.ChampionDate" class="form-label"> Champion Date</label>
+                                <input type="date" asp-for="@Model.ChampionVM.ChampionDate" class="form-control" value="" />
+                                <span asp-validation-for="@Model.ChampionVM.ChampionDate" class="text-danger"></span>
+                            </div>
+                        }
+                        <div class="mb-3">
+                            <label asp-for="@Model.ChampionVM.ChampionDescription" class="form-label"> Champion Description</label>
+                            <textarea asp-for="@Model.ChampionVM.ChampionDescription" class="form-control"> </textarea>
+                            <span asp-validation-for="@Model.ChampionVM.ChampionDescription" class="text-danger"></span>
+                        </div>
+                     @*    <div class="mb-3">
+
+
+                            <label for="fileUpload" class="form-label">Choose an Image</label>
+                            <div class="input-group">
+                                <input type="file" accept=".png, .jpg, .jpeg" class="form-control" id="fileUpload" name="fileUpload" />
+
+                            </div>
+
+
+
+                        </div> *@
+
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Add Champion</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div><!--end row-->
+
+<script>
+
+
+
+    function GetBranchDepartments( value) {
+        console.log(value)
+        // Send AJAX request to the controller's action method
+
+        if(value!=""&&value!=0){
+            $.ajax({
+                url: "/admin/Champions/Add?handler=GetDepartments", // Adjust for Razor Pages if needed
+                type: 'GET',
+                data: { id: value},
+                success: function (data) {
+                    console.log(data);
+                    if (Array.isArray(data) && typeof data !== "string") {
+                        // Find the select element
+                        var select = $('#ChampionVM_DepartmentId');
+                        console.log(select);
+                        select.empty(); // Clear existing options
+
+                        // Add a default option
+                        select.append('<option selected disabled  value="0" >Choose ...</option>');
+
+                        // Loop through the data and append options
+                        $.each(data, function (index, item) {
+                            console.log(item)
+                            select.append('<option value="' + item.DepartmentId + '">' + item.DepartmentName + '</option>');
+                        });
+                    }
+                    else {
+                        console.log('Error loading options:', error);
+                    }
+
+                },
+                error: function (error) {
+                    console.log('Error loading options:', error);
+                }
+            });
+        }
+
+
+    };
+
+
+</script>

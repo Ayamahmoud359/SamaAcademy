@@ -1,0 +1,80 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Champions.EditModel
+@{
+    ViewBag.Title = "Champions";
+    ViewBag.pTitle = "Edit Champion";
+    ViewBag.pageTitle = "Champions";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Edit Champion</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form method="post">
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.champion.ChampionId" class="form-label">ID</label>
+                            <input asp-for="@Model.champion.ChampionId" class="form-control" />
+                            <span asp-validation-for="@Model.champion.ChampionId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.champion.ChampionName" class="form-label">Champion Name</label>
+                            <input asp-for="@Model.champion.ChampionName" class="form-control" /> 
+                            <span asp-validation-for="@Model.champion.ChampionName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.champion.ChampionDescription" class="form-label">Champion Description</label>
+                            <textarea asp-for="@Model.champion.ChampionDescription" class="form-control" ></textarea>
+                            <span asp-validation-for="@Model.champion.ChampionDescription" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="@Model.champion.ChampionScore" class="form-label">Champion Score</label>
+                            <input asp-for="@Model.champion.ChampionScore" class="form-control" />
+                            <span asp-validation-for="@Model.champion.ChampionScore" class="text-danger"></span>
+                        </div>
+                        @if (Model.champion.ChampionDate != null)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.champion.ChampionDate" class="form-label">Champion Date</label>
+                                <input type="date" asp-for="@Model.champion.ChampionDate" class="form-control" />
+                                <span asp-validation-for="@Model.champion.ChampionDate" class="text-danger"></span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-3">
+                                <label asp-for="@Model.champion.ChampionDate" class="form-label"> Champion Date</label>
+                                <input type="date" asp-for="@Model.champion.ChampionDate" class="form-control" value="" />
+                                <span asp-validation-for="@Model.champion.ChampionDate" class="text-danger"></span>
+                            </div>
+                        }
+                        <div class="mb-3">
+                            @Html.CheckBoxFor(m => m.champion.IsActive, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="Active">
+                                Is Active?
+                            </label>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Save </button>
+                            <a href="/Admin/Champions" class="text-primary d-inline-block">
+                                <button type="button" class="btn btn-primary">Back To List </button>
+                            </a>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+

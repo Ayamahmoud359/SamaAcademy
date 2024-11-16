@@ -11,7 +11,7 @@ namespace Academy.Areas.Admin.Pages.Categories
     public class EditModel : PageModel
     {
       
-            private readonly AcademyContext _context;
+        private readonly AcademyContext _context;
         private readonly IToastNotification _toastNotification;
 
         public EditModel(AcademyContext context,IToastNotification toastNotification)
@@ -52,11 +52,6 @@ namespace Academy.Areas.Admin.Pages.Categories
             public async Task<IActionResult> OnPostAsync()
             {
 
-            if (!ModelState.IsValid)
-                {
-                _toastNotification.AddErrorToastMessage("Something Went Wrong");
-                return Page();
-                }
 
                 try
                 {

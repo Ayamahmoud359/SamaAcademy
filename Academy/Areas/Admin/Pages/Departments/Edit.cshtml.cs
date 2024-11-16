@@ -59,12 +59,7 @@ namespace Academy.Areas.Admin.Pages.Departments
         public async Task<IActionResult> OnPostAsync()
         {
             Branches = _context.Branches.Where(b => b.IsActive && !b.IsDeleted).ToList();
-            if (!ModelState.IsValid)
-            {
-                _toastNotification.AddErrorToastMessage("Something Went Wrong");
-                return Page();
-
-            }
+          
 
             try
             {

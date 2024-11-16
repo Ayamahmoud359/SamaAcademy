@@ -7,7 +7,7 @@ namespace Academy.Models
         public int DepartmentId { get; set; }
         public string DepartmentName { get; set; }
   
-        public string DepartmentDescription { get; set; }
+        public string? DepartmentDescription { get; set; }
 
         public string? Image { get; set; }
         public bool IsActive { get; set; }

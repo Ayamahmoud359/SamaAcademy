@@ -57,22 +57,17 @@ namespace Academy.Areas.Admin.Pages.Branchs
         public async Task<IActionResult> OnPostAsync()
         {
            
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
+         
 
             try
             {
                 var branch = await _context.Branches.FirstOrDefaultAsync(m => m.BranchId == Branch.BranchId);
                 if (branch != null)
                 {
-                   branch.BranchName=  Branch.BranchName ;
+                     branch.BranchName=  Branch.BranchName ;
                     branch.BranchAddress   = Branch.BranchAddress ;
-                    branch.BranchId = Branch.BranchId;
-
-
                     branch.IsActive = Branch.IsActive;
+
                     _context.Attach(branch).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Branch Edited Successfully");

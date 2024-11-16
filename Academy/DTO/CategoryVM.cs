@@ -14,7 +14,7 @@ namespace Academy.DTO
         [Required(ErrorMessage = "Category Description is Required")]
 
         [Display(Name = "Category Description")]
-        public string CategoryDescription { get; set; }
+        public string? CategoryDescription { get; set; }
 
         public bool IsActive { get; set; }
         [Required(ErrorMessage = "Department is Required")]

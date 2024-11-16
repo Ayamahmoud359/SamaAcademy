@@ -1,49 +1,57 @@
 ﻿@page
-@model Academy.Areas.Admin.Pages.Exams.IndexModel
+@model Academy.Areas.Admin.Pages.Champions.IndexModel
 @{
-    ViewBag.Title = "Evaluations";
+    ViewBag.Title = "Champions";
     ViewBag.pTitle = "List";
-    ViewBag.pageTitle = "Evaluations";
+    ViewBag.pageTitle = "Champions";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-
 <div class="row">
     <div class="col-xxl-12 col-xl-12">
         <div class="card card-height-100">
             <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Evaluations</h4>
+                <h4 class="card-title mb-0 flex-grow-1">Champions</h4>
 
             </div>
             <!-- end card header -->
             <!-- card body -->
             <div class="card-body">
-                @(Html.DevExtreme().DataGrid<Academy.DataGridVM.ExamDataGridVM>()
-                    .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetExams").Key("ExamId"))
-                    .RemoteOperations(true)
-                    .ColumnHidingEnabled(true)
-                    .Width("100%")
-                    .Columns(columns =>
-                    {
-                        // Example column configuration
-                        columns.AddFor(m => m.BranchName).Caption("Branch");
-                        columns.AddFor(m => m.DepartmentName).Caption("Department");
-                        columns.AddFor(m => m.CategoryName).Caption("Category");
-                        columns.AddFor(m => m.TrainerName).Caption("Trainer");
-                        columns.AddFor(m => m.Score).Caption("Score");
-                        columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                @(
+                        Html.DevExtreme().DataGrid<Academy.DataGridVM.ChampionDataGridVM>()
+                        .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetChampions").Key("ChampionId"))
+                        .RemoteOperations(true)
+                        .ColumnHidingEnabled(true)
+                        .Width("100%")
+                        .Columns(columns =>
+                        {
+                            // Example column configuration
+                         
+                            columns.AddFor(m => m.ChampionName).Caption("Champion");
+                            columns.AddFor(m => m.DepartmentName).Caption("Department");
+                            columns.AddFor(m => m.BranchName).Caption("Branch");
+
+                            columns.Add().Caption("Status").CellTemplate(@<text>
+                    <span>
+                        <%= data.IsActive ? "Active" : "Not Active" %>
+                    </span>
+                </text>);
+                            columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
                     <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
-                        <a href="/Admin/Exams/View?Id=<%- data.ExamId %>" class="text-primary d-inline-block me-1">
+                        <a href="/Admin/Champions/View?Id=<%- data.ChampionId %>" class="text-primary d-inline-block">
 
                             @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
                         </a>
+                        &nbsp;
+                        <a href="/Admin/Champions/Edit?Id=<%- data.ChampionId %>" class="text-primary d-inline-block">
 
+                            @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
+                        </a>
+                        &nbsp;
+                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.ChampionId) }").Type(ButtonType.Danger)
 
-                        @*
-                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.ExamId) }").Type(ButtonType.Danger)
-                        *@
                     </div>
                 </text>);
-                    })
+                        })
                     .ShowColumnLines(true)
                     .ShowRowLines(true)
                     //.Export(e => e.Enabled(true).AllowExportSelectedData(true))
@@ -83,10 +91,12 @@
                 })
                 ) *@
                     )
-
             </div>
-            <!-- End Card Body  -->
-            <!-- Start Delete Popup  -->
+
+            @{
+            }
+
+
             <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1"
                  aria-labelledby="deleteRecordLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -102,18 +112,18 @@
                             <div class="mt-4 text-center">
 
 
-                                <h4 class="fs-semibold">You are about to delete This Evaluation  </h4>
-                                @*  <p class="text-muted fs-14 mb-4 pt-1">
-                                Deleting This Attendence will remove all of its information .
-                                </p> *@
+                                <h4 class="fs-semibold">You are about to delete This Champion </h4>
+                                <p class="text-muted fs-14 mb-4 pt-1">
+                                    Deleting This Champion will remove all of its information .
+                                </p>
                                 <div class="hstack gap-2 justify-content-center remove">
                                     <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close"
                                             data-bs-dismiss="modal">
                                         <i class="ri-close-line me-1 align-middle"></i>
                                         Close
                                     </button>
-                                    <form asp-area="Admin" asp-page="/Exams/Index" asp-page-handler="DeleteEvaluation">
-                                        <input asp-for="@Model.Evaluationid" id="DeleteEvaluation" hidden>
+                                    <form asp-area="Admin" asp-page="/Champions/Index" asp-page-handler="DeleteChampion">
+                                        <input asp-for="@Model.championid" id="DeleteChampion" hidden>
                                         <button class="btn btn-danger" type="submit" id="delete-record">
                                             Yes,
                                             Delete
@@ -128,21 +138,24 @@
                     </div>
                 </div>
             </div>
-            <!-- End Delete Popup  -->
+            <!-- end card body -->
+
+
 
         </div>
+
     </div>
+
+
 </div>
 
 <script>
-          function Delete(Id) {
+        function Delete(Id) {
 
-        document.getElementById("DeleteEvaluation").value = Id
+        document.getElementById("DeleteChampion").value = Id
             $('#deleteRecordModal').modal('show');
 
     };
-
-
 
 
 </script>

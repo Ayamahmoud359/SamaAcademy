@@ -86,13 +86,7 @@ namespace Academy.Areas.Admin.Pages.Trainees
                 }).ToList();
 
             }
-            //    ModelState.Remove("Trainee.Subscriptions");
-            //    ModelState.Remove("Subscriptions");
-            if (!ModelState.IsValid)
-            {
-                _toastNotification.AddErrorToastMessage("SomeThing Went Error");
-                return Page();
-            }
+           
 
             try
             {
