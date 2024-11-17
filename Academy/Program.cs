@@ -17,8 +17,23 @@ builder.Services.AddDbContext<AcademyContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount =false)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+//builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount =false)
+//    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = false;
+
+    // Password settings
+    options.Password.RequireDigit = false; // Requires at least one digit (0-9)
+    options.Password.RequireLowercase = false; // Requires at least one lowercase letter (a-z)
+    options.Password.RequireUppercase = false; // Requires at least one uppercase letter (A-Z)
+    options.Password.RequireNonAlphanumeric = false; // Requires at least one special character
+    options.Password.RequiredLength = 6; // Minimum length of the password
+})
+.AddEntityFrameworkStores<ApplicationDbContext>();
+
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");

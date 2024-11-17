@@ -7,9 +7,9 @@ namespace Academy.Models
         public int ParentId { get; set; }
         public string ParentName { get; set; }
         public string? UserName { get; set; }
-        public string ParentAddress { get; set; }
+        public string? ParentAddress { get; set; }
         public string? ParentEmail{ get; set; }
-        public string ParentPhone { get; set; }
+        public string? ParentPhone { get; set; }
         public string? Image { get; set; }
         public bool IsActive { get; set; }
         //list of children

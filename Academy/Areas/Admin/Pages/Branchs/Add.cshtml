@@ -30,13 +30,18 @@
                             <span asp-validation-for="@Model.BranchVM.BranchAddress" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
-                          
-                                   
-                                        <label for="fileUpload" class="form-label">Choose an Image</label>
-                                        <div class="input-group">
-                                    <input type="file" accept=".png, .jpg, .jpeg" class="form-control" id="fileUpload" name="fileUpload" />
+                            <label asp-for="@Model.BranchVM.Phone" class="form-label">Branch Phone</label>
+                            <input asp-for="@Model.BranchVM.Phone" class="form-control" />
+                            <span asp-validation-for="@Model.BranchVM.Phone" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+
+                             <label for="fileUpload" class="form-label">Choose an Image</label>
+                             <div class="input-group">
+                             <input type="file" accept=".png, .jpg, .jpeg" class="form-control" id="fileUpload" name="fileUpload" />
                                        
-                                        </div>
+                        </div>
                                    
 
                                

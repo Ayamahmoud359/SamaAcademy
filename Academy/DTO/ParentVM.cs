@@ -24,10 +24,10 @@ namespace Academy.DTO
 
         [Required(ErrorMessage = "Parent Name is required")]
         public string ParentName { get; set; }
-        [Required(ErrorMessage = "Parent Phone is required")]
-        public string ParentPhone { get; set; }
-        [Required(ErrorMessage = "Parent Address is required")]
-        public string ParentAddress { get; set; }
+        //[Required(ErrorMessage = "Parent Phone is required")]
+        public string? ParentPhone { get; set; }
+        //[Required(ErrorMessage = "Parent Address is required")]
+        public string? ParentAddress { get; set; }
 
        
     }
