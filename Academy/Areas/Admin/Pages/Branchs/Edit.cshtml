@@ -37,6 +37,12 @@
                             <span asp-validation-for="@Model.Branch.BranchAddress" class="text-danger"></span>
                         </div>
 
+                        <div class="mb-3">
+                            <label asp-for="@Model.Branch.Phone" class="form-label">Branch Phone</label>
+                            <input asp-for="@Model.Branch.Phone" class="form-control" />
+                            <span asp-validation-for="@Model.Branch.Phone" class="text-danger"></span>
+                        </div>
+
                       
                         <div class="mb-3">
                             @Html.CheckBoxFor(m => m.Branch.IsActive, new { @class = "form-check-input" })
