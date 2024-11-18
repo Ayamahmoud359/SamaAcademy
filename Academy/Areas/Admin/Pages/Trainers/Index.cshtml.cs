@@ -49,20 +49,24 @@ namespace Academy.Areas.Admin.Pages.Trainers
                     }
                     trainer.IsActive = false;
                     trainer.IsDeleted = true;
+                    await _context.SaveChangesAsync();
+                    _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                    return RedirectToPage("Index");
 
-                    var user = await _userManager.FindByNameAsync(trainer.UserName);
-                    if (user != null)
-                    {
-                        var result = await _userManager.DeleteAsync(user);
-                        if (result.Succeeded)
-                        {
 
-                            await _context.SaveChangesAsync();
-                            _toastNotification.AddSuccessToastMessage("Deleted Successfully");
-                            return RedirectToPage("Index");
-                        }
+                    //var user = await _userManager.FindByNameAsync(trainer.UserName);
+                    //if (user != null)
+                    //{
+                    //    var result = await _userManager.DeleteAsync(user);
+                    //    if (result.Succeeded)
+                    //    {
 
-                    }
+                    //        await _context.SaveChangesAsync();
+                    //        _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                    //        return RedirectToPage("Index");
+                    //    }
+
+                    //}
                 }
 
 

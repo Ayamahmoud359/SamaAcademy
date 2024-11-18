@@ -68,11 +68,11 @@ namespace Academy.Areas.Admin.Pages.Subscriptions
             try
             {
                 var SubscriptionToEdit = await _context.Subscriptions.FirstOrDefaultAsync(m => m.SubscriptionId == Subscription.SubscriptionId);
-                if (SubscriptionToEdit.EndDate < DateOnly.FromDateTime(DateTime.Now))
-                {
-                    ModelState.AddModelError(string.Empty, "Subscription EndDate Has Already Passed ,You can't activate it");
-                    return Page();
-                }
+                //if (SubscriptionToEdit.EndDate < DateOnly.FromDateTime(DateTime.Now))
+                //{
+                //    ModelState.AddModelError(string.Empty, "Subscription EndDate Has Already Passed ,You can't activate it");
+                //    return Page();
+                //}
                 if (Subscription.EndDate == Subscription.StartDate || Subscription.EndDate < Subscription.StartDate)
                 {
                     ModelState.AddModelError(string.Empty, "EndDate must be greater than StartDate");

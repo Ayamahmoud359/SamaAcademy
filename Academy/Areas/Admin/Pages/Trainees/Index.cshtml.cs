@@ -144,19 +144,23 @@ namespace Academy.Areas.Admin.Pages.Trainees
                     trainee.IsDeleted = true;
                   
                     _context.Attach(trainee).State = EntityState.Modified;
-                    var user = await _userManager.FindByNameAsync(trainee.UserName);
-                    if (user != null)
-                    {
-                        var result = await _userManager.DeleteAsync(user);
-                        if (result.Succeeded)
-                        {
+                    await _context.SaveChangesAsync();
+                    _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                    return RedirectToPage("Index");
 
-                            await _context.SaveChangesAsync();
-                            _toastNotification.AddSuccessToastMessage("Deleted Successfully");
-                            return RedirectToPage("Index");
-                        }
+                    //var user = await _userManager.FindByNameAsync(trainee.UserName);
+                    //if (user != null)
+                    //{
+                    //    var result = await _userManager.DeleteAsync(user);
+                    //    if (result.Succeeded)
+                    //    {
 
-                    }
+                    //        await _context.SaveChangesAsync();
+                    //        _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                    //        return RedirectToPage("Index");
+                    //    }
+
+                    //}
                    
                 }
 
