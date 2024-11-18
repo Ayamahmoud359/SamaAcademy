@@ -8,11 +8,11 @@ namespace Academy.DataGridVM
         public int TrainerCategoriesId { get; set; }
         public string BranchName { get; set; }
         public string DepartmentName { get; set; }
-        public string CategoryName{ get; set; }
-        
-       public string TrainerName { get; set; }
+        public string CategoryName { get; set; }
 
-     
+        public string TrainerName { get; set; }
+
+
         public bool IsActive { get; set; }
     }
 }

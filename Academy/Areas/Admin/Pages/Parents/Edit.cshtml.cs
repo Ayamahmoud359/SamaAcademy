@@ -1,6 +1,7 @@
 using Academy.Data;
 using Academy.DTO;
 using Academy.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -12,11 +13,18 @@ namespace Academy.Areas.Admin.Pages.Parents
     {
         private readonly AcademyContext _context;
         private readonly IToastNotification _toastNotification;
+        private readonly ApplicationDbContext _applicationDb;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public EditModel(AcademyContext context,IToastNotification toastNotification)
+        public EditModel(AcademyContext context
+            ,IToastNotification toastNotification
+            ,ApplicationDbContext applicationDb
+            ,UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _toastNotification = toastNotification;
+            _applicationDb = applicationDb;
+            _userManager = userManager;
         }
         [BindProperty]
 
@@ -55,15 +63,47 @@ namespace Academy.Areas.Admin.Pages.Parents
             try
             {
                 var ParentToEdit = await _context.Parents.FirstOrDefaultAsync(m => m.ParentId == Parent.ParentId);
+                if (Parent.UserName!=ParentToEdit.UserName )
+                {
+                    var checkuser =await _userManager.FindByNameAsync(Parent.UserName);
+                    if (checkuser!=null)
+                    {
+                        ModelState.AddModelError(string.Empty, "User Name alredy Token");
+                        _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
+                        return Page();
+                    }
+                    var ExistedUser =await _userManager.FindByNameAsync(ParentToEdit.UserName);
+                    if (ExistedUser != null)
+                    {
+                        ExistedUser.UserName = Parent.UserName;
+                        var result = await _userManager.UpdateAsync(ExistedUser);
+                        if (result.Succeeded)
+                        {
+                            ParentToEdit.UserName = Parent.UserName;
+                          
+                        }
+                        else
+                        {
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
+                            _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
+                            return Page();
+                        }
+                    }
+                    
+                }
                 ParentToEdit.ParentName = Parent.ParentName;
                 ParentToEdit.ParentAddress = Parent.ParentAddress;
                 ParentToEdit.ParentPhone = Parent.ParentPhone;
                 ParentToEdit.IsActive = Parent.IsActive;
                 _context.Attach(ParentToEdit).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 _toastNotification.AddSuccessToastMessage("Parent Information Edited Successfully");
                 return RedirectToPage("Index");
-               
+
+
             }
             catch (Exception e)
             {

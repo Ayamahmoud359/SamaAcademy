@@ -1,5 +1,6 @@
 using Academy.Data;
 using Academy.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,13 +14,19 @@ namespace Academy.Areas.Admin.Pages.Trainees
     {
         private readonly AcademyContext _context;
         private readonly IToastNotification _toastNotification;
-
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _applicationDb;
         public List<SelectListItem> Nationalities { get; set; }
-        public EditModel(AcademyContext context,IToastNotification toastNotification)
+        public EditModel(AcademyContext context
+            ,IToastNotification toastNotification
+             , ApplicationDbContext applicationDb
+            , UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _toastNotification = toastNotification;
-           
+            _applicationDb = applicationDb;
+            _userManager = userManager;
 
         }
         [BindProperty]
@@ -91,6 +98,37 @@ namespace Academy.Areas.Admin.Pages.Trainees
             try
             {
                 var TraineeToEdit = await _context.Trainees.FirstOrDefaultAsync(m => m.TraineeId == Trainee.TraineeId);
+                if (Trainee.UserName != TraineeToEdit.UserName)
+                {
+                    var checkuser = await _userManager.FindByNameAsync(Trainee.UserName);
+                    if (checkuser != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "User Name alredy Token");
+                        _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
+                        return Page();
+                    }
+                    var ExistedUser = await _userManager.FindByNameAsync(TraineeToEdit.UserName);
+                    if (ExistedUser != null)
+                    {
+                        ExistedUser.UserName = Trainee.UserName;
+                        var result = await _userManager.UpdateAsync(ExistedUser);
+                        if (result.Succeeded)
+                        {
+                            TraineeToEdit.UserName = Trainee.UserName;
+
+                        }
+                        else
+                        {
+                            foreach (var error in result.Errors)
+                            {
+                                ModelState.AddModelError(string.Empty, error.Description);
+                            }
+                            _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
+                            return Page();
+                        }
+                    }
+
+                }
                 TraineeToEdit.TraineeName = Trainee.TraineeName;
                 TraineeToEdit.TraineeAddress = Trainee.TraineeAddress;
                 TraineeToEdit.TraineePhone = Trainee.TraineePhone;

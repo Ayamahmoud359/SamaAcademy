@@ -353,5 +353,35 @@ namespace Academy.Controllers
 
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetTraineeChampions(DataSourceLoadOptions loadOptions)
+        {
+
+            IQueryable<TraineeChampionDataGridVM> TraineeChampions =
+                _context.TraineeChampions.Include(d => d.Trainee)
+                .Include(d => d.Champion).ThenInclude(d => d.Department)
+                .ThenInclude(d => d.Branch)
+                .Where(d => !d.IsDeleted && d.IsActive && !d.Champion.IsDeleted
+                && d.Champion.IsActive && !d.Champion.Department.IsDeleted
+                && d.Champion.Department.IsActive && !d.Champion.Department.Branch.IsDeleted
+            && d.Champion.Department.Branch.IsActive && !d.Trainee.IsDeleted
+            && d.Trainee.IsActive)
+                .Select(i => new TraineeChampionDataGridVM()
+                {
+                    TraineeChampionId = i.TraineeChampionId,
+                    TraineeName = i.Trainee.TraineeName,
+                    ChampionName = i.Champion.ChampionName,
+                    BranchName = i.Champion.Department.Branch.BranchName,
+                    DepartmentName = i.Champion.Department.DepartmentName,
+                    IsActive = i.IsActive,
+                    TraineeId=i.TraineeId,
+                    ChampionId=i.ChampionId
+
+                });
+
+            return Json(await DataSourceLoader.LoadAsync(TraineeChampions, loadOptions));
+
+        }
     }
 }

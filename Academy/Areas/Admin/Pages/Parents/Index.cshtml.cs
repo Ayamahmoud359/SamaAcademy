@@ -85,24 +85,20 @@ namespace Academy.Areas.Admin.Pages.Parents
                     }
                     parent.IsActive = false;
                     parent.IsDeleted = true;
-                    _context.Attach(parent).State = EntityState.Modified;
-                    await _context.SaveChangesAsync();
-                    _toastNotification.AddSuccessToastMessage("Deleted Successfully");
-                    return RedirectToPage("Index");
 
-                    //var user = await _userManager.FindByNameAsync(parent.UserName);
-                    //if (user != null)
-                    //{
-                    //    var result = await _userManager.DeleteAsync(user);
-                    //    if (result.Succeeded)
-                    //    {
+                    var user = await _userManager.FindByNameAsync(parent.UserName);
+                    if (user != null)
+                    {
+                        var result = await _userManager.DeleteAsync(user);
+                        if (result.Succeeded)
+                        {
 
-                    //        await _context.SaveChangesAsync();
-                    //        _toastNotification.AddSuccessToastMessage("Deleted Successfully");
-                    //        return RedirectToPage("Index");
-                    //    }
+                            await _context.SaveChangesAsync();
+                            _toastNotification.AddSuccessToastMessage("Deleted Successfully");
+                            return RedirectToPage("Index");
+                        }
 
-                    //}
+                    }
 
                 }
 

@@ -7,7 +7,7 @@ namespace Academy.Models
     {
         public int TraineeId { get; set; }
         public string? TraineeEmail { get; set; }
-        public string? UserName { get; set; }
+        public string UserName { get; set; }
         public string TraineePhone { get; set; }
         public string? TraineeAddress { get; set; }
         public string TraineeName { get; set; }
