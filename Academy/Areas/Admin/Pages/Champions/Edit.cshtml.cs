@@ -37,10 +37,7 @@ namespace Academy.Areas.Admin.Pages.Champions
                     champion.ChampionDate = Champion.ChampionDate;
                     champion.ChampionId = Champion.ChampionId;
                     champion.ChampionDescription = Champion.ChampionDescription;
-                    champion.ChampionScore = Champion.ChampionScore;
-                    champion.DepartmentId = Champion.DepartmentId;
-                    champion.IsActive = Champion.IsActive;
-                
+                  
 
                     return Page();
                 }
@@ -68,9 +65,9 @@ namespace Academy.Areas.Admin.Pages.Champions
                 {
                     championToEdit.ChampionName = champion.ChampionName;
                     championToEdit.ChampionDescription = champion.ChampionDescription;
-                    championToEdit.ChampionScore = champion.ChampionScore;
+                   
                     championToEdit.ChampionDate = champion.ChampionDate;
-                    championToEdit.IsActive = champion.IsActive;
+                
                     _context.Attach(championToEdit).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Champion Information Edited Successfully");

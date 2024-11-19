@@ -36,11 +36,7 @@
                             <span asp-validation-for="@Model.champion.ChampionDescription" class="text-danger"></span>
                         </div>
 
-                        <div class="mb-3">
-                            <label asp-for="@Model.champion.ChampionScore" class="form-label">Champion Score</label>
-                            <input asp-for="@Model.champion.ChampionScore" class="form-control" />
-                            <span asp-validation-for="@Model.champion.ChampionScore" class="text-danger"></span>
-                        </div>
+                      
                         @if (Model.champion.ChampionDate != null)
                         {
                             <div class="mb-3">
@@ -57,12 +53,7 @@
                                 <span asp-validation-for="@Model.champion.ChampionDate" class="text-danger"></span>
                             </div>
                         }
-                        <div class="mb-3">
-                            @Html.CheckBoxFor(m => m.champion.IsActive, new { @class = "form-check-input" })
-                            <label class="form-check-label" for="Active">
-                                Is Active?
-                            </label>
-                        </div>
+                      
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">Save </button>
                             <a href="/Admin/Champions" class="text-primary d-inline-block">

@@ -21,12 +21,10 @@ namespace Academy.Models
     
         public int? ParentId { get; set; }
         public Parent? Parent { get; set; }
-         /// List of Champion
-          public ICollection<TraineeChampion> TraineeChampions{ get; set; } = new List<TraineeChampion>();
+
         // A trainee can have many subscriptions (to multiple departments and categories)
-        public ICollection<Subscription> Subscriptions { get; set; }= new List<Subscription> 
-            ();
-      
+        public ICollection<Subscription> Subscriptions { get; set; }= new List<Subscription>();
+        public ICollection<TraineeCompetitionTeam> traineeCompetitionTeams { set; get; } = new List<TraineeCompetitionTeam>();
         public bool IsDeleted { get; set; }
      
     }

@@ -11,6 +11,7 @@
         public CompetitionDepartment CompetitionDepartment { get; set; } = null!; 
         public int TrainerId { get; set; }
         public Trainer Trainer { get; set; } = null!;
-        public ICollection<Trainee> Trainees { get; set; } = new List<Trainee>();
+        public ICollection<TraineeCompetitionTeam> traineeCompetitionTeams { set; get; } = new List<TraineeCompetitionTeam>();
+
     }
 }

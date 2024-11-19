@@ -27,14 +27,7 @@
                             // Example column configuration
                          
                             columns.AddFor(m => m.ChampionName).Caption("Champion");
-                            columns.AddFor(m => m.DepartmentName).Caption("Department");
-                            columns.AddFor(m => m.BranchName).Caption("Branch");
-
-                            columns.Add().Caption("Status").CellTemplate(@<text>
-                    <span>
-                        <%= data.IsActive ? "Active" : "Not Active" %>
-                    </span>
-                </text>);
+                         
                             columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
                     <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
                         <a href="/Admin/Champions/View?Id=<%- data.ChampionId %>" class="text-primary d-inline-block">

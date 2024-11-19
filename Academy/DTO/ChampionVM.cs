@@ -23,18 +23,7 @@ namespace Academy.DTO
 
         [Display(Name = "Champion Date")]
         public DateOnly? ChampionDate { get; set; }
-       
-        public int? ChampionScore { get; set; }
-
-        [Required(ErrorMessage = "Department is Required")]
-
-        [Display(Name = "Department")]
-        public int DepartmentId { get; set; }
-        [Required(ErrorMessage = "Branch is Required")]
-
-        [Display(Name = "Branch")]
-        public int BranchId { get; set; }
-        public bool IsActive { get; set; }
+      
 
     }
 }

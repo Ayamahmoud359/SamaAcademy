@@ -129,24 +129,8 @@ namespace Academy.Areas.Admin.Pages.Branchs
                         item.IsDeleted = true;
                         item.IsActive = false;
                     }
-                    List<TraineeChampion> traineeChampions = new List<TraineeChampion>();
-                    traineeChampions = _context.TraineeChampions.Include(a => a.Champion)
-                       .ThenInclude(a => a.Department)
-                       .ThenInclude(a => a.Branch)
-                       .Where(a => a.Champion.Department.Branch.BranchId == Branchid).ToList();
-                    foreach (var item in traineeChampions)
-                    {
-                        item.IsDeleted = true;
-                        item.IsActive = false;
-                    }
-                    List<Champion> champions = new List<Champion>();
-                    champions= _context.Champions.Include(a => a.Department).ThenInclude(a => a.Branch)
-                        .Where(a => a.Department.Branch.BranchId == Branchid).ToList();
-                    foreach (var item in champions)
-                    {
-                        item.IsDeleted = true;
-                        item.IsActive = false;
-                    }
+                  
+                  
 
 
                     List<Department> departments = new List<Department>();

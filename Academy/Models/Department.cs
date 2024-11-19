@@ -17,8 +17,7 @@ namespace Academy.Models
         public Branch? Branch { get; set; } 
         ///list of Category
         public ICollection<Category> Categories { get; set; } = new List<Category>();
-        public ICollection<Champion> Champions { get; set; } = new List<Champion>();
-       
+      
         public bool IsDeleted { get; set; }
     }
 }

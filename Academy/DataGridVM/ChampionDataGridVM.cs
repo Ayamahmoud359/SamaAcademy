@@ -6,9 +6,7 @@ namespace Academy.DataGridVM
     public class ChampionDataGridVM
     {
       
-        public string DepartmentName { set; get; }
-        public string BranchName { set; get; }
-        public bool IsActive { set; get; }
+
    
 
         public int ChampionId { get; set; }
@@ -19,7 +17,6 @@ namespace Academy.DataGridVM
 
         public DateOnly? ChampionDate { get; set; }
 
-        public int? ChampionScore { get; set; }
        
     }
 }

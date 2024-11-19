@@ -33,10 +33,9 @@ namespace Academy.Data
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Exam> Exams { get; set; }
         public virtual DbSet<TrainerCategories> CategoryTrainers { get; set; }
-       // public virtual DbSet<SubCategoryTrainer> SubCategoryTrainer { get; set; }
-        public virtual DbSet<TraineeChampion> TraineeChampions { get; set; }
+        // public virtual DbSet<SubCategoryTrainer> SubCategoryTrainer { get; set; }
 
-
+        public virtual DbSet<TraineeCompetitionTeam> TraineeCompetitionTeams { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             

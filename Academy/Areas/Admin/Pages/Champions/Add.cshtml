@@ -18,24 +18,8 @@
                 <div class="live-preview">
                     <div asp-validation-summary="All" class="text-danger"></div>
                     <form method="post" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label class="form-label" asp-for="@Model.ChampionVM.BranchId">Branch</label>
-                            <select onchange=" GetBranchDepartments(this.value)" asp-for="@Model.ChampionVM.BranchId" asp-items="@(new SelectList(Model.Branches, "BranchId", "BranchName"))" class="form-control form-select">
-                                <option selected disabled>Choose...</option>
-
-                            </select>
-                            <span asp-validation-for="@Model.ChampionVM.BranchId" class="text-danger"></span>
-
-                        </div><!--end col-->
-                        <div class="mb-3">
-                            <label class="form-label" asp-for="@Model.ChampionVM.DepartmentId">Department</label>
-                            <select asp-for="@Model.ChampionVM.DepartmentId" asp-items="@(new SelectList(Model.Departments,"DepartmentId", "DepartmentName"))" class="form-control form-select">
-                                <option selected disabled>Choose...</option>
-
-                            </select>
-                            <span asp-validation-for="@Model.ChampionVM.DepartmentId" class="text-danger"></span>
-
-                        </div><!--end col-->
+                       
+                     
 
 
                         <div class="mb-3">
@@ -64,7 +48,7 @@
                             <textarea asp-for="@Model.ChampionVM.ChampionDescription" class="form-control"> </textarea>
                             <span asp-validation-for="@Model.ChampionVM.ChampionDescription" class="text-danger"></span>
                         </div>
-                     @*    <div class="mb-3">
+                    <div class="mb-3">
 
 
                             <label for="fileUpload" class="form-label">Choose an Image</label>
@@ -75,7 +59,7 @@
 
 
 
-                        </div> *@
+                        </div> 
 
 
                         <div class="text-end">

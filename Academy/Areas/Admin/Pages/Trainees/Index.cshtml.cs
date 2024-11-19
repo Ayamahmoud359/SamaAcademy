@@ -132,14 +132,6 @@ namespace Academy.Areas.Admin.Pages.Trainees
                     }
                     
                    
-                    List<TraineeChampion> traineeChampions = new List<TraineeChampion>();
-                    traineeChampions = _context.TraineeChampions.Include(a => a.Trainee)
-                        .Where(a => a.Trainee.TraineeId==Traineeid).ToList();
-                    foreach (var item in traineeChampions)
-                    {
-                        item.IsDeleted = true;
-                        item.IsActive = false;
-                    }
                     trainee.IsActive = false;
                     trainee.IsDeleted = true;
                   

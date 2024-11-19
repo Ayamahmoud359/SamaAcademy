@@ -15,9 +15,7 @@ namespace Academy.Areas.Admin.Pages.Champions
         private readonly AcademyContext _context;
         private readonly IToastNotification _toastNotification;
         private readonly IWebHostEnvironment _hostEnvironment;
-        public List<Branch> Branches { get; set; } = new List<Branch>();
-
-        public List<Department> Departments { get; set; } = new List<Department>();
+     
 
         public AddModel(AcademyContext context
             , IToastNotification toastNotification
@@ -31,13 +29,11 @@ namespace Academy.Areas.Admin.Pages.Champions
         public void OnGet()
         {
 
-            Branches = _context.Branches.Where(b => b.IsActive && !b.IsDeleted).ToList();
+        
         }
         public async Task<IActionResult> OnPostAsync(IFormFile? fileUpload)
         {
 
-            Branches = _context.Branches.Where(b => !b.IsDeleted && b.IsActive).ToList();
-            Departments = _context.Departments.Where(d => !d.IsDeleted && d.IsActive && d.BranchId == ChampionVM.BranchId).ToList();
             try
             {
                 if (!ModelState.IsValid)
@@ -51,16 +47,16 @@ namespace Academy.Areas.Admin.Pages.Champions
                 {
                     ChampionName = ChampionVM.ChampionName,
                     ChampionDate = ChampionVM.ChampionDate,
-                    DepartmentId = ChampionVM.DepartmentId,
+                 
                     ChampionDescription = ChampionVM.ChampionDescription,
-                    IsActive = true
+                 
                 };
-                //if (fileUpload != null && fileUpload.Length > 0)
-                //{
-                //    string folder = "uploads/Champions/";
-                //    branch.Image = await UploadImage(folder, fileUpload);
+                if (fileUpload != null && fileUpload.Length > 0)
+                {
+                    string folder = "uploads/Champions/";
+                    champion.Image = await UploadImage(folder, fileUpload);
 
-                //}
+                }
 
                 _context.Champions.Add(champion);
                 _context.SaveChanges();
