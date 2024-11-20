@@ -1,9 +1,9 @@
 ﻿@page
 @model Academy.Areas.Admin.Pages.TraineeCompetitionTeamsManagment.IndexModel
 @{
-    ViewBag.Title = "Trainer Categories";
+    ViewBag.Title = "Competition Teams Subscriptions";
     ViewBag.pTitle = "List";
-    ViewBag.pageTitle = "Trainer Categories";
+    ViewBag.pageTitle = "Competition Teams Subscriptions";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
 
@@ -11,24 +11,24 @@
     <div class="col-xxl-12 col-xl-12">
         <div class="card card-height-100">
             <div class="card-header align-items-center d-flex">
-                <h4 class="card-title mb-0 flex-grow-1">Trainer Categories</h4>
+                <h4 class="card-title mb-0 flex-grow-1">Competition Teams Subscriptions</h4>
 
             </div>
             <!-- end card header -->
             <!-- card body -->
             <div class="card-body">
-                @(Html.DevExtreme().DataGrid<Academy.DataGridVM.TrainerCategoryDataGridVM>()
-                    .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetTrainerCategories").Key("TrainerCategoriesId"))
+                @(Html.DevExtreme().DataGrid<Academy.DataGridVM.TraineeCompetitionTeamDataGridVM>()
+                    .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetTraineeCompetitionTeams").Key("Id"))
                     .RemoteOperations(true)
                     .ColumnHidingEnabled(true)
                     .Width("100%")
                     .Columns(columns =>
                     {
                         // Example column configuration
-                        columns.AddFor(m => m.BranchName).Caption("Branch");
-                        columns.AddFor(m => m.DepartmentName).Caption("Department");
-                        columns.AddFor(m => m.CategoryName).Caption("Category");
-                        columns.AddFor(m => m.TrainerName).Caption("Trainer");
+                        columns.AddFor(m => m.TraineeName).Caption("Trainee");
+                        columns.AddFor(m => m.CompetitionTeam).Caption("Team");
+                        columns.AddFor(m => m.CompetitionDepartment).Caption("Competition Department");
+                        columns.AddFor(m => m.Trainer).Caption("Trainer");
                         @*   columns.Add().Caption("Status").CellTemplate(@<text>
                 <span>
                 <%= data.IsActive ? "Active" : "Not Active" %>
@@ -36,13 +36,13 @@
                 </text>); *@
                         columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
                     <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
-                        <a href="/Admin/TrainerCategoriesManagment/View?Id=<%- data.TrainerCategoriesId %>" class="text-primary d-inline-block">
+                        <a href="/Admin/TraineeCompetitionTeamsManagment/View?Id=<%- data.Id %>" class="text-primary d-inline-block">
 
                             @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
                         </a>
 
                         &nbsp;
-                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.TrainerCategoriesId) }").Type(ButtonType.Danger)
+                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.Id) }").Type(ButtonType.Danger)
 
                     </div>
                 </text>);
@@ -105,7 +105,7 @@
                             <div class="mt-4 text-center">
 
 
-                                <h4 class="fs-semibold">You are about to delete This Trainer Category </h4>
+                                <h4 class="fs-semibold">You are about to delete This Trainee Subscription In this team </h4>
                                 @*  <p class="text-muted fs-14 mb-4 pt-1">
                                 Deleting This Subscription will remove all of its information .
                                 </p> *@
@@ -115,8 +115,8 @@
                                         <i class="ri-close-line me-1 align-middle"></i>
                                         Close
                                     </button>
-                                    <form asp-area="Admin" asp-page="/TrainerCategoriesManagment/Index" asp-page-handler="DeleteTrainerCategory">
-                                        <input asp-for="@Model.TrainerCategoryid" id="DeleteTrainerCategory" hidden>
+                                    <form asp-area="Admin" asp-page="/TraineeCompetitionTeamsManagment/Index" asp-page-handler="DeleteTraineeTeam">
+                                        <input asp-for="@Model.TraineeTeamid" id="DeleteTraineeTeam" hidden>
                                         <button class="btn btn-danger" type="submit" id="delete-record">
                                             Yes,
                                             Delete
@@ -140,7 +140,7 @@
 <script>
     function Delete(Id) {
 
-        document.getElementById("DeleteTrainerCategory").value = Id
+        document.getElementById("DeleteTraineeTeam").value = Id
         $('#deleteRecordModal').modal('show');
 
     };

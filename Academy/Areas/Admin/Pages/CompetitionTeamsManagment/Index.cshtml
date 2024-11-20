@@ -39,7 +39,7 @@
                     </div>
                 </text>);
                             columns.AddFor(m => m.TeamName).Caption("Team");
-                             columns.AddFor(m => m.CompetitionDepartmentName).Caption("Competition Department");
+                            columns.AddFor(m => m.CompetitionDepartmentName).Caption("Competition Department");
                             columns.AddFor(m => m.TrainerName).Caption("Trainer");
                             columns.Add().Caption("Status").CellTemplate(@<text>
                     <span>
@@ -197,51 +197,51 @@
 </div>
 <script>
 
-      $(document).ready(function() {
-            $('.custom-select').select2({
-                //  placeholder: "Choose...",
-                //  allowClear:false
-            });
-            });
+    $(document).ready(function () {
+        $('.custom-select').select2({
+            //  placeholder: "Choose...",
+            //  allowClear:false
+        });
+    });
 
 
-              function Delete(Id) {
+    function Delete(Id) {
 
         document.getElementById("DeleteTeam").value = Id
-                 $('#deleteRecordModal').modal('show');
+        $('#deleteRecordModal').modal('show');
 
-         };
-
-
-             var currentKey;
+    };
 
 
+    var currentKey;
 
-                 function handleSubmit(event) {
-                     console.log("submit")
-                     // Trigger the client-side validation
-                     var isValid = true;
-                     // Validate form using ASP.NET Core's built-in validation
-                     if (!event.target.checkValidity()) {
-                         isValid = false;  // If the form fails validation, prevent submission
-                     }
 
-                     if (!isValid) {
-                         event.preventDefault(); // Prevent form submission if validation fails
-                     }
 
-                     // Return false to prevent form from submitting even if valid
-                     return false;
-                 }
+    function handleSubmit(event) {
+        console.log("submit")
+        // Trigger the client-side validation
+        var isValid = true;
+        // Validate form using ASP.NET Core's built-in validation
+        if (!event.target.checkValidity()) {
+            isValid = false;  // If the form fails validation, prevent submission
+        }
+
+        if (!isValid) {
+            event.preventDefault(); // Prevent form submission if validation fails
+        }
+
+        // Return false to prevent form from submitting even if valid
+        return false;
+    }
     function Addtrainees(data) {
-                     console.log(data)
-                     currentKey=data
-              $('#showModal').modal('show');
+        console.log(data)
+        currentKey = data
+        $('#showModal').modal('show');
 
-             }
-             function saveButtonClick() {
+    }
+    function saveButtonClick() {
 
-                     console.log("save")
+        console.log("save")
         const selectedValues = [];
         const selectedOptions = document.getElementById("TeamVM_SelectedTrainees").selectedOptions;
 
@@ -249,62 +249,66 @@
         for (let option of selectedOptions) {
             selectedValues.push(option.value);
         }
-                     if (selectedValues.length !== 0){
 
-             
-                         $.ajax({
-                             type: "POST",
-                             beforeSend: function (xhr) {
-                                 xhr.setRequestHeader("XSRF-TOKEN",
-                                     $('input:hidden[name="__RequestVerificationToken"]').val());
-                             }
-                             ,
+        if (selectedValues.length !== 0) {
+
+            console.log(JSON.stringify({ selectedValues: selectedValues, TeamId: currentKey }))
+            $.ajax({
+                type: "POST",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                }
+                ,
                 url: "/admin/CompetitionTeamsManagment/Index?handler=AddTrainees",
                 contentType: 'application/json',
                 data: JSON.stringify({ selectedValues: selectedValues, TeamId: currentKey }),
 
-                             success: function (response) {
-                                 console.log(response)
-                                 if (response == "Added") {
-                                    console.log("close")
-                      document.getElementById("Err").innerHTML = "";
+                success: function (response) {
+                    console.log(response)
+                    if (response == "Added") {
+                        console.log("close")
+                        document.getElementById("Err").innerHTML = "";
                         var trianeespan = document.getElementById("TeamVM_SelectedTrainees-error");
 
                         console.log(trianeespan)
-                          }
-                    if (trianeespan) {
-                        document.getElementById("TeamVM_SelectedTrainees-error");
+
+                        if (trianeespan) {
+                            document.getElementById("TeamVM_SelectedTrainees-error");
 
                             console.log("Trinees span removed")
-                         }
+                        }
 
-                     document.getElementById("frm").reset();
-                      $('#showModal').modal('hide');
-                       currentKey = -1;
-                               toastr.success('Department Added Successfully');
-                                 }
-                               
-                                 else{
-                                     console.log(currentKey)
-                                     document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
-                                      //toastNotify("error", "An error occurred: " + "Data havn't been sent Correctly ,Please try in another time");
-                                 }
+                        document.getElementById("frm").reset();
+                        $('#showModal').modal('hide');
+                        currentKey = -1;
+                        toastr.success('trainees Added Successfully');
+                    }
+                    else if(response=="Sorry ,You can't add new subscription in this team as This team isn't Active or in competition Department Not Active")
+                    {
+                        document.getElementById("Err").innerHTML = response
+                    }
+                    else {
+                        console.log(currentKey)
+                        document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
+                       
+                    }
 
-                             },
-                             failure: function (response) {
-                                   console.log(response)
-                                 document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
-                                  //toastNotify("error", "An error occurred: " + "Data havn't been sent Correctly ,Please try in another time")
+                },
+                failure: function (response) {
+                    console.log(response)
+                    document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
+              
 
-                             }
-                         });
+                }
+            });
 
-                     }
+        }
 
-             }
-             function cancelButtonClick() {
-                 console.log("close")
-                      document.getElementById("Err").innerHTML = "";
+    }
+    function cancelButtonClick() {
+        console.log("close")
+        document.getElementById("Err").innerHTML = "";
         var trianeespan = document.getElementById("TeamVM_SelectedTrainees-error");
 
         console.log(trianeespan)
@@ -315,12 +319,12 @@
         console.log("Trinees span removed")
     }
 
-                     document.getElementById("frm").reset();
+    document.getElementById("frm").reset();
 
-                 $('#showModal').modal('hide');
-                  currentKey = -1;
+    $('#showModal').modal('hide');
+    currentKey = -1;
 
-             }
+                 }
 
 
 

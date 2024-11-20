@@ -10,7 +10,7 @@ namespace Academy.Areas.Admin.Pages.TraineeCompetitionTeamsManagment
     {
         private readonly AcademyContext _context;
         [BindProperty]
-        public int TrainerCategoryid { set; get; }
+        public int TraineeTeamid { set; get; }
         private readonly IToastNotification _toastNotification;
 
         public IndexModel(AcademyContext context, IToastNotification toastNotification)
@@ -19,20 +19,20 @@ namespace Academy.Areas.Admin.Pages.TraineeCompetitionTeamsManagment
             _toastNotification = toastNotification;
         }
 
-        public async Task<IActionResult> OnPostDeleteTrainerCategory()
+        public async Task<IActionResult> OnPostDeleteTraineeTeam()
         {
             try
             {
-                var tranierCat = _context.CategoryTrainers.Find(TrainerCategoryid);
-                if (tranierCat != null)
+                var tranieeTeam = _context.TraineeCompetitionTeams.Find(TraineeTeamid);
+                if (tranieeTeam != null)
                 {
 
 
-                    tranierCat.IsActive = false;
-                    tranierCat.IsDeleted = true;
+                    tranieeTeam.IsActive = false;
+                    tranieeTeam.IsDeleted = true;
 
 
-                    _context.Attach(tranierCat).State = EntityState.Modified;
+                    _context.Attach(tranieeTeam).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Deleted Successfully");
                     return RedirectToPage("Index");

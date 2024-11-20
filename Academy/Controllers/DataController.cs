@@ -399,5 +399,40 @@ namespace Academy.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetTraineeCompetitionTeams(DataSourceLoadOptions loadOptions)
+        {
+
+
+            IQueryable<TraineeCompetitionTeamDataGridVM> TraineeCompetitionTeams = _context.TraineeCompetitionTeams
+                .Include(e => e.Trainee).Include(e => e.CompetitionTeam)
+                .ThenInclude(a=>new { a.CompetitionDepartment, a.Trainer })
+                
+                .Where(d => !d.IsDeleted&&d.IsActive
+                &&!d.Trainee.IsDeleted
+                &&d.Trainee.IsActive
+                && !d.CompetitionTeam.IsDeleted
+                && d.CompetitionTeam.IsActive&&
+                !d.CompetitionTeam.CompetitionDepartment.IsDeleted
+                &&d.CompetitionTeam.CompetitionDepartment.IsActive)
+                .Select(i => new TraineeCompetitionTeamDataGridVM()
+                {
+                    Id = i.Id,
+                    TraineeId = i.TraineeId,
+                    CompetitionTeamId = i.CompetitionTeamId,
+                    CompetitionTeam = i.CompetitionTeam.Name,
+                    Trainer = i.CompetitionTeam.Trainer.IsDeleted ? "" : i.CompetitionTeam.Trainer.TrainerName,
+                    CompetitionDepartment = i.CompetitionTeam.CompetitionDepartment.Name,
+                    IsActive = i.IsActive,
+                  
+                });
+
+
+            return Json(await DataSourceLoader.LoadAsync(TraineeCompetitionTeams, loadOptions));
+
+
+
+        }
+
     }
 }

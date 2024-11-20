@@ -23,13 +23,13 @@
 
 
                         <div class="mb-3">
-                            <label asp-for="@Model.CompetitionDepartmentVM.Name" class="form-label">Champion Name</label>
+                            <label asp-for="@Model.CompetitionDepartmentVM.Name" class="form-label">Competition Department Title</label>
                             <input asp-for="@Model.CompetitionDepartmentVM.Name" class="form-control" />
                             <span asp-validation-for="@Model.CompetitionDepartmentVM.Name" class="text-danger"></span>
                         </div>
                        
                         <div class="mb-3">
-                            <label asp-for="@Model.CompetitionDepartmentVM.Description" class="form-label"> Champion Description</label>
+                            <label asp-for="@Model.CompetitionDepartmentVM.Description" class="form-label"> Competition Department Description</label>
                             <textarea asp-for="@Model.CompetitionDepartmentVM.Description" class="form-control"> </textarea>
                             <span asp-validation-for="@Model.CompetitionDepartmentVM.Description" class="text-danger"></span>
                         </div>

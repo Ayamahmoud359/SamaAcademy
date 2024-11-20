@@ -130,15 +130,15 @@ namespace Academy.Areas.Admin.Pages.Trainees
                         item.IsDeleted = true;
                         item.IsActive = false;
                     }
-                    //List<TraineeCompetitionTeam> traineeCompetitionTeams = new List<TraineeCompetitionTeam>();
-                    //traineeCompetitionTeams = _context.TraineeCompetitionTeams.Include(a => a.Trainee)
+                    List<TraineeCompetitionTeam> traineeCompetitionTeams = new List<TraineeCompetitionTeam>();
+                    traineeCompetitionTeams = _context.TraineeCompetitionTeams.Include(a => a.Trainee)
 
-                    //   .Where(a => a.Trainee.TraineeId==Traineeid ).ToList();
-                    //foreach (var item in traineeCompetitionTeams)
-                    //{
-                    //    item.IsActive = false;
-                    //    item.IsDeleted = true;
-                    //}
+                       .Where(a => a.Trainee.TraineeId == Traineeid).ToList();
+                    foreach (var item in traineeCompetitionTeams)
+                    {
+                        item.IsActive = false;
+                        item.IsDeleted = true;
+                    }
 
 
                     trainee.IsActive = false;

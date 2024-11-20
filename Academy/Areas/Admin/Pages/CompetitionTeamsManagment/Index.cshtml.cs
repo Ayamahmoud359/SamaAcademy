@@ -37,10 +37,10 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
             {
                 if (TeamId != null&&selectedValues!=null&&selectedValues.Count>0)
                 {
-                    var team = _context.CompetitionTeam.Find(TeamId);
-                    if (team!= null && !team.IsActive)
+                    var team = _context.CompetitionTeam.Include(a=>a.CompetitionDepartment).FirstOrDefault(a=>a.Id==TeamId);
+                    if (team!= null &&( !team.IsActive||!team.CompetitionDepartment.IsActive))
                     {
-                        return new JsonResult("Sorry ,You can't add new subscription in this team as This team isn't Active");
+                        return new JsonResult("Sorry ,You can't add new subscription in this team as This team isn't Active or in competition Department Not Active");
                     }
                     var teamsubscriptions = _context.TraineeCompetitionTeams.Where(a =>!a.IsDeleted&&a.IsActive&& a.CompetitionTeamId == TeamId);
                     var traineecomptitionTeams = new List<TraineeCompetitionTeam>();
@@ -56,7 +56,7 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
                         }
 
                     }
-                    _context.TraineeCompetitionTeams.AddRangeAsync(traineecomptitionTeams);
+                   await _context.TraineeCompetitionTeams.AddRangeAsync(traineecomptitionTeams);
                     _context.SaveChanges();
 
 

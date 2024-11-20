@@ -19,7 +19,7 @@ namespace Academy.DTO
         [Required(ErrorMessage = "Trainer is Required")]
 
         [Display(Name = "Trainer")]
-        public int TrainerId { get; set; }
+        public int? TrainerId { get; set; }
 
         [Required(ErrorMessage = "Please select at least one Trainee.")]
         public List<int> SelectedTrainees { get; set; } = new List<int>();
