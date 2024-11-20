@@ -59,7 +59,7 @@ namespace Academy.Areas.Admin.Pages.Trainers
                 var Trainer = _context.Trainers.FirstOrDefault(t => t.TrainerId == TrainerCategoryVM.TrainerId);
                 if (Trainer != null)
                 {
-                    if (Trainer != null && !Trainer.IsActive )
+                    if (!Trainer.IsActive )
                     {
                         ModelState.AddModelError(string.Empty, "Sorry ,You can't assign this trainer to  new Categories as This Trainer isn't Active ");
                         _toastNotification.AddErrorToastMessage("Trainer Isn't Active");
