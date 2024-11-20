@@ -1,0 +1,330 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.CompetitionTeamsManagment.IndexModel
+@{
+    ViewBag.Title = "Competition Teams";
+    ViewBag.pTitle = "List";
+    ViewBag.pageTitle = "Competition Teams";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-xxl-12 col-xl-12">
+        <div class="card card-height-100">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Competition Teams</h4>
+                <div class="flex-shrink-0">
+                    <a href="/admin/CompetitionTeamsManagment/Add" class="btn btn-soft-primary">
+                        Add Team
+                    </a>
+                </div>
+            </div>
+            <!-- end card header -->
+            <!-- card body -->
+            <div class="card-body">
+                @(Html.DevExtreme().DataGrid<Academy.DataGridVM.CompetitionTeamDataGridVM>()
+                        .DataSource(ds => ds.Mvc().Controller("Data").LoadAction("GetCompetitionTeams").Key("Id"))
+                        .RemoteOperations(true)
+                        .ColumnHidingEnabled(true)
+                        .Width("100%")
+                        .Columns(columns =>
+                        {
+                            // Example column configuration
+                            columns.AddFor(m => m.Image).Width(100).Caption("Photo")
+                        .AllowFiltering(false)
+                        .AllowSorting(false)
+
+                        .CellTemplate(@<text>
+                    <div>
+                        <img src="/<%- value %>" alt="" width="35" height="35" />
+                    </div>
+                </text>);
+                            columns.AddFor(m => m.TeamName).Caption("Team");
+                             columns.AddFor(m => m.CompetitionDepartmentName).Caption("Competition Department");
+                            columns.AddFor(m => m.TrainerName).Caption("Trainer");
+                            columns.Add().Caption("Status").CellTemplate(@<text>
+                    <span>
+                        <%= data.IsActive ? "Active" : "Not Active" %>
+                    </span>
+                </text>);
+                            columns.Add().Caption("Actions").Alignment(HorizontalAlignment.Center).CellTemplate(@<text>
+                    <div class="btn-group" role="group" aria-label="Basic example" style="justify-content: space-between !important;">
+                        <a href="/Admin/CompetitionTeamsManagment/View?Id=<%- data.Id %>" class="text-primary d-inline-block">
+
+                            @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
+                        </a>
+                        &nbsp;
+
+                        @Html.DevExtreme().Button().Text("Add trainees").OnClick("function (e) { Addtrainees(data.Id) }").Type(ButtonType.Success)
+
+                        &nbsp;
+                        <a href="/Admin/CompetitionTeamsManagment/Edit?Id=<%- data.Id %>" class="text-primary d-inline-block ">
+
+                            @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
+                        </a>
+                        &nbsp;
+
+                        @Html.DevExtreme().Button().Text("Delete").OnClick("function (e) { Delete(data.Id) }").Type(ButtonType.Danger)
+
+                    </div>
+                </text>);
+                        })
+                    .ShowColumnLines(true)
+                    .ShowRowLines(true)
+                    //.Export(e => e.Enabled(true).AllowExportSelectedData(true))
+                    //.OnExporting("exporting")
+                    .FilterRow(f => f.Visible(true))
+                    .HeaderFilter(f => f.Visible(true))
+                    .GroupPanel(p => p.Visible(true))
+                    //.Selection(s => s.Mode(SelectionMode.Multiple))
+                    .Paging(paging => paging.PageSize(5).Enabled(true))
+                    .WordWrapEnabled(true)
+                    .ColumnAutoWidth(true)
+                    .ShowBorders(true)
+                    //.ColumnChooser(c => c.Enabled(true))
+                    .ColumnFixing(c => c.Enabled(true))
+                    .Grouping(g => g.AutoExpandAll(false))
+                    .Pager(pager =>
+                    {
+                        pager.Visible(true);
+                        pager.DisplayMode(GridPagerDisplayMode.Full);
+                        pager.ShowPageSizeSelector(true);
+                        pager.AllowedPageSizes(new JS("[5,10,20,50,100,'all']"));
+                        pager.ShowInfo(true);
+                        pager.ShowNavigationButtons(true);
+                    })
+                    .SearchPanel(searchPanel => searchPanel
+                    .Visible(true)
+                    .Placeholder("SearchTxt"))
+                    .RemoteOperations(false)
+                    @*  .Summary(s => s
+                .TotalItems(totalItems =>
+                {
+                totalItems.AddFor(m => m.BranchId).SummaryType(SummaryType.Count);
+                })
+                .GroupItems(groupItems =>
+                {
+                groupItems.Add().SummaryType(SummaryType.Count);
+                })
+                ) *@
+                    )
+            </div>
+            <!-- End Card Body  -->
+            <!-- Start Delete Popup  -->
+            <div class="modal fade zoomIn" id="deleteRecordModal" tabindex="-1"
+                 aria-labelledby="deleteRecordLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close" id="btn-close"></button>
+                        </div>
+                        <div class="modal-body p-5 text-center">
+                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json"
+                                       trigger="loop" colors="primary:#405189,secondary:#f06548"
+                                       style="width:90px;height:90px"></lord-icon>
+                            <div class="mt-4 text-center">
+
+
+                                <h4 class="fs-semibold">You are about to delete This Team </h4>
+                                <p class="text-muted fs-14 mb-4 pt-1">
+                                    Deleting This Team will remove all of its information .
+                                </p>
+                                <div class="hstack gap-2 justify-content-center remove">
+                                    <button class="btn btn-link link-success fw-medium text-decoration-none" id="deleteRecord-close"
+                                            data-bs-dismiss="modal">
+                                        <i class="ri-close-line me-1 align-middle"></i>
+                                        Close
+                                    </button>
+                                    <form asp-area="Admin" asp-page="/CompetitionTeamsManagment/Index" asp-page-handler="DeleteTeam">
+                                        <input asp-for="@Model.Teamid" id="DeleteTeam" hidden>
+                                        <button class="btn btn-danger" type="submit" id="delete-record">
+                                            Yes,
+                                            Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Delete Popup  -->
+            <!-- Start Add department Popup  -->
+            <div class="modal fade" id="showModal" tabindex="-1"
+                 aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content p-3">
+                        <div class="modal-header">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close" id="btn-close" onclick="cancelButtonClick()"></button>
+                        </div>
+                        <form method="post" id="frm" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div class="text-danger" id="Err"></div>
+
+                            <div class="mb-3">
+                                <label class="form-label" asp-for="@Model.TeamVM.SelectedTrainees">Trainees</label>
+                                <select asp-for="@Model.TeamVM.SelectedTrainees" class="form-control form-select custom-select" asp-items="@(new SelectList(Model.Trainees, "TraineeId", "TraineeName"))" multipl>
+
+                                    <option disabled value="0">Choose...</option>
+
+                                </select>
+
+
+                                <span asp-validation-for="@Model.TeamVM.SelectedTrainees" class="text-danger"></span>
+
+                            </div><!--end col-->
+
+
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-success" onclick="saveButtonClick()">Save</button>
+                                @*  @Html.DevExtreme().Button().Text("Save").Type(ButtonType.Success).OnClick("function (e) { saveButtonClick() }") *@
+                                @Html.DevExtreme().Button().Text("Cancel").OnClick("function (e) { cancelButtonClick() }")
+
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Add department Popup  -->
+        </div>
+    </div>
+</div>
+<script>
+
+      $(document).ready(function() {
+            $('.custom-select').select2({
+                //  placeholder: "Choose...",
+                //  allowClear:false
+            });
+            });
+
+
+              function Delete(Id) {
+
+        document.getElementById("DeleteTeam").value = Id
+                 $('#deleteRecordModal').modal('show');
+
+         };
+
+
+             var currentKey;
+
+
+
+                 function handleSubmit(event) {
+                     console.log("submit")
+                     // Trigger the client-side validation
+                     var isValid = true;
+                     // Validate form using ASP.NET Core's built-in validation
+                     if (!event.target.checkValidity()) {
+                         isValid = false;  // If the form fails validation, prevent submission
+                     }
+
+                     if (!isValid) {
+                         event.preventDefault(); // Prevent form submission if validation fails
+                     }
+
+                     // Return false to prevent form from submitting even if valid
+                     return false;
+                 }
+    function Addtrainees(data) {
+                     console.log(data)
+                     currentKey=data
+              $('#showModal').modal('show');
+
+             }
+             function saveButtonClick() {
+
+                     console.log("save")
+        const selectedValues = [];
+        const selectedOptions = document.getElementById("TeamVM_SelectedTrainees").selectedOptions;
+
+        // Loop through the selected options
+        for (let option of selectedOptions) {
+            selectedValues.push(option.value);
+        }
+                     if (selectedValues.length !== 0){
+
+             
+                         $.ajax({
+                             type: "POST",
+                             beforeSend: function (xhr) {
+                                 xhr.setRequestHeader("XSRF-TOKEN",
+                                     $('input:hidden[name="__RequestVerificationToken"]').val());
+                             }
+                             ,
+                url: "/admin/CompetitionTeamsManagment/Index?handler=AddTrainees",
+                contentType: 'application/json',
+                data: JSON.stringify({ selectedValues: selectedValues, TeamId: currentKey }),
+
+                             success: function (response) {
+                                 console.log(response)
+                                 if (response == "Added") {
+                                    console.log("close")
+                      document.getElementById("Err").innerHTML = "";
+                        var trianeespan = document.getElementById("TeamVM_SelectedTrainees-error");
+
+                        console.log(trianeespan)
+                          }
+                    if (trianeespan) {
+                        document.getElementById("TeamVM_SelectedTrainees-error");
+
+                            console.log("Trinees span removed")
+                         }
+
+                     document.getElementById("frm").reset();
+                      $('#showModal').modal('hide');
+                       currentKey = -1;
+                               toastr.success('Department Added Successfully');
+                                 }
+                               
+                                 else{
+                                     console.log(currentKey)
+                                     document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
+                                      //toastNotify("error", "An error occurred: " + "Data havn't been sent Correctly ,Please try in another time");
+                                 }
+
+                             },
+                             failure: function (response) {
+                                   console.log(response)
+                                 document.getElementById("Err").innerHTML = "Data havn't been sent Correctly ,Please try in another time";
+                                  //toastNotify("error", "An error occurred: " + "Data havn't been sent Correctly ,Please try in another time")
+
+                             }
+                         });
+
+                     }
+
+             }
+             function cancelButtonClick() {
+                 console.log("close")
+                      document.getElementById("Err").innerHTML = "";
+        var trianeespan = document.getElementById("TeamVM_SelectedTrainees-error");
+
+        console.log(trianeespan)
+    }
+    if (trianeespan) {
+        document.getElementById("TeamVM_SelectedTrainees-error");
+
+        console.log("Trinees span removed")
+    }
+
+                     document.getElementById("frm").reset();
+
+                 $('#showModal').modal('hide');
+                  currentKey = -1;
+
+             }
+
+
+
+
+
+</script>
+

@@ -1,0 +1,79 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.CompetitionTeamsManagment.EditModel
+
+@Html.AntiForgeryToken()
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@{
+    ViewBag.Title = "Competition Teams";
+    ViewBag.pTitle = "Add Competition Team";
+    ViewBag.pageTitle = "Competition Teams";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Edit Competition Department</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <form method="post">
+                        <div class="mb-3" style="display:none">
+                            <label asp-for="@Model.CompetitionTeamVM.Id" class="form-label">Id</label>
+                            <input asp-for="@Model.CompetitionTeamVM.Id" class="form-control" />
+                            <span asp-validation-for="@Model.CompetitionTeamVM.Id" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="@Model.CompetitionTeamVM.Name" class="form-label">Competition Team  Title</label>
+                            <input asp-for="@Model.CompetitionTeamVM.Name" class="form-control" />
+                            <span asp-validation-for="@Model.CompetitionTeamVM.Name" class="text-danger"></span>
+                        </div>
+
+
+
+                        <div class="mb-3">
+                            <label class="form-label" asp-for="@Model.CompetitionTeamVM.CompetitionDepartmentId">Competition Department</label>
+                            <select asp-for=" @Model.CompetitionTeamVM.CompetitionDepartmentId" asp-items="@(new SelectList(Model.CompetitionDepartments, "Id", "Name"))" class="form-select">
+                                <option selected disabled value="0">Choose</option>
+
+                            </select>
+
+                            <span asp-validation-for="@Model.CompetitionTeamVM.CompetitionDepartmentId" class="text-danger"></span>
+
+                        </div><!--end col-->
+                        <div class="mb-3">
+                            <label class="form-label" asp-for="@Model.CompetitionTeamVM.TrainerId">Trainer</label>
+                            <select asp-for=" @Model.CompetitionTeamVM.TrainerId" asp-items="@(new SelectList(Model.Trainers, "TrainerId", "TrainerName"))" class="form-select">
+                                <option selected disabled value="0">Choose</option>
+
+                            </select>
+
+                            <span asp-validation-for="@Model.CompetitionTeamVM.TrainerId" class="text-danger"></span>
+
+                        </div><!--end col-->
+
+
+
+
+                        <div class="mb-3">
+                            @Html.CheckBoxFor(m => m.CompetitionTeamVM.IsActive, new { @class = "form-check-input" })
+                            <label class="form-check-label" for="Active">
+                                Is Active?
+                            </label>
+                        </div>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Save </button>
+                            <a href="/Admin/CompetitionTeamsManagment" class="text-primary d-inline-block">
+                                <button type="button" class="btn btn-primary">Back To List </button>
+                            </a>
+
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

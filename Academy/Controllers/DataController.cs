@@ -1,5 +1,6 @@
 ﻿using Academy.Data;
 using Academy.DataGridVM;
+using Academy.DTO;
 using Academy.Models;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
@@ -349,34 +350,54 @@ namespace Academy.Controllers
 
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> GetTraineeChampions(DataSourceLoadOptions loadOptions)
-        //{
+        [HttpGet]
+        public async Task<IActionResult> GetCompetitionDepartments(DataSourceLoadOptions loadOptions)
+        {
 
-        //    IQueryable<TraineeChampionDataGridVM> TraineeChampions =
-        //        _context.TraineeChampions.Include(d => d.Trainee)
-        //        .Include(d => d.Champion).ThenInclude(d => d.Department)
-        //        .ThenInclude(d => d.Branch)
-        //        .Where(d => !d.IsDeleted && d.IsActive && !d.Champion.IsDeleted
-        //        && d.Champion.IsActive && !d.Champion.Department.IsDeleted
-        //        && d.Champion.Department.IsActive && !d.Champion.Department.Branch.IsDeleted
-        //    && d.Champion.Department.Branch.IsActive && !d.Trainee.IsDeleted
-        //    && d.Trainee.IsActive)
-        //        .Select(i => new TraineeChampionDataGridVM()
-        //        {
-        //            TraineeChampionId = i.TraineeChampionId,
-        //            TraineeName = i.Trainee.TraineeName,
-        //            ChampionName = i.Champion.ChampionName,
-        //            BranchName = i.Champion.Department.Branch.BranchName,
-        //            DepartmentName = i.Champion.Department.DepartmentName,
-        //            IsActive = i.IsActive,
-        //            TraineeId=i.TraineeId,
-        //            ChampionId=i.ChampionId
+            var CompetitionDepartments = _context.CompetitionDepartment
 
-        //        });
+                .Where(d => !d.IsDeleted).Select(i => new 
+                {
+                    i.Name,
+                    i.Id,
+                    i.Description,
+                    i.Image
+                });
 
-        //    return Json(await DataSourceLoader.LoadAsync(TraineeChampions, loadOptions));
+            return Json(await DataSourceLoader.LoadAsync(CompetitionDepartments, loadOptions));
 
-        //}
+
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCompetitionTeams(DataSourceLoadOptions loadOptions)
+        {
+
+           
+            IQueryable<CompetitionTeamDataGridVM> CompetitionTeams = _context.CompetitionTeam
+                .Include(e => e.CompetitionDepartment).Include(e => e.Trainer)
+
+                .Where(d => !d.IsDeleted && !d.CompetitionDepartment.IsDeleted && d.CompetitionDepartment.IsActive)
+                .Select(i => new CompetitionTeamDataGridVM()
+             {
+                    Id=i.Id,
+                    TrainerId=i.TrainerId,
+                    CompetitionDepartmentId=i.CompetitionDepartmentId,
+                    TeamName=i.Name,
+                    TrainerName=i.Trainer.IsDeleted?"":i.Trainer.TrainerName,
+                    CompetitionDepartmentName=i.CompetitionDepartment.Name,
+                    IsActive=i.IsActive,
+                    Image=i.Image
+
+             });
+
+           
+            return Json(await DataSourceLoader.LoadAsync(CompetitionTeams, loadOptions));
+
+
+
+        }
+
     }
 }

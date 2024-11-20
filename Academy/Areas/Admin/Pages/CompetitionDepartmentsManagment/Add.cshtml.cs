@@ -5,17 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NToastNotify;
 
-namespace Academy.Areas.Admin.Pages.Champions
+namespace Academy.Areas.Admin.Pages.CompetitionDepartmentsManagment
 {
     public class AddModel : PageModel
     {
         [BindProperty]
-        public ChampionVM ChampionVM { get; set; }
+        public CompetitionDepartmentVM CompetitionDepartmentVM{ get; set; }
 
         private readonly AcademyContext _context;
         private readonly IToastNotification _toastNotification;
         private readonly IWebHostEnvironment _hostEnvironment;
-     
+
 
         public AddModel(AcademyContext context
             , IToastNotification toastNotification
@@ -24,12 +24,12 @@ namespace Academy.Areas.Admin.Pages.Champions
             _context = context;
             _toastNotification = toastNotification;
             _hostEnvironment = hostEnvironment;
-            ChampionVM = new ChampionVM();
+            CompetitionDepartmentVM = new CompetitionDepartmentVM();
         }
         public void OnGet()
         {
 
-        
+
         }
         public async Task<IActionResult> OnPostAsync(IFormFile? fileUpload)
         {
@@ -43,24 +43,22 @@ namespace Academy.Areas.Admin.Pages.Champions
                 }
 
 
-                Champion champion = new Champion()
+               CompetitionDepartment competitionDepartment = new CompetitionDepartment()
                 {
-                    ChampionName = ChampionVM.ChampionName,
-                    ChampionDate = ChampionVM.ChampionDate,
-                 
-                    ChampionDescription = ChampionVM.ChampionDescription,
-                 
+                    Name=CompetitionDepartmentVM.Name,
+                    Description=CompetitionDepartmentVM.Description,
+                    IsActive=true
                 };
                 if (fileUpload != null && fileUpload.Length > 0)
                 {
-                    string folder = "uploads/Champions/";
-                    champion.Image = await UploadImage(folder, fileUpload);
+                    string folder = "uploads/CompetitionDepartments/";
+                    competitionDepartment.Image = await UploadImage(folder, fileUpload);
 
                 }
 
-                _context.Champions.Add(champion);
+                _context.CompetitionDepartment.Add(competitionDepartment);
                 _context.SaveChanges();
-                _toastNotification.AddSuccessToastMessage("Champion Added Successfully");
+                _toastNotification.AddSuccessToastMessage("Competition Department Added Successfully");
                 return RedirectToPage("Index");
             }
             catch (Exception exc)
@@ -89,5 +87,6 @@ namespace Academy.Areas.Admin.Pages.Champions
             return folderPath;
         }
 
+     
     }
 }
