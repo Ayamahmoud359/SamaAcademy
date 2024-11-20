@@ -361,7 +361,9 @@ namespace Academy.Controllers
                     i.Name,
                     i.Id,
                     i.Description,
-                    i.Image
+                    i.Image,
+                    i.IsActive
+
                 });
 
             return Json(await DataSourceLoader.LoadAsync(CompetitionDepartments, loadOptions));
@@ -406,8 +408,9 @@ namespace Academy.Controllers
 
             IQueryable<TraineeCompetitionTeamDataGridVM> TraineeCompetitionTeams = _context.TraineeCompetitionTeams
                 .Include(e => e.Trainee).Include(e => e.CompetitionTeam)
-                .ThenInclude(a=>new { a.CompetitionDepartment, a.Trainer })
-                
+                .ThenInclude(a=> a.CompetitionDepartment)
+                 .Include(e => e.CompetitionTeam)
+        .ThenInclude(a => a.Trainer)
                 .Where(d => !d.IsDeleted&&d.IsActive
                 &&!d.Trainee.IsDeleted
                 &&d.Trainee.IsActive
@@ -419,6 +422,7 @@ namespace Academy.Controllers
                 {
                     Id = i.Id,
                     TraineeId = i.TraineeId,
+                    TraineeName=i.Trainee.TraineeName,
                     CompetitionTeamId = i.CompetitionTeamId,
                     CompetitionTeam = i.CompetitionTeam.Name,
                     Trainer = i.CompetitionTeam.Trainer.IsDeleted ? "" : i.CompetitionTeam.Trainer.TrainerName,

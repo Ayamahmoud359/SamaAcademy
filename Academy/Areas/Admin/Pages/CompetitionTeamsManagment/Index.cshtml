@@ -53,10 +53,11 @@
                             @Html.DevExtreme().Button().Text("View").Type(ButtonType.Default)
                         </a>
                         &nbsp;
+                        <a href="/Admin/CompetitionTeamsManagment/AssignTraineeToTeam?Id=<%- data.Id %>" class="text-primary d-inline-block">
 
-                        @Html.DevExtreme().Button().Text("Add trainees").OnClick("function (e) { Addtrainees(data.Id) }").Type(ButtonType.Success)
-
-                        &nbsp;
+                        @Html.DevExtreme().Button().Text("Add Trainees").Type(ButtonType.Success)
+                        </a>
+                        &nbsp; 
                         <a href="/Admin/CompetitionTeamsManagment/Edit?Id=<%- data.Id %>" class="text-primary d-inline-block ">
 
                             @Html.DevExtreme().Button().Text("Edit").Type(ButtonType.Default)
@@ -162,7 +163,7 @@
                                     aria-label="Close" id="btn-close" onclick="cancelButtonClick()"></button>
                         </div>
                         <form method="post" id="frm" enctype="multipart/form-data" onsubmit="return handleSubmit(event)">
-                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="text-danger" id="Err"></div>
 
                             <div class="mb-3">
@@ -274,7 +275,7 @@
                         console.log(trianeespan)
 
                         if (trianeespan) {
-                            document.getElementById("TeamVM_SelectedTrainees-error");
+                            document.getElementById("TeamVM_SelectedTrainees-error").innerHTML = "";
 
                             console.log("Trinees span removed")
                         }
@@ -312,9 +313,9 @@
         var trianeespan = document.getElementById("TeamVM_SelectedTrainees-error");
 
         console.log(trianeespan)
-    }
+  
     if (trianeespan) {
-        document.getElementById("TeamVM_SelectedTrainees-error");
+        document.getElementById("TeamVM_SelectedTrainees-error").innerHTML = "";
 
         console.log("Trinees span removed")
     }

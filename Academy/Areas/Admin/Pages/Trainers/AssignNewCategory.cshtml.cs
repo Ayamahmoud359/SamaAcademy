@@ -53,9 +53,19 @@ namespace Academy.Areas.Admin.Pages.Trainers
         {
             try
             {
+                Branches = _context.Branches.Where(b => !b.IsDeleted && b.IsActive).ToList();
+                Departments = _context.Departments.Where(b => !b.IsDeleted && b.IsActive&&b.BranchId==TrainerCategoryVM.BranchId).ToList();
+                Categories = _context.Categories.Where(b => !b.IsDeleted && b.IsActive && b.DepartmentId == TrainerCategoryVM.DepartmentId).ToList(); ;
                 var Trainer = _context.Trainers.FirstOrDefault(t => t.TrainerId == TrainerCategoryVM.TrainerId);
                 if (Trainer != null)
                 {
+                    if (Trainer != null && !Trainer.IsActive )
+                    {
+                        ModelState.AddModelError(string.Empty, "Sorry ,You can't assign this trainer to  new Categories as This Trainer isn't Active ");
+                        _toastNotification.AddErrorToastMessage("Trainer Isn't Active");
+                        return Page();
+
+                    }
                     List<TrainerCategories> assignedCategories = new List<TrainerCategories>();
                     assignedCategories = _context.CategoryTrainers.Include(e => e.Trainer)
                         .Include(e => e.Category).ThenInclude(e => e.Department)
@@ -64,11 +74,10 @@ namespace Academy.Areas.Admin.Pages.Trainers
                     && !c.Category.IsDeleted
                     && !c.Category.Department.IsDeleted
                     && !c.Category.Department.Branch.IsDeleted
-                    && !c.Trainer.IsDeleted
                     && c.Category.IsActive
                     && c.Category.Department.IsActive
                     && c.Category.Department.Branch.IsActive
-                    && c.Trainer.IsActive &&
+                    &&
                     c.TrainerId == Trainer.TrainerId &&
                     c.Category.Department.DepartmentId == Trainer.CurrentDepartment
                     && c.Category.Department.Branch.BranchId == Trainer.CurrentBranch).ToList();
@@ -138,7 +147,7 @@ namespace Academy.Areas.Admin.Pages.Trainers
 
                     }
                 _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");
-                return RedirectToPage("../NotFound");
+                return Page();
             }
             catch (Exception ex)
             {
