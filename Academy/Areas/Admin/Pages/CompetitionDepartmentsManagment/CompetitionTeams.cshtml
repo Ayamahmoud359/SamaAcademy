@@ -16,7 +16,7 @@
             <!-- end card header -->
             <!-- card body -->
             <div class="card-body">
-                @(Html.DevExtreme().DataGrid<Academy.Models.CompetitionTeam>()
+                @(Html.DevExtreme().DataGrid<Academy.DataGridVM.CompetitionTeamDataGridVM>()
                     .DataSource(ds => ds.RemoteController()
                     .LoadUrl(Url.Page("CompetitionTeams", "GridData"))
                     .Key("Id")
@@ -29,8 +29,8 @@
                     .Columns(columns =>
                     {
                         // Example column configuration
-                        columns.AddFor(m => m.Name).Caption("Team");
-                        columns.AddFor(m => m.Trainer.TrainerName).Caption("Trainer");
+                        columns.AddFor(m => m.TeamName).Caption("Team");
+                        columns.AddFor(m => m.TrainerName).Caption("Trainer");
                         columns.Add().Caption("Status").CellTemplate(@<text>
                     <span>
                         <%= data.IsActive ? "Active" : "Not Active" %>

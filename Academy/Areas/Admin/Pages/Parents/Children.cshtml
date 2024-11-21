@@ -31,6 +31,8 @@
                     {
                         // Example column configuration
                         columns.AddFor(m => m.TraineeName).Caption("Child Name");
+                        columns.AddFor(m => m.TraineePhone).Caption("Child Phone");
+                        columns.AddFor(m => m.TraineeAddress).Caption("Child Address");
                         columns.Add().Caption("Status").CellTemplate(@<text>
                     <span>
                         <%= data.IsActive ? "Active" : "Not Active" %>

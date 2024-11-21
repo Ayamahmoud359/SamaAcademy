@@ -53,7 +53,11 @@ namespace Academy.Areas.Admin.Pages.Categories
             List<SubscriptionDataGridVM> data = new List<SubscriptionDataGridVM>();
             if (id != 0)
             {
-                var Allsubscriptions = _context.Subscriptions.Where(d => !d.IsDeleted).ToList();
+                var Allsubscriptions = _context.Subscriptions.Include(a => a.Trainee)
+                    .Where(d=>!d.IsDeleted
+                && !d.Trainee.IsDeleted
+                && d.Trainee.IsActive
+                && d.CategoryId == id).ToList();
                 foreach (var item in Allsubscriptions)
                 {
                     if (item.EndDate < DateOnly.FromDateTime(DateTime.Now))

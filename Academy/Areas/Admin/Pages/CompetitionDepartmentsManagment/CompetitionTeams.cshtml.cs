@@ -1,4 +1,5 @@
 using Academy.Data;
+using Academy.DataGridVM;
 using Academy.Models;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
@@ -49,10 +50,21 @@ namespace Academy.Areas.Admin.Pages.CompetitionDepartmentsManagment
         }
         public IActionResult OnGetGridData(DataSourceLoadOptions loadOptions, int id)
         {
-            List<CompetitionTeam> data = new List<CompetitionTeam>();
+            List<CompetitionTeamDataGridVM> data = new List<CompetitionTeamDataGridVM>();
             if (id != 0)
             {
-                data = _context.CompetitionTeam.Include(a=>a.Trainer).Where(d => !d.IsDeleted && d.CompetitionDepartmentId == id).ToList();
+                data = _context.CompetitionTeam.Include(a=>a.Trainer)
+                    .Where(d => !d.IsDeleted
+                    && d.CompetitionDepartmentId == id).Select(i => new CompetitionTeamDataGridVM()
+                    {
+                        Id = i.Id,
+                  
+                        TeamName = i.Name,
+                        TrainerName = i.Trainer.IsDeleted ? "" : i.Trainer.TrainerName,
+                        IsActive = i.IsActive
+                       
+
+                    }).ToList();
             }
 
             return new JsonResult(DataSourceLoader.Load(data, loadOptions));

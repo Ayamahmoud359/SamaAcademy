@@ -64,7 +64,6 @@ namespace Academy.Areas.Admin.Pages.Trainees
                 {
                     Id = i.Id,
                    
-                    CompetitionTeamId = i.CompetitionTeamId,
                     CompetitionTeam = i.CompetitionTeam.Name,
                     Trainer = i.CompetitionTeam.Trainer.IsDeleted ? "" : i.CompetitionTeam.Trainer.TrainerName,
                     CompetitionDepartment = i.CompetitionTeam.CompetitionDepartment.Name,
