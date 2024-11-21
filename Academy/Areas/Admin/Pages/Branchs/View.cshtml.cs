@@ -16,7 +16,7 @@ namespace Academy.Areas.Admin.Pages.Branchs
         public ViewModel(AcademyContext context)
         {
             _context = context;
-
+            Branch = new Branch();
         }
         public async Task<IActionResult> OnGetAsync(int? id)
         {

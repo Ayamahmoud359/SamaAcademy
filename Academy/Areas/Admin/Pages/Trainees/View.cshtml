@@ -2,7 +2,59 @@
 @model Academy.Areas.Admin.Pages.Trainees.ViewModel
 @{
     ViewBag.Title = "Trainees";
-    ViewBag.pTitle = "List";
+    ViewBag.pTitle = "View Details";
     ViewBag.pageTitle = "Trainees";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <!-- Department Card 3 -->
+
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Trainee Information</h4>
+            </div><!-- end card header -->
+
+            <div class="card-img-container" style="text-align: center; margin-bottom: 20px;">
+                <img src="/@Model.trainee.Image" alt="Trainee Image" class="img-fluid" style="max-height: 250px; object-fit: cover;">
+            </div>
+
+            @* <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Department Image"> *@
+            <div class="card-body">
+                @*  <h5 class="card-title">Department of Human Resources</h5>
+                <p class="card-text">The HR Department is dedicated to employee development, recruitment, and ensuring a positive work environment.</p> *@
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Trainee Name:</strong> @Model.trainee.TraineeName</li>
+                    <li class="list-group-item"><strong>Trainee User Name:</strong> @Model.trainee.UserName</li>
+                    <li class="list-group-item"><strong>Trainee Email:</strong> @Model.trainee.TraineeEmail</li>
+                    <li class="list-group-item"><strong>Trainee Phone:</strong> @Model.trainee.TraineePhone</li>
+                      <li class="list-group-item"><strong>Trainee Address:</strong> @Model.trainee.TraineeAddress</li>
+                    <li class="list-group-item"><strong>Trainee Nationality:</strong> @Model.trainee.Nationality</li>
+                    <li class="list-group-item"><strong>Trainee ResidencyNumber:</strong> @Model.trainee.ResidencyNumber</li>
+                    <li class="list-group-item"><strong>Trainee Birth Date:</strong> @Model.trainee.BirthDate</li>
+                    <li class="list-group-item"><strong>Parent Name:</strong> @Model.trainee.Parent.ParentName</li>
+
+                        @if (Model.trainee.IsActive)
+                        {
+                        <li class="list-group-item"><strong>Status:</strong>    Active</li>
+                        }
+                        else
+                        {
+                        <li class="list-group-item"><strong>Status:</strong>    Not Active</li>
+                        }
+
+                </ul>
+                <!-- Links to other pages -->
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="/Admin/Trainees/Subscriptions?id=@Model.trainee.TraineeId" class="link text-primary me-2">Trainee Subscriptions</a>
+                    <a href="/Admin/Trainees/CompetitionTeams?id=@Model.trainee.TraineeId" class="link text-primary me-2">Trainee Competition Teams</a>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

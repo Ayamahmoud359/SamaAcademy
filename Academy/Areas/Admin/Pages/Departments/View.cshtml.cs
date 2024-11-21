@@ -24,7 +24,7 @@ namespace Academy.Areas.Admin.Pages.Departments
             try
             {
                
-                Dept = await _context.Departments.FirstOrDefaultAsync(m => m.DepartmentId == id);
+                Dept = await _context.Departments.Include(a=>a.Branch).FirstOrDefaultAsync(m => m.DepartmentId == id);
                 if (Dept != null)
                 {
                   

@@ -1,4 +1,41 @@
 ﻿@page
 @model Academy.Areas.Admin.Pages.Champions.ViewModel
 @{
+    ViewBag.Title = "Champions";
+    ViewBag.pTitle = "View Details";
+    ViewBag.pageTitle = "Champions";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
+<div class="row">
+    <div class="col-lg-12">
+
+        <!-- Department Card 3 -->
+
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Champion Information</h4>
+            </div><!-- end card header -->
+
+            <div class="card-img-container" style="text-align: center; margin-bottom: 20px;">
+                <img src="/@Model.Champion.Image" alt="Champion Image" class="img-fluid" style="max-height: 250px; object-fit: cover;">
+            </div>
+
+            @* <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Department Image"> *@
+            <div class="card-body">
+                @*  <h5 class="card-title">Department of Human Resources</h5>
+                <p class="card-text">The HR Department is dedicated to employee development, recruitment, and ensuring a positive work environment.</p> *@
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Champion Title:</strong> @Model.Champion.ChampionName</li>
+                    <li class="list-group-item"><strong>Champion Date:</strong> @Model.Champion.ChampionDate</li>
+                    <li class="list-group-item"><strong>Champion Description:</strong>  @Model.Champion.ChampionDescription</li>
+
+                  
+                </ul>
+                <!-- Links to other pages -->
+               
+
+            </div>
+        </div>
+    </div>
+</div>
+

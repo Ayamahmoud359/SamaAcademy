@@ -9,7 +9,7 @@ namespace Academy.DataGridVM
         public string BranchName { get; set; }
         public string DepartmentName { get; set; }
         public string CategoryName { get; set; }
-
+        public string TraineeName { get; set; }
         public string TrainerName { get; set; }
         public int AbsenceId { get; set; }
         public bool IsAbsent { get; set; }

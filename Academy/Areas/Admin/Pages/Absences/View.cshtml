@@ -1,0 +1,55 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Absences.ViewModel
+@{
+    ViewBag.Title = "Attendences";
+    ViewBag.pTitle = "View Details";
+    ViewBag.pageTitle = "Attendences";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <!-- Department Card 3 -->
+
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Attendence Information</h4>
+            </div><!-- end card header -->
+
+        @*     <div class="card-img-container" style="text-align: center; margin-bottom: 20px;">
+                <img src="/@Model.Branch.Image" alt="Branch Image" class="img-fluid" style="max-height: 250px; object-fit: cover;">
+            </div>
+ *@
+            @* <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Department Image"> *@
+            <div class="card-body">
+                @*  <h5 class="card-title">Department of Human Resources</h5>
+                <p class="card-text">The HR Department is dedicated to employee development, recruitment, and ensuring a positive work environment.</p> *@
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Trainee:</strong>  @Model.absence.Subscription.Trainee.TraineeName</li>
+                    <li class="list-group-item"><strong>Branch:</strong>  @Model.absence.Subscription.Category.Department.Branch.BranchName</li>
+                    <li class="list-group-item"><strong>Department:</strong> @Model.absence.Subscription.Category.Department.DepartmentName</li>
+                    <li class="list-group-item"><strong>Category:</strong>  @Model.absence.Subscription.Category.CategoryName</li>
+                    <li class="list-group-item"><strong>Subscription Start Date:</strong> @Model.absence.Subscription.StartDate</li>
+                    <li class="list-group-item"><strong>Subscription End Date:</strong> @Model.absence.Subscription.EndDate</li>
+                    <li class="list-group-item"><strong>Responsible Trainer:</strong>  @Model.absence.Trainer.TrainerName</li>
+                    <li class="list-group-item"><strong>Attendebnce Date:</strong> @Model.absence.AbsenceDate</li>
+                    <li class="list-group-item"><strong>Attendence Type:</strong>@Model.absence.Type</li>
+
+                    @if (Model.absence.IsAbsent)
+                    {
+                        <li class="list-group-item"><strong>Status:</strong> Absent</li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item"><strong>Status:</strong> Present</li>
+                    }
+
+                </ul>
+                <!-- Links to other pages -->
+               
+
+            </div>
+        </div>
+    </div>
+</div>

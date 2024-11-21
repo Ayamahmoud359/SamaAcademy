@@ -4,19 +4,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace Academy.Areas.Admin.Pages.Champions
+namespace Academy.Areas.Admin.Pages.Parents
 {
     public class ViewModel : PageModel
     {
         private readonly AcademyContext _context;
 
-        public Champion Champion { get; set; }
+        public Parent Parent { get; set; }
 
         public ViewModel(AcademyContext context)
         {
             _context = context;
-            Champion = new Champion();
-
+           Parent = new Parent();
         }
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -24,8 +23,8 @@ namespace Academy.Areas.Admin.Pages.Champions
             try
             {
 
-               Champion= await _context.Champions.FirstOrDefaultAsync(m => m.ChampionId == id);
-                if (Champion != null)
+               Parent = await _context.Parents.FirstOrDefaultAsync(m => m.ParentId== id);
+                if (Parent != null)
                 {
 
                     return Page();
