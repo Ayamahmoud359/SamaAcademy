@@ -1,0 +1,54 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Parents.ViewModel
+@{
+    ViewBag.Title = "Parents";
+    ViewBag.pTitle = "View Details";
+    ViewBag.pageTitle = "Parents";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <!-- Department Card 3 -->
+
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Parent Information</h4>
+            </div><!-- end card header -->
+
+            <div class="card-img-container" style="text-align: center; margin-bottom: 20px;">
+                <img src="/@Model.Parent.Image" alt="Parent Image" class="img-fluid" style="max-height: 250px; object-fit: cover;">
+            </div>
+
+            @* <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Department Image"> *@
+            <div class="card-body">
+                @*  <h5 class="card-title">Department of Human Resources</h5>
+                <p class="card-text">The HR Department is dedicated to employee development, recruitment, and ensuring a positive work environment.</p> *@
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Parent Name:</strong> @Model.Parent.ParentName</li>
+                    <li class="list-group-item"><strong>Parent User Name:</strong> @Model.Parent.UserName/li>
+                    <li class="list-group-item"><strong>Parent Email:</strong> @Model.Parent.ParentEmail</li>
+                    <li class="list-group-item"><strong>Parent phone:</strong> @Model.Parent.ParentPhone</li>
+                    <li class="list-group-item"><strong>Parent Address:</strong> @Model.Parent.ParentAddress</li>
+               
+                    @if (Model.Parent.IsActive)
+                    {
+                        <li class="list-group-item"><strong>Status:</strong>    Active</li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item"><strong>Status:</strong>    Not Active</li>
+                    }
+
+                </ul>
+                <!-- Links to other pages -->
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="/Admin/Parents/Children?id=@Model.Parent.ParentId" class="link text-primary me-2">Parent Children</a>
+                    @* <a href="branch-trainers.html" class="btn btn-primary">Branch Trainers</a> *@
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

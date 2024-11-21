@@ -1,0 +1,67 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.CompetitionTeamsManagment.AssignTraineeToTeamModel
+@{
+    ViewBag.Title = "Competition Teams";
+    ViewBag.pTitle = "Assign Trainees To Team";
+    ViewBag.pageTitle = "Competition Teams";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Add Trainer</h4>
+
+            </div><!-- end card header -->
+            <div class="card-body">
+                <div class="live-preview">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <form method="post">
+
+
+                      
+                        <div class="mb-3">
+                            <label class="form-label" asp-for="@Model.TeamVM.SelectedTrainees">Trainees</label>
+                            <select asp-for="@Model.TeamVM.SelectedTrainees" class="form-control form-select custom-select" asp-items="@(new SelectList(Model.Trainees, "TraineeId", "TraineeName"))" multipl>
+
+                                <option disabled value="0">Choose...</option>
+
+                            </select>
+
+
+                            <span asp-validation-for="@Model.TeamVM.SelectedTrainees" class="text-danger"></span>
+
+                        </div><!--end col-->
+
+
+                        <div class="mb-3" style="display:none">
+                            
+                            <input asp-for="@Model.TeamVM.Id" class="form-control" />
+              
+                        </div>
+
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Assign</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div><!--end row-->
+<script>
+       $(document).ready(function() {
+            $('.custom-select').select2({
+                //  placeholder: "Choose...",
+                //  allowClear:false
+            });
+            });
+
+
+
+</script>

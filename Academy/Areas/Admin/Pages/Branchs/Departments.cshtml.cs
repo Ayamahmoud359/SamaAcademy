@@ -20,7 +20,7 @@ namespace Academy.Areas.Admin.Pages.Branchs
         }
         
 
-        public static int BranchId { get; set; }
+        public  int BranchId { get; set; }
 
 
 
@@ -46,12 +46,12 @@ namespace Academy.Areas.Admin.Pages.Branchs
 
 
         }
-        public IActionResult OnGetGridData(DataSourceLoadOptions loadOptions)
+        public IActionResult OnGetGridData(DataSourceLoadOptions loadOptions,int id)
         {
             List<Department> depts = new List<Department>();
-            if (BranchId != 0)
+            if (id != 0)
             {
-                 depts = _context.Departments.Where(d => !d.IsDeleted && d.BranchId == BranchId).ToList();
+                 depts = _context.Departments.Where(d => !d.IsDeleted && d.BranchId == id).ToList();
             }
          
             return new JsonResult(DataSourceLoader.Load(depts, loadOptions));

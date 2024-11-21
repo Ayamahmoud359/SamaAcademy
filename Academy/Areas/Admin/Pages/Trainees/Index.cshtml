@@ -159,7 +159,7 @@
                                     aria-label="Close" id="btn-close" onclick="cancelButtonClick()"></button>
                         </div>
                         <form enctype="multipart/form-data" method="post" id="frm" onsubmit="return handleSubmit(event)">
-                            <div asp-validation-summary="All" class="text-danger"></div>
+                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="text-danger" id="Err"></div>
                             <div class="mb-3">
                                 <label class="form-label" asp-for="@Model.subscription.BranchId">Branch</label>

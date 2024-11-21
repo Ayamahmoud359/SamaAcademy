@@ -66,7 +66,17 @@ namespace Academy.Areas.Admin.Pages.Parents
                     }
 
 
-                 
+                    List<TraineeCompetitionTeam> traineeCompetitionTeams = new List<TraineeCompetitionTeam>();
+                    traineeCompetitionTeams = _context.TraineeCompetitionTeams.Include(a => a.Trainee).ThenInclude(a=>a.Parent)
+
+                       .Where(a => a.Trainee.Parent.ParentId == Parentid).ToList();
+                    foreach (var item in traineeCompetitionTeams)
+                    {
+                        item.IsActive = false;
+                        item.IsDeleted = true;
+                    }
+
+
                     List<Trainee> trainees = new List<Trainee>();
                     trainees = _context.Trainees.Include(a => a.Parent)
                         .Where(a => a.Parent.ParentId == Parentid).ToList();

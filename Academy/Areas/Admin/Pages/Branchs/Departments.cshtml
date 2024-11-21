@@ -19,7 +19,11 @@
             <div class="card-body">
                 @(Html.DevExtreme().DataGrid<Academy.Models.Department>()
                     .DataSource(ds => ds.RemoteController()
-                    .LoadUrl(Url.Page("Departments", "GridData")).Key("DepartmentId"))
+                    .LoadUrl(Url.Page("Departments", "GridData"))
+                    .Key("DepartmentId")
+
+                    .LoadParams(new { id= Model.BranchId})
+                    )
                     .RemoteOperations(true)
                     .ColumnHidingEnabled(true)
                     .Width("100%")

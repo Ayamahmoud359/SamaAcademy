@@ -4,6 +4,7 @@ using Academy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using NToastNotify;
 using System.ComponentModel.DataAnnotations;
 
@@ -43,7 +44,7 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
         {
            CompetitionDepartments= _context.CompetitionDepartment.Where(b => !b.IsDeleted && b.IsActive).ToList();
             Trainers = _context.Trainers.Where(t=>!t.IsDeleted&&t.IsActive).ToList();
-            Trainees = _context.Trainees.Where(t => !t.IsDeleted && t.IsActive).ToList();
+            Trainees = _context.Trainees.Include(a=>a.Parent).Where(t => !t.IsDeleted && t.IsActive&&!t.Parent.IsDeleted&&t.Parent.IsActive).ToList();
         }
 
 
@@ -51,7 +52,7 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
         {
             CompetitionDepartments = _context.CompetitionDepartment.Where(b => !b.IsDeleted && b.IsActive).ToList();
             Trainers = _context.Trainers.Where(t => !t.IsDeleted && t.IsActive).ToList();
-            Trainees = _context.Trainees.Where(t => !t.IsDeleted && t.IsActive).ToList();
+            Trainees = _context.Trainees.Include(a => a.Parent).Where(t => !t.IsDeleted && t.IsActive && !t.Parent.IsDeleted && t.Parent.IsActive).ToList();
             if (!ModelState.IsValid)
             {
                 _toastNotification.AddErrorToastMessage("SomeThing Went Wrong");

@@ -134,7 +134,7 @@ namespace Academy.Controllers
         public async Task<IActionResult> GetSubscriptions(DataSourceLoadOptions loadOptions)
         {
 
-            var Allsubscriptions = _context.Subscriptions.Include(s => s.Trainee).Where(d => !d.IsDeleted).ToList();
+            var Allsubscriptions = _context.Subscriptions.Where(d => !d.IsDeleted).ToList();
             foreach (var item in Allsubscriptions)
             {
                 if (item.EndDate < DateOnly.FromDateTime(DateTime.Now))
@@ -257,20 +257,34 @@ namespace Academy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetApsences(DataSourceLoadOptions loadOptions)
         {
+            var Allsubscriptions = _context.Subscriptions.Where(d => !d.IsDeleted).ToList();
+            foreach (var item in Allsubscriptions)
+            {
+                if (item.EndDate < DateOnly.FromDateTime(DateTime.Now))
+                {
+                    item.IsActive = false;
+                }
+
+
+            }
+            _context.SaveChanges();
 
             IQueryable<AbsenceDataGridVM> apsences =
                 _context.Abscenses.Include(d => d.Trainer).Include(d => d.Subscription)
+                .ThenInclude(d => d.Trainee).Include(d => d.Subscription)
                 .ThenInclude(d => d.Category).ThenInclude(d => d.Department)
                 .ThenInclude(d => d.Branch)
                 .Where(d => !d.IsDeleted
                 && !d.Subscription.IsDeleted
-                // &&d.Subscription.IsActive 
+                &&d.Subscription.IsActive
+                && !d.Subscription.Trainee.IsDeleted
+                && d.Subscription.Trainee.IsActive
                 && !d.Subscription.Category.IsDeleted
                 && d.Subscription.Category.IsActive
                 && !d.Subscription.Category.Department.IsDeleted
                 && d.Subscription.Category.Department.IsActive
                 && !d.Subscription.Category.Department.Branch.IsDeleted
-            && d.Subscription.Category.Department.Branch.IsActive)
+                && d.Subscription.Category.Department.Branch.IsActive)
                 .Select(i => new AbsenceDataGridVM()
                 {
                     AbsenceId = i.AbsenceId,
@@ -285,7 +299,7 @@ namespace Academy.Controllers
                     CategoryName = i.Subscription.Category.CategoryName,
                     BranchName = i.Subscription.Category.Department.Branch.BranchName,
                     DepartmentName = i.Subscription.Category.Department.DepartmentName,
-
+                    TraineeName = i.Subscription.Trainee.TraineeName
 
                 });
 
@@ -295,20 +309,34 @@ namespace Academy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetExams(DataSourceLoadOptions loadOptions)
         {
+            var Allsubscriptions = _context.Subscriptions.Where(d => !d.IsDeleted).ToList();
+            foreach (var item in Allsubscriptions)
+            {
+                if (item.EndDate < DateOnly.FromDateTime(DateTime.Now))
+                {
+                    item.IsActive = false;
+                }
+
+
+            }
+            _context.SaveChanges();
 
             IQueryable<ExamDataGridVM> Evaluations =
                 _context.Exams.Include(d => d.Trainer).Include(d => d.Subscription)
+                .ThenInclude(d => d.Trainee).Include(d => d.Subscription)
                 .ThenInclude(d => d.Category).ThenInclude(d => d.Department)
                 .ThenInclude(d => d.Branch)
                 .Where(d => !d.IsDeleted
                 && !d.Subscription.IsDeleted
-                // &&d.Subscription.IsActive 
+                &&d.Subscription.IsActive 
+                && !d.Subscription.Trainee.IsDeleted
+                && d.Subscription.Trainee.IsActive
                 && !d.Subscription.Category.IsDeleted
                 && d.Subscription.Category.IsActive
                 && !d.Subscription.Category.Department.IsDeleted
                 && d.Subscription.Category.Department.IsActive
                 && !d.Subscription.Category.Department.Branch.IsDeleted
-            && d.Subscription.Category.Department.Branch.IsActive)
+                && d.Subscription.Category.Department.Branch.IsActive)
                 .Select(i => new ExamDataGridVM()
                 {
                     ExamId = i.ExamId,
@@ -323,7 +351,7 @@ namespace Academy.Controllers
                     CategoryName = i.Subscription.Category.CategoryName,
                     BranchName = i.Subscription.Category.Department.Branch.BranchName,
                     DepartmentName = i.Subscription.Category.Department.DepartmentName,
-
+                    TraineeName=i.Subscription.Trainee.TraineeName
 
                 });
 
@@ -361,7 +389,9 @@ namespace Academy.Controllers
                     i.Name,
                     i.Id,
                     i.Description,
-                    i.Image
+                    i.Image,
+                    i.IsActive
+
                 });
 
             return Json(await DataSourceLoader.LoadAsync(CompetitionDepartments, loadOptions));
@@ -406,8 +436,9 @@ namespace Academy.Controllers
 
             IQueryable<TraineeCompetitionTeamDataGridVM> TraineeCompetitionTeams = _context.TraineeCompetitionTeams
                 .Include(e => e.Trainee).Include(e => e.CompetitionTeam)
-                .ThenInclude(a=>new { a.CompetitionDepartment, a.Trainer })
-                
+                .ThenInclude(a=> a.CompetitionDepartment)
+                 .Include(e => e.CompetitionTeam)
+        .ThenInclude(a => a.Trainer)
                 .Where(d => !d.IsDeleted&&d.IsActive
                 &&!d.Trainee.IsDeleted
                 &&d.Trainee.IsActive
@@ -419,6 +450,7 @@ namespace Academy.Controllers
                 {
                     Id = i.Id,
                     TraineeId = i.TraineeId,
+                    TraineeName=i.Trainee.TraineeName,
                     CompetitionTeamId = i.CompetitionTeamId,
                     CompetitionTeam = i.CompetitionTeam.Name,
                     Trainer = i.CompetitionTeam.Trainer.IsDeleted ? "" : i.CompetitionTeam.Trainer.TrainerName,

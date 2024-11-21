@@ -32,7 +32,7 @@
 
                         <div class="mb-3">
                             <label class="form-label" asp-for="@Model.CompetitionTeamVM.CompetitionDepartmentId">Competition Department</label>
-                            <select  asp-for=" @Model.CompetitionTeamVM.CompetitionDepartmentId" asp-items="@(new SelectList(Model.CompetitionDepartments, "Id", "Name"))" class="form-select">
+                            <select asp-for=" @Model.CompetitionTeamVM.CompetitionDepartmentId" asp-items="@(new SelectList(Model.CompetitionDepartments, "Id", "Name"))" class="form-select select2">
                                 <option selected disabled value="0">Choose</option>
 
                             </select>
@@ -42,7 +42,7 @@
                         </div><!--end col-->
                         <div class="mb-3">
                             <label class="form-label" asp-for="@Model.CompetitionTeamVM.TrainerId">Trainer</label>
-                            <select asp-for=" @Model.CompetitionTeamVM.TrainerId" asp-items="@(new SelectList(Model.Trainers, "TrainerId", "TrainerName"))" class="form-select">
+                            <select asp-for=" @Model.CompetitionTeamVM.TrainerId" asp-items="@(new SelectList(Model.Trainers, "TrainerId", "TrainerName"))" class="form-select select2">
                                 <option selected disabled value="0">Choose</option>
 
                             </select>
@@ -54,9 +54,11 @@
 
                         <div class="mb-3" >
                             <label class="form-label" asp-for="@Model.CompetitionTeamVM.SelectedTrainees">Trainees</label>
-                            <select asp-for="@Model.CompetitionTeamVM.SelectedTrainees" class="form-control form-select custom-select" asp-items="@(new SelectList(Model.Trainees, "TraineeId", "TraineeName"))" multipl>
+                            <select asp-for="@Model.CompetitionTeamVM.SelectedTrainees" class="form-select select2" multiple
+                                    asp-items="@(new SelectList(Model.Trainees, "TraineeId", "TraineeName"))" >
 
-                                <option disabled value="0">Choose...</option>
+                                <option  disabled value="0">Choose</option>
+
 
                             </select>
 
@@ -80,7 +82,7 @@
 
                         </div>
                         <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Add Trainer</button>
+                            <button type="submit" class="btn btn-primary">Add Team</button>
                         </div>
                     </form>
                 </div>
@@ -95,13 +97,12 @@
 
 <script>
 
-
-        $(document).ready(function() {
-            $('.custom-select').select2({
-                //  placeholder: "Choose...",
-                //  allowClear:false
-            });
-            });
-
-  
+    $(document).ready(function () {
+        // Initialize Select2 on elements with the select2 class
+        $('.select2').select2({
+           placeholder: "Choose...",
+            allowClear: false,  // Disable the clear button
+            minimumResultsForSearch: 1  // Enable search if there are multiple options
+        });
+    });
 </script>

@@ -11,7 +11,7 @@ namespace Academy.DataGridVM
         public string CategoryName { get; set; }
 
         public string TrainerName { get; set; }
-      
+        public string TraineeName { get; set; }
 
         public int SubscriptionId { get; set; }
 

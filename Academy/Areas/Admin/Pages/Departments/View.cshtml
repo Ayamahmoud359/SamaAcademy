@@ -1,43 +1,53 @@
 ﻿@page
 @model Academy.Areas.Admin.Pages.Departments.ViewModel
 @{
+    ViewBag.Title = "Departments";
+    ViewBag.pTitle = "View Details";
+    ViewBag.pageTitle = "Departments";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
 }
-<div class="slim-mainpanel">
-    <div class="container">
-        <div class="slim-pageheader">
-            <ol class="breadcrumb slim-breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Departments</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Department Details</li>
-            </ol>
-            <h6 class="slim-pagetitle">Depatrment Information</h6>
-        </div><!-- slim-pageheader -->
-
-        <div class="section-wrapper">
-            @* <label class="section-title">Please fill your company information</label>*@
-            @*<p class="mg-b-20 mg-sm-b-40">Please fill your company information</p>*@
-
-            <div class="form-layout">
-                <div class="row mg-b-25">
-                    <div class="col-lg-6">
-                        <label class="form-control-label">Department Name: <span class="tx-danger">*</span></label>
-                        <div style="font-size:xx-large">@Model.Dept.DepartmentName</div>
-                    </div><!-- col-4 -->
-
-                    
 
 
-                </div><!-- row -->
+<div class="row">
+    <div class="col-lg-12">
 
+        <!-- Department Card 3 -->
 
-                <div class="form-layout-footer">
-                    <a asp-area="Admin" asp-page="/Departments/Index">
-                        <input type='button' class="btn btn-secondary bd-0" value='Back to List' />
-                    </a>
-                </div><!-- form-layout-footer -->
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Department Information</h4>
+            </div><!-- end card header -->
 
-            </div><!-- form-layout -->
-        </div><!-- section-wrapper -->
+            <div class="card-img-container" style="text-align: center; margin-bottom: 20px;">
+                <img src="/@Model.Dept.Image" alt="Department Image" class="img-fluid" style="max-height: 250px; object-fit: cover;">
+            </div>
 
-    </div><!-- container -->
+            @* <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Department Image"> *@
+            <div class="card-body">
+                @*  <h5 class="card-title">Department of Human Resources</h5>
+                <p class="card-text">The HR Department is dedicated to employee development, recruitment, and ensuring a positive work environment.</p> *@
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Branch:</strong> @Model.Dept.Branch.BranchName</li>
+                    <li class="list-group-item"><strong>Department Title:</strong> @Model.Dept.DepartmentName</li>
+                    <li class="list-group-item"><strong>Description:</strong> @Model.Dept.DepartmentDescription</li>
+
+                    @if (Model.Dept.IsActive)
+                    {
+                        <li class="list-group-item"><strong>Status:</strong>    Active</li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item"><strong>Status:</strong>    Not Active</li>
+                    }
+
+                </ul>
+                <!-- Links to other pages -->
+                <div class="d-flex justify-content-center mt-4">
+                    <a href="/Admin/Departments/DepartmentCategories?id=@Model.Dept.DepartmentId" class="link text-primary me-2">Department Categories </a>
+                   
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>

@@ -27,8 +27,7 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
         }
         public void OnGet()
         {
-            Trainees = _context.Trainees.Where(t => !t.IsDeleted && t.IsActive).ToList();
-
+            Trainees = _context.Trainees.Include(a => a.Parent).Where(t => !t.IsDeleted && t.IsActive && !t.Parent.IsDeleted && t.Parent.IsActive).ToList();
         }
 
         public async Task<IActionResult> OnPostAddTraineesAsync([FromBody] List<int> selectedValues,int? TeamId)

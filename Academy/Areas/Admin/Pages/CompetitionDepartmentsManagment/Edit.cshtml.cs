@@ -37,6 +37,7 @@ namespace Academy.Areas.Admin.Pages.CompetitionDepartmentsManagment
                     CompetitionDepartmentVM.Description = competitionDepartment.Description;
                     CompetitionDepartmentVM.Image = competitionDepartment.Image;
                     CompetitionDepartmentVM.IsActive = competitionDepartment.IsActive;
+                    CompetitionDepartmentVM.Id = competitionDepartment.Id;
                     return Page();
                 }
                 return RedirectToPage("../NotFound");

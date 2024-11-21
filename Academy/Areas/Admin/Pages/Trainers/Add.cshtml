@@ -87,7 +87,7 @@
 
                         <div class="mb-3" id="Category">
                             <label for="CategoryId" class="form-label ">Categories</label>
-                            <select asp-for="@Model.Trainer.SelectedCategories" class="form-control form-select custom-select" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))"
+                            <select asp-for="@Model.Trainer.SelectedCategories" class=" form-select custom-select" asp-items="@(new SelectList(Model.Categories, "CategoryId", "CategoryName"))"
                                    multiple 
                                     id="CategoryId">
 
@@ -151,7 +151,7 @@
   
         $(document).ready(function() {
             $('.custom-select').select2({
-                //  placeholder: "Choose...",
+             placeholder: "Choose...",
                 //  allowClear:false
             });
             });

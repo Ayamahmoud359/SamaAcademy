@@ -2,7 +2,7 @@
 @model Academy.Areas.Admin.Pages.Trainers.AssignNewCategoryModel
 @{
     ViewBag.Title = "Trainers";
-    ViewBag.pTitle = "Assign T";
+    ViewBag.pTitle = "Assign To Category";
     ViewBag.pageTitle = "Trainers";
     Layout = "~/Pages/Shared/_Layout.cshtml";
 }
@@ -17,12 +17,9 @@
             </div><!-- end card header -->
             <div class="card-body">
                 <div class="live-preview">
-                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <form method="post">
 
-                       
-                            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                            <div class="text-danger" id="Err"></div>
                             <div class="mb-3">
                                 <label class="form-label" asp-for="@Model.TrainerCategoryVM.BranchId">Branch</label>
                                 <select onchange="GetBranchDepartments(this.value)" asp-items="@(new SelectList(Model.Branches, "BranchId", "BranchName"))" asp-for="@Model.TrainerCategoryVM.BranchId" class="form-select ">
