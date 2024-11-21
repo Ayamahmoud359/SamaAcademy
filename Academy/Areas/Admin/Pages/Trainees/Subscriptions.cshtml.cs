@@ -53,6 +53,18 @@ namespace Academy.Areas.Admin.Pages.Trainees
             List<SubscriptionDataGridVM> data = new List<SubscriptionDataGridVM>();
             if (id != 0)
             {
+                var Allsubscriptions = _context.Subscriptions.Where(d => !d.IsDeleted).ToList();
+                foreach (var item in Allsubscriptions)
+                {
+                    if (item.EndDate < DateOnly.FromDateTime(DateTime.Now))
+                    {
+                        item.IsActive = false;
+                    }
+
+
+                }
+                _context.SaveChanges();
+
                 data = _context.Subscriptions
                     .Include(a => a.Category)
                     .ThenInclude(a => a.Department)
