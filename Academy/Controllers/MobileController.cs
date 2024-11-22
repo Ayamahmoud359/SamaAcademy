@@ -2,6 +2,7 @@
 using Academy.DTO;
 using Academy.Models;
 using Academy.ViewModels;
+using DevExpress.XtraPrinting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,21 +29,25 @@ namespace Academy.Controllers
         #region Login
         [HttpPost]
         [Route("Login")]
-        public async Task<ActionResult<ApplicationUser>> Login([FromQuery] string login, [FromQuery] string password)
+        public async Task<IActionResult> Login([FromQuery] string login, [FromQuery] string password)
         {
-            ApplicationUser user = null;
+
+            var user = await _userManager.FindByEmailAsync(login)
+                  ?? await _userManager.FindByNameAsync(login);
+
+            //ApplicationUser user = null;
 
             // Determine if the input is an email or username
-            if (login.Contains("@"))
-            {
-                // Assume it's an email
-                user = await _userManager.FindByEmailAsync(login);
-            }
-            else
-            {
-                // Assume it's a username
-                user = await _userManager.FindByNameAsync(login);
-            }
+            //if (login.Contains("@"))
+            //{
+            //    // Assume it's an email
+            //    user = await _userManager.FindByEmailAsync(login);
+            //}
+            //else
+            //{
+            //    // Assume it's a username
+            //    user = await _userManager.FindByNameAsync(login);
+            //}
 
             if (user != null)
             {
@@ -55,39 +60,42 @@ namespace Academy.Controllers
                     {
                         var trainer = await _context.Trainers
                             .FirstOrDefaultAsync(e => e.TrainerId == user.EntityId);
-                        return Ok(new { Status = true, Message = "User logged in successfully!", trainer });
+                        return Ok(new { status = true, type_id = 1, message = "User logged in successfully!", trainer });
                     }
                     if (user.EntityId != null && user.EntityName == "Parent")
                     {
                         var parent = await _context.Parents
                             .FirstOrDefaultAsync(e => e.ParentId == user.EntityId);
-                        return Ok(new { Status = true, Message = "User logged in successfully!", parent });
+                        return Ok(new { status = true, type_id = 2, message = "User logged in successfully!", parent });
                     }
                 }
             }
 
             // Return an invalid response
-            return Ok(new { Status = false, Message = "Invalid login credentials." });
+            return Ok(new { status = false, message = "Invalid login credentials." });
         }
 
         #endregion
+        
         #region GetDepartmetsById 
         [HttpGet]
         [Route("GetDepartmetsByBranchId")]
-        public async Task<ActionResult<List<Department>>> GetDepartmetsByBranchId(int BranchId)
+        public async Task<IActionResult> GetDepartmetsByBranchId(int BranchId)
         {
-            var departments = await _context.Departments.Where(e => e.BranchId == BranchId && e.IsActive).ToListAsync();
-            return Ok(departments);
+            var departments = await _context.Departments.Where(e => e.BranchId == BranchId && e.IsActive && !e.IsDeleted).ToListAsync();
+            return Ok(new { status = true, data = departments });
+
         }
         #endregion
+        
         #region GetCategoriesByDepartmentId
         [HttpGet]
         [Route("GetCategoriesByDepartmentId")]
-        public async Task<ActionResult<List<Category>>> GetCategoriesByDepartmentId(int DepartmentId)
+        public async Task<IActionResult> GetCategoriesByDepartmentId(int DepartmentId)
         {
             try
             {
-                var categories = await _context.Categories.Include(e => e.Department).Where(e => e.DepartmentId == DepartmentId && e.IsActive == true && e.Department.IsActive).Select(e => new
+                var categories = await _context.Categories.Include(e => e.Department).Where(e => e.DepartmentId == DepartmentId && e.IsActive == true && !e.IsDeleted && e.Department.IsActive && e.Department.IsDeleted == false).Select(e => new
                 {
                     e.CategoryId,
                     e.DepartmentId,
@@ -96,23 +104,24 @@ namespace Academy.Controllers
                     e.image,
                     e.IsActive
                 }).ToListAsync();
-                return Ok(new { Status = true, categories });
+                return Ok(new { status = true, data = categories });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
 
         }
         #endregion
+        
         #region GetDepartmentDetailsById
         [HttpGet]
         [Route("GetDepartmentDetailsById")]
-        public async Task<ActionResult> GetDepartmentDetailsById(int DepartmentId)
+        public async Task<IActionResult> GetDepartmentDetailsById(int DepartmentId)
         {
             try
             {
-                var department = await _context.Departments.Where(e => e.DepartmentId == DepartmentId && e.IsActive).Select(e => new
+                var department = await _context.Departments.Where(e => e.DepartmentId == DepartmentId && e.IsActive && !e.IsDeleted).Select(e => new
                 {
                     e.DepartmentId,
                     e.DepartmentName,
@@ -126,27 +135,29 @@ namespace Academy.Controllers
                     BranchImage = _context.Branches.Where(a => a.IsActive && a.BranchId == e.BranchId).FirstOrDefault().Image,
                     Categories = _context.Categories.Where(a => a.IsActive && a.DepartmentId == e.DepartmentId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).ToList()
                 }).ToListAsync();
-                return Ok(new { Status = true, department });
+                return Ok(new { status = true, data = department });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
         #endregion
+       
         #region GetCategoriesByBranchId
         [HttpGet]
         [Route("GetCategoriesByBranchId")]
-        public async Task<ActionResult<List<Category>>> GetCategoriesByBranchId(int BranchId)
+        public async Task<IActionResult> GetCategoriesByBranchId(int BranchId)
         {
             var categories = await _context.Categories.Include(e => e.Department).Where(e => e.Department.BranchId == BranchId && e.IsActive == true).ToListAsync();
             return Ok(categories);
         }
         #endregion
+        
         #region GetCategoryDetailsById
         [HttpGet]
         [Route("GetCategoryDetailsById")]
-        public async Task<ActionResult> GetCategoryDetailsById(int CategoryId)
+        public async Task<IActionResult> GetCategoryDetailsById(int CategoryId)
         {
             try
             {
@@ -161,24 +172,31 @@ namespace Academy.Controllers
                     DepartmentName = _context.Departments.Where(a => a.IsActive && a.DepartmentId == e.DepartmentId).FirstOrDefault().DepartmentName,
 
                 }).FirstOrDefaultAsync();
-                return Ok(new { Status = true, category });
+                return Ok(new { status = true,data = category });
             }
             catch (Exception ex) {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
 
 
             }
         }
         #endregion
+
         #region GetTrainersByBranchId
-        //[HttpGet]
-        //[Route("GetTrainersByBranchId")]
-        //public async Task<ActionResult<List<Trainer>>> GetTrainersByBranchId(int BranchId)
-        //{
-        //    //var trainers = await _context.Trainers.Include(e=>e.Department).Where(e => e.Department.BranchId == BranchId && e.IsActive).ToListAsync();
-        //    return Ok(trainers);
-        //}
+        [HttpGet]
+        [Route("GetTrainersByBranchId")]
+        public async Task<IActionResult> GetTrainersByBranchId(int BranchId)
+        {
+            var branch = await _context.Branches.Where(e => e.BranchId == BranchId && e.IsActive).FirstOrDefaultAsync();
+            if (branch == null)
+            {
+                return Ok(new { status = false, message = "Branch not found!" });
+            }
+            var trainers = await _context.Trainers.Where(e => e.CurrentBranch == BranchId && e.IsActive).ToListAsync();
+            return Ok(new {status = true , data = trainers});
+        }
         #endregion
+
         #region GetTrainerDetailsById
         [HttpGet]
         [Route("GetTrainerDetailsById")]
@@ -197,24 +215,20 @@ namespace Academy.Controllers
                     e.HiringDate,
                     e.CurrentDepartment,
                     e.CurrentBranch,
-                    BranchName = _context.Branches.Where(a => a.IsActive && a.BranchId == e.CurrentBranch).FirstOrDefault().BranchName,
-                    BranchAddress = _context.Branches.Where(a => a.IsActive && a.BranchId == e.CurrentBranch).FirstOrDefault().BranchAddress,
-                    BranchPhone = _context.Branches.Where(a => a.IsActive && a.BranchId == e.CurrentBranch).FirstOrDefault().Phone,
-                    BranchImage = _context.Branches.Where(a => a.IsActive && a.BranchId == e.CurrentBranch).FirstOrDefault().Image,
-                    DepartmentName = _context.Departments.Where(a => a.IsActive && a.DepartmentId == e.CurrentDepartment).FirstOrDefault().DepartmentName,
-                    DepartmentDescription = _context.Departments.Where(a => a.IsActive && a.DepartmentId == e.CurrentDepartment).FirstOrDefault().DepartmentDescription,
-                    DepartmentImage = _context.Departments.Where(a => a.IsActive && a.DepartmentId == e.CurrentDepartment).FirstOrDefault().Image,
+                    Branch = _context.Branches.Where(a => a.IsActive && a.BranchId == e.CurrentBranch).Select(a => new { a.BranchId, a.BranchName, a.BranchAddress, a.Phone, a.Image, a.IsActive }).FirstOrDefault(),
+                    Department = _context.Departments.Where(a => a.IsActive && a.DepartmentId == e.CurrentDepartment).Select(a => new { a.DepartmentId, a.DepartmentName, a.DepartmentDescription, a.Image, a.IsActive }).FirstOrDefault(),
                     Categories = _context.CategoryTrainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.CategoryId, CategoryName = _context.Categories.Where(b => b.IsActive && b.CategoryId == a.CategoryId).FirstOrDefault().CategoryName, CategoryDescription = _context.Categories.Where(b => b.IsActive && b.CategoryId == a.CategoryId).FirstOrDefault().CategoryDescription, image = _context.Categories.Where(b => b.IsActive && b.CategoryId == a.CategoryId).FirstOrDefault().image, IsActive = _context.Categories.Where(b => b.IsActive && b.CategoryId == a.CategoryId).FirstOrDefault().IsActive }).ToList()
                 }).FirstOrDefaultAsync();
-                return Ok(new { Status = true, trainer });
+                return Ok(new { status = true, data = trainer });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
 
         #endregion
+        
         #region AddAttendance
         [HttpPost]
         [Route("AddAttendance")]
@@ -233,14 +247,15 @@ namespace Academy.Controllers
                 };
                 _context.Abscenses.Add(attendance);
                 await _context.SaveChangesAsync();
-                return Ok(new { Status = true, Message = "Attendance added successfully!" });
+                return Ok(new { status = true, message = "Attendance added successfully!" });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
         #endregion
+        
         #region AddEvaluation
         [HttpPost]
         [Route("AddEvaluation")]
@@ -260,14 +275,15 @@ namespace Academy.Controllers
                 };
                 _context.Exams.Add(evaluation);
                 await _context.SaveChangesAsync();
-                return Ok(new { Status = true, Message = "Evaluation added successfully!" });
+                return Ok(new { status = true, message = "Evaluation added successfully!" });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
         #endregion
+        
         #region GetAttendancesListByCategoryId
         [HttpGet]
         [Route("GetAttendancesListByCategoryId")]
@@ -291,11 +307,11 @@ namespace Academy.Controllers
                     CategoryDescription = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.Trainer.TrainerCategories.FirstOrDefault().CategoryId).FirstOrDefault().CategoryDescription,
                     CategoryImage = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.Trainer.TrainerCategories.FirstOrDefault().CategoryId).FirstOrDefault().image,
                 }).ToListAsync();
-                return Ok(new { Status = true, attendances });
+                return Ok(new { status = true,data = attendances });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
         #endregion
@@ -319,11 +335,11 @@ namespace Academy.Controllers
                     e.ParentAddress,
                     
                 }).FirstOrDefaultAsync();
-                return Ok(new { Status = true, parent });
+                return Ok(new { status = true, data = parent });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
         #endregion
@@ -345,16 +361,13 @@ namespace Academy.Controllers
                     e.Image,
                     e.IsActive,
                     e.ParentId,
-                    ParentName = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).FirstOrDefault().ParentName,
-                    ParentEmail = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).FirstOrDefault().ParentEmail,
-                    ParentPhone = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).FirstOrDefault().ParentPhone,
-                    ParentImage = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).FirstOrDefault().Image,
+                    Parent = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).Select(a => new { a.ParentId, a.ParentName, a.ParentEmail, a.ParentPhone, a.Image, a.IsActive }).FirstOrDefault(),
                 }).ToListAsync();
-                return Ok(new { Status = true, children });
+                return Ok(new { status = true, data =children });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
         #endregion
@@ -376,19 +389,17 @@ namespace Academy.Controllers
                     e.Image,
                     e.IsActive,
                     e.ParentId,
-                    ParentName = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).FirstOrDefault().ParentName,
-                    ParentEmail = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).FirstOrDefault().ParentEmail,
-                    ParentPhone = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).FirstOrDefault().ParentPhone,
-                    ParentImage = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).FirstOrDefault().Image,
+                    Parent = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).Select(a => new { a.ParentId, a.ParentName, a.ParentEmail, a.ParentPhone, a.Image, a.IsActive }).FirstOrDefault(),
                 }).FirstOrDefaultAsync();
-                return Ok(new { Status = true, child });
+                return Ok(new { status = true,data = child });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
         #endregion
+        
         #region GetChildSubscriptionsByChildId
         [HttpGet]
         [Route("GetChildSubscriptionsByChildId")]
@@ -404,57 +415,56 @@ namespace Academy.Controllers
                     e.EndDate,
                     e.IsActive,
                     e.TraineeId,
-                    TraineeName = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).FirstOrDefault().TraineeName,
-                    TraineePhone = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).FirstOrDefault().TraineePhone,
-                    TraineeEmail = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).FirstOrDefault().TraineeEmail,
-                    TraineeImage = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).FirstOrDefault().Image,
-                    CategoryName = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).FirstOrDefault().CategoryName,
-                    CategoryDescription = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).FirstOrDefault().CategoryDescription,
-                    CategoryImage = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).FirstOrDefault().image,
-                                  }).ToListAsync();
-                return Ok(new { Status = true, subscriptions });
+                    Trainee = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).Select(a => new { a.TraineeId, a.TraineeName, a.TraineePhone, a.TraineeEmail, a.Image, a.IsActive }).FirstOrDefault(),
+                    Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).FirstOrDefault(),
+                }).ToListAsync();
+                return Ok(new { status = true, subscriptions });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
         #endregion
 
         #region GetTrainersByDepartmentId
-        //[HttpGet]
-        //[Route("GetTrainersByDepartmentId")]
-        //public async Task<ActionResult<List<Trainer>>> GetTrainersByDepartmentId(int DepartmentId)
-        //{
-        //    //var trainers = await _context.Trainers.Where(e => e.DepartmentId == DepartmentId && e.IsActive).ToListAsync();
-        //    return Ok(trainers);
-        //}
+        [HttpGet]
+        [Route("GetTrainersByDepartmentId")]
+        public async Task<IActionResult> GetTrainersByDepartmentId(int DepartmentId)
+        {
+            var department = await _context.Departments.Where(e => e.DepartmentId == DepartmentId && e.IsActive).FirstOrDefaultAsync();
+            if (department == null)
+            {
+                return Ok(new { status = false, message = "Department not found!" });
+            }
+            var trainers = await _context.Trainers.Where(e => e.CurrentDepartment == DepartmentId && e.IsActive).ToListAsync();
+            return Ok(new {status = true , data = trainers});
+        }
         #endregion
+
         #region GetTrainerCategoriesByTrainerId
         [HttpGet]
         [Route("GetTrainerCategoriesByTrainerId")]
-        public async Task<ActionResult> GetTrainersByvCategoryId(int TrainerId)
+        public async Task<ActionResult> GetTrainerCategoriesByTrainerId(int TrainerId)
         {
             try
             {
                 var trainerCategories = await _context.CategoryTrainers.Where(e => e.TrainerId == TrainerId && e.IsActive).Select(e => new
                 {
                     e.CategoryId,
-                    CategoryName = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).FirstOrDefault().CategoryName,
-                    CategoryDescription = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).FirstOrDefault().CategoryDescription,
-                    image = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).FirstOrDefault().image,
-                    IsActive = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).FirstOrDefault().IsActive,
+                    Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).FirstOrDefault(),
                     Trainer = _context.Trainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.TrainerId, a.TrainerName, a.TrainerEmail, a.TrainerPhone, a.Image, a.IsActive }).FirstOrDefault()
                 }).ToListAsync();
-                return Ok(new { Status = true, trainerCategories });
+                return Ok(new { status = true, trainerCategories });
 
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
         }
         #endregion
+        
         #region GetTrainersByBranchIdAndCategoryId
 
         //[HttpGet]
@@ -467,27 +477,29 @@ namespace Academy.Controllers
         //    return Ok(trainers);
         //}
         #endregion
+        
         #region GetDepartmentsByBranchId
         [HttpGet]
         [Route("GetDepartmentsByBranchId")]
-        public async Task<ActionResult<List<Category>>> GetDepartmentsByBranchId(int BranchId)
+        public async Task<IActionResult> GetDepartmentsByBranchId(int BranchId)
         {
             try
             {
                 var departments = await _context.Departments.Include(e => e.Branch).Where(e => e.BranchId == BranchId && e.IsActive == true && e.Branch.IsActive).ToListAsync();
-                return Ok(new { Status = true, departments });
+                return Ok(new { status = true, departments });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
+                return Ok(new { status = false, message = ex.Message });
             }
 
         }
         #endregion
+        
         #region GetBranchDetailsById
         [HttpGet]
         [Route("GetBranchDetailsById")]
-        public async Task<ActionResult<Branch>> GetBranchDetailsById(int BranchId)
+        public async Task<IActionResult> GetBranchDetailsById(int BranchId)
         {
             var branch = await _context.Branches.Where(e => e.BranchId == BranchId && e.IsActive).Include(e => e.Departments).Select(e => new
             {
@@ -498,32 +510,29 @@ namespace Academy.Controllers
                 e.Image,
                 e.Departments,
             }).FirstOrDefaultAsync();
-            return Ok(branch);
+            return Ok(new {status = true , branch});
         }
         #endregion
+        
         #region GetAllBranches
         [HttpGet]
         [Route("GetAllBranches")]
-        public async Task<ActionResult<List<Branch>>> GetAllBranches()
+        public async Task<IActionResult> GetAllBranches()
         {
             try
             {
                 var branches = await _context.Branches.Where(e => e.IsActive).ToListAsync();
-                return Ok(new { Status = true, branches });
+                return Ok(new { status = true, branches });
             }
             catch (Exception ex)
             {
-                return Ok(new { Status = false, Message = ex.Message });
-
-                #endregion
-
-
-
-
-
+                return Ok(new { status = false, message = ex.Message });
 
 
             }
         }
+        #endregion
+
+
     }
 }
