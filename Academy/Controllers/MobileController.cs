@@ -533,6 +533,150 @@ namespace Academy.Controllers
         }
         #endregion
 
+        #region Champions
+        [HttpGet]
+        [Route("GetAllChampions")]
+        public async Task<IActionResult> GetAllChampions()
+        {
+            try
+            {
+                var champions = await _context.Champions.Where(e => e.IsDeleted == false).ToListAsync();
+                return Ok(new { status = true, champions });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+
+
+            }
+        }
+
+        #endregion
+
+        #region Competitions 
+        [HttpGet]
+        [Route("GetCompetitionDepartments")]
+        public async Task<IActionResult> GetCompetitionDepartments()
+        {
+            try
+            {
+                var CompetitionDepartments = await _context.CompetitionDepartment.Where(e => e.IsActive && !e.IsDeleted).ToListAsync();
+                return Ok(new { status = true, CompetitionDepartments });
+            }
+            catch (Exception ex)
+            {
+
+               return Ok(new { status = false, message = ex.Message });
+
+
+            }
+        }
+
+        [HttpGet]
+        [Route("GetCompetitionTeamsByDepartmentId")]
+        public async Task<IActionResult> GetCompetitionTeamsByDepartmentId(int departmentId)
+        {
+            try
+            {
+                var competitionDepartment = await _context.CompetitionDepartment.Where(e => e.IsActive && !e.IsDeleted && e.Id == departmentId).FirstOrDefaultAsync();
+                if (competitionDepartment == null)
+                {
+                    return Ok(new { status = false, message = "Department not found!" });
+                }
+                var teams = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.CompetitionDepartmentId == departmentId).ToListAsync();
+                return Ok(new { status = true, teams });
+            }
+            catch (Exception ex)
+            {
+
+                return Ok(new { status = false, message = ex.Message });
+
+
+            }
+        }
+
+        [HttpGet]
+        [Route("GetCompetitionTeamsByTrainerId")]
+        public async Task<IActionResult> GetCompetitionTeamsByTrainerId(int trainerId)
+        {
+            try
+            {
+                var trainer = await _context.Trainers.Where(e => e.IsActive && e.TrainerId == trainerId).FirstOrDefaultAsync();
+                if (trainer == null)
+                {
+                    return Ok(new { status = false, message = "trainer not found!" });
+                }
+                var teams = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.TrainerId == trainerId).ToListAsync();
+                return Ok(new { status = true, teams });
+            }
+            catch (Exception ex)
+            {
+
+                return Ok(new { status = false, message = ex.Message });
+
+
+            }
+        }
+
+        [HttpGet]
+        [Route("GetTeamChildrenByTeamId")]
+        public async Task<IActionResult> GetTeamChildrenByTeamId(int teamId)
+        {
+            try
+            {
+                var team = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.Id == teamId).FirstOrDefaultAsync();
+                if (team == null)
+                {
+                    return Ok(new { status = false, message = "team not found!" });
+                }
+                var teamChildren = await _context.TraineeCompetitionTeams.Where(e => e.IsActive && !e.IsDeleted && e.CompetitionTeamId == teamId).ToListAsync();
+                return Ok(new { status = true, teamChildren });
+            }
+            catch (Exception ex)
+            {
+
+                return Ok(new { status = false, message = ex.Message });
+
+
+            }
+        }
+
+        [HttpGet]
+        [Route("GetAllTeamDetailsByTeamId")]
+        public async Task<IActionResult> GetAllTeamDetailsByTeamId(int teamId)
+        {
+            try
+            {
+                var team = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.Id == teamId).FirstOrDefaultAsync();
+                if (team == null)
+                {
+                    return Ok(new { status = false, message = "team not found!" });
+                }
+                var teamDepartment = await _context.CompetitionDepartment.Where(e => e.IsActive && !e.IsDeleted && e.Id == team.CompetitionDepartmentId).FirstOrDefaultAsync();
+                var trainer = await _context.Trainers.Where(e => e.IsActive && e.TrainerId == team.TrainerId).FirstOrDefaultAsync();
+                var teamChildren = await _context.TraineeCompetitionTeams.Where(e => e.IsActive && !e.IsDeleted && e.CompetitionTeamId == teamId).ToListAsync();
+               
+                var teamDetails = new
+                {
+                    team,
+                    teamDepartment,
+                    trainer,
+                    teamChildren
+                };
+                return Ok(new { status = true, teamDetails });
+            }
+            catch (Exception ex)
+            {
+
+                return Ok(new { status = false, message = ex.Message });
+
+
+            }
+        }
+
+
+        #endregion
+
 
     }
 }
