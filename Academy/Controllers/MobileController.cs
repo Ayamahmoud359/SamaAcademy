@@ -2,7 +2,7 @@
 using Academy.DTO;
 using Academy.Models;
 using Academy.ViewModels;
-using DevExpress.XtraPrinting;
+//using DevExpress.XtraPrinting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
