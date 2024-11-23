@@ -6,6 +6,8 @@ using Academy.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using System;
 using System.Linq;
 
 namespace Academy.Controllers
@@ -18,13 +20,15 @@ namespace Academy.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AcademyContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
 
-        public MobileController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, AcademyContext context)
+        public MobileController(UserManager<ApplicationUser> userManager, IWebHostEnvironment hostEnvironment, SignInManager<ApplicationUser> signInManager, AcademyContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
         #region Login
         [HttpPost]
@@ -105,10 +109,30 @@ namespace Academy.Controllers
 
         }
         #endregion
+        #region UploadMedia
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+
+            var directory = Path.GetDirectoryName(serverFolder);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return folderPath;
+        }
+
+        #endregion
         #region UpdateUserProfile
         [HttpPost]
         [Route("UpdateUserProfile")]
-        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDTO updateUserProfileDTO)
+        public async Task<IActionResult> UpdateUserProfile([FromForm] UpdateUserProfileDTO updateUserProfileDTO, IFormFile Pic)
         {
             // Find the user in the Identity system
             var user = await _userManager.FindByIdAsync(updateUserProfileDTO.UserId);
@@ -130,6 +154,12 @@ namespace Academy.Controllers
                 if (updateUserProfileDTO.Name != null) {
                     trainer.TrainerName = updateUserProfileDTO.Name;
                 }
+                if (Pic != null)
+                {
+                    trainer.Image = await UploadImage("uploads/Users/", Pic);
+
+                }
+
                 if (updateUserProfileDTO.Email != null)
                 {
                     trainer.TrainerEmail = updateUserProfileDTO.Email;
@@ -173,6 +203,11 @@ namespace Academy.Controllers
                 if(updateUserProfileDTO.Name != null)
                 {
                     parent.ParentName = updateUserProfileDTO.Name;
+                }
+                if (Pic != null)
+                {
+                    parent.Image = await UploadImage("uploads/Users/", Pic);
+
                 }
                 if (updateUserProfileDTO.Email != null)
                 {
@@ -804,7 +839,7 @@ namespace Academy.Controllers
 
             }
         }
-
+        
         [HttpGet]
         [Route("GetAllTeamDetailsByTeamId")]
         public async Task<IActionResult> GetAllTeamDetailsByTeamId(int teamId)
@@ -840,6 +875,7 @@ namespace Academy.Controllers
 
 
         #endregion
+        
 
 
     }
