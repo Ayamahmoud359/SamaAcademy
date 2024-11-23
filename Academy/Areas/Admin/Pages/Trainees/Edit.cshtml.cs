@@ -1,10 +1,12 @@
 using Academy.Data;
+using Academy.DTO;
 using Academy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using NToastNotify;
 
@@ -17,16 +19,19 @@ namespace Academy.Areas.Admin.Pages.Trainees
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _applicationDb;
+        private readonly IWebHostEnvironment _hostEnvironment;
         public List<SelectListItem> Nationalities { get; set; }
         public EditModel(AcademyContext context
             ,IToastNotification toastNotification
              , ApplicationDbContext applicationDb
-            , UserManager<ApplicationUser> userManager)
+            , UserManager<ApplicationUser> userManager
+              , IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _toastNotification = toastNotification;
             _applicationDb = applicationDb;
             _userManager = userManager;
+            _hostEnvironment = hostEnvironment;
 
         }
         [BindProperty]
@@ -79,24 +84,25 @@ namespace Academy.Areas.Admin.Pages.Trainees
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(IFormFile? fileUpload)
         {
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
-                var countries = JsonConvert.DeserializeObject<List<Country>>(response);
-
-                Nationalities = countries.Select(c => new SelectListItem
-                {
-                    Text = c.Name.Common,
-                    Value = c.Cca2
-                }).ToList();
-
-            }
            
 
             try
             {
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                    var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+
+                    Nationalities = countries.Select(c => new SelectListItem
+                    {
+                        Text = c.Name.Common,
+                        Value = c.Cca2
+                    }).ToList();
+
+                }
+
                 var TraineeToEdit = await _context.Trainees.FirstOrDefaultAsync(m => m.TraineeId == Trainee.TraineeId);
                 if (Trainee.UserName != TraineeToEdit.UserName)
                 {
@@ -136,6 +142,20 @@ namespace Academy.Areas.Admin.Pages.Trainees
                 TraineeToEdit.ResidencyNumber = Trainee.ResidencyNumber;
                 TraineeToEdit.IsActive = Trainee.IsActive;
                 TraineeToEdit.BirthDate = Trainee.BirthDate;
+                if (fileUpload != null && fileUpload.Length > 0)
+                {
+                    if (TraineeToEdit.Image != null)
+                    {
+                        var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, TraineeToEdit.Image);
+                        if (System.IO.File.Exists(ImagePath))
+                        {
+                            System.IO.File.Delete(ImagePath);
+                        }
+                    }
+                    string folder = "uploads/Trainees/";
+                    TraineeToEdit.Image = await UploadImage(folder, fileUpload);
+
+                }
                 _context.Attach(TraineeToEdit).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
                 _toastNotification.AddSuccessToastMessage("Trainee Information Edited Successfully");
@@ -149,6 +169,24 @@ namespace Academy.Areas.Admin.Pages.Trainees
                 return Page();
             }
 
+        }
+
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+
+            var directory = Path.GetDirectoryName(serverFolder);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return folderPath;
         }
     }
 }

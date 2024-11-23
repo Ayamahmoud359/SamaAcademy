@@ -17,7 +17,7 @@
             <div class="card-body">
                 <div class="live-preview">
                     <div asp-validation-summary="All" class="text-danger"></div>
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         <div class="mb-3" style="display:none">
                             <label asp-for="@Model.category.CategoryId" class="form-label">ID</label>
                             <input asp-for="@Model.category.CategoryId" class="form-control" />
@@ -41,12 +41,22 @@
                             <span asp-validation-for="@Model.category.DepartmentId" class="text-danger"></span>
 
                         </div><!--end col-->
+
+                        <div class="mb-3">
+
+                            <label for="fileUpload" class="form-label">Choose an Image</label>
+                            <div class="input-group">
+                                <input type="file" accept=".png, .jpg, .jpeg" class="form-control" id="fileUpload" name="fileUpload" />
+
+                            </div>
+                        </div>
                         <div class="mb-3">
                             @Html.CheckBoxFor(m => m.category.IsActive, new { @class = "form-check-input" })
                             <label class="form-check-label" for="Active">
                                 Is Active?
                             </label>
                         </div>
+
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">Save </button>
                             <a href="/Admin/Departments" class="text-primary d-inline-block">

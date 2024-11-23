@@ -12,12 +12,16 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
     {
         private readonly AcademyContext _context;
         private readonly IToastNotification _toastNotification;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public EditModel(AcademyContext context, IToastNotification toastNotification)
+        public EditModel(AcademyContext context
+            , IToastNotification toastNotification
+             , IWebHostEnvironment hostEnvironment)
         {
             CompetitionTeamVM = new CompetitionTeamVM();
             _context = context;
             _toastNotification = toastNotification;
+            _hostEnvironment = hostEnvironment;
         }
         [BindProperty]
         public CompetitionTeamVM CompetitionTeamVM { get; set; }
@@ -37,7 +41,7 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
 
                 CompetitionDepartments = _context.CompetitionDepartment.Where(b => !b.IsDeleted && b.IsActive).ToList();
                 Trainers = _context.Trainers.Where(t => !t.IsDeleted && t.IsActive).ToList();
-                Trainees = _context.Trainees.Where(t => !t.IsDeleted && t.IsActive).ToList();
+                Trainees = _context.Trainees.Include(a => a.Parent).Where(t => !t.IsDeleted && t.IsActive && !t.Parent.IsDeleted && t.Parent.IsActive).ToList();
                 var competitionTeam = await _context.CompetitionTeam.FirstOrDefaultAsync(m => m.Id == id);
                 if (competitionTeam != null)
                 {
@@ -62,15 +66,14 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(IFormFile? fileUpload)
         {
 
             try
             {
                 CompetitionDepartments = _context.CompetitionDepartment.Where(b => !b.IsDeleted && b.IsActive).ToList();
                 Trainers = _context.Trainers.Where(t => !t.IsDeleted && t.IsActive).ToList();
-                Trainees = _context.Trainees.Where(t => !t.IsDeleted && t.IsActive).ToList();
-
+                Trainees = _context.Trainees.Include(a => a.Parent).Where(t => !t.IsDeleted && t.IsActive && !t.Parent.IsDeleted && t.Parent.IsActive).ToList();
                 var competitionTeam = await _context.CompetitionTeam.FirstOrDefaultAsync(m => m.Id == CompetitionTeamVM.Id);
                 if (competitionTeam != null)
                 {
@@ -78,6 +81,20 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
                     competitionTeam.CompetitionDepartmentId = CompetitionTeamVM.CompetitionDepartmentId;
                     competitionTeam.TrainerId = CompetitionTeamVM.TrainerId;
                     competitionTeam.IsActive = CompetitionTeamVM.IsActive;
+                    if (fileUpload != null && fileUpload.Length > 0)
+                    {
+                        if (competitionTeam.Image != null)
+                        {
+                            var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, competitionTeam.Image);
+                            if (System.IO.File.Exists(ImagePath))
+                            {
+                                System.IO.File.Delete(ImagePath);
+                            }
+                        }
+                        string folder = "uploads/CompetitionDepartments/";
+                        competitionTeam.Image = await UploadImage(folder, fileUpload);
+
+                    }
                     _context.Attach(competitionTeam).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Competition Team Information Edited Successfully");
@@ -94,6 +111,24 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
             }
             _toastNotification.AddErrorToastMessage("Something Went Wrong");
             return Page();
+        }
+
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+
+            var directory = Path.GetDirectoryName(serverFolder);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return folderPath;
         }
     }
 }

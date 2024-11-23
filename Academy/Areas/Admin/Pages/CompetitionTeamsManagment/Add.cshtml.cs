@@ -42,7 +42,7 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
 
         public void OnGet()
         {
-           CompetitionDepartments= _context.CompetitionDepartment.Where(b => !b.IsDeleted && b.IsActive).ToList();
+            CompetitionDepartments= _context.CompetitionDepartment.Where(b => !b.IsDeleted && b.IsActive).ToList();
             Trainers = _context.Trainers.Where(t=>!t.IsDeleted&&t.IsActive).ToList();
             Trainees = _context.Trainees.Include(a=>a.Parent).Where(t => !t.IsDeleted && t.IsActive&&!t.Parent.IsDeleted&&t.Parent.IsActive).ToList();
         }

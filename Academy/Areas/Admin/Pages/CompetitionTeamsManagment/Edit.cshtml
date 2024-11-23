@@ -19,7 +19,7 @@
             <div class="card-body">
                 <div class="live-preview">
                     <div asp-validation-summary="All" class="text-danger"></div>
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         <div class="mb-3" style="display:none">
                             <label asp-for="@Model.CompetitionTeamVM.Id" class="form-label">Id</label>
                             <input asp-for="@Model.CompetitionTeamVM.Id" class="form-control" />
@@ -54,7 +54,14 @@
 
                         </div><!--end col-->
 
+                        <div class="mb-3">
 
+                            <label for="fileUpload" class="form-label">Choose an Image</label>
+                            <div class="input-group">
+                                <input type="file" accept=".png, .jpg, .jpeg" class="form-control" id="fileUpload" name="fileUpload" />
+
+                            </div>
+                        </div>
 
 
                         <div class="mb-3">

@@ -4,6 +4,7 @@ using Academy.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using NToastNotify;
 
 namespace Academy.Areas.Admin.Pages.CompetitionDepartmentsManagment
@@ -12,11 +13,15 @@ namespace Academy.Areas.Admin.Pages.CompetitionDepartmentsManagment
     {
         private readonly AcademyContext _context;
         private readonly IToastNotification _toastNotification;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public EditModel(AcademyContext context, IToastNotification toastNotification)
+        public EditModel(AcademyContext context
+            , IToastNotification toastNotification
+             , IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _toastNotification = toastNotification;
+            _hostEnvironment = hostEnvironment;
         }
         [BindProperty]
 
@@ -53,7 +58,7 @@ namespace Academy.Areas.Admin.Pages.CompetitionDepartmentsManagment
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(IFormFile? fileUpload)
         {
            
             try
@@ -65,6 +70,20 @@ namespace Academy.Areas.Admin.Pages.CompetitionDepartmentsManagment
                     competitionDepartment.Name = CompetitionDepartmentVM.Name;
                     competitionDepartment.Description = CompetitionDepartmentVM.Description;
                     competitionDepartment.IsActive = CompetitionDepartmentVM.IsActive;
+                    if (fileUpload != null && fileUpload.Length > 0)
+                    {
+                        if (competitionDepartment.Image != null)
+                        {
+                            var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, competitionDepartment.Image);
+                            if (System.IO.File.Exists(ImagePath))
+                            {
+                                System.IO.File.Delete(ImagePath);
+                            }
+                        }
+                        string folder = "uploads/CompetitionDepartments/";
+                        competitionDepartment.Image = await UploadImage(folder, fileUpload);
+
+                    }
                     _context.Attach(competitionDepartment).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     _toastNotification.AddSuccessToastMessage("Competition Deparment Edited Successfully");
@@ -81,6 +100,24 @@ namespace Academy.Areas.Admin.Pages.CompetitionDepartmentsManagment
             }
             _toastNotification.AddErrorToastMessage("Something Went Wrong");
             return Page();
+        }
+
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+
+            var directory = Path.GetDirectoryName(serverFolder);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return folderPath;
         }
     }
 }

@@ -103,25 +103,27 @@ public async Task<IActionResult> OnGet(int id)
 
             public async Task<IActionResult> OnPostAsync(IFormFile? fileUpload)
             {
-            using (var client = new HttpClient())
-            {
-                var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
-                var countries = JsonConvert.DeserializeObject<List<Country>>(response);
-
-                Nationalities = countries.Select(c => new SelectListItem
-                {
-                    Text = c.Name.Common,
-                    Value = c.Cca2
-                }).ToList();
-
-            }
-            if (!ModelState.IsValid)
-                {
-                _toastNotification.AddErrorToastMessage("Something Went Wrong");
-                    return Page();
-                }
+           
+           
                 try
                 {
+                using (var client = new HttpClient())
+                {
+                    var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                    var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+
+                    Nationalities = countries.Select(c => new SelectListItem
+                    {
+                        Text = c.Name.Common,
+                        Value = c.Cca2
+                    }).ToList();
+
+                }
+                if (!ModelState.IsValid)
+                {
+                    _toastNotification.AddErrorToastMessage("Something Went Wrong");
+                    return Page();
+                }
                 var newtrainee = new Trainee
                 {
                     TraineeName = trainee.TraineeName,

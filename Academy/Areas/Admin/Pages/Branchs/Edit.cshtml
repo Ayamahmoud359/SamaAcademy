@@ -19,7 +19,7 @@
             <div class="card-body">
                 <div class="live-preview">
                     <div asp-validation-summary="All" class="text-danger"></div>
-                    <form method="post">
+                    <form method="post" enctype="multipart/form-data">
                         <div class="mb-3" style="display:none">
                             <label asp-for="@Model.Branch.BranchId" class="form-label"></label>
                             <input asp-for="@Model.Branch.BranchId" class="form-control" />
@@ -42,14 +42,22 @@
                             <input asp-for="@Model.Branch.Phone" class="form-control" />
                             <span asp-validation-for="@Model.Branch.Phone" class="text-danger"></span>
                         </div>
+                        <div class="mb-3">
 
-                      
+                            <label for="fileUpload" class="form-label">Choose an Image</label>
+                            <div class="input-group">
+                                <input type="file" accept=".png, .jpg, .jpeg" class="form-control" id="fileUpload" name="fileUpload" />
+
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             @Html.CheckBoxFor(m => m.Branch.IsActive, new { @class = "form-check-input" })
                             <label class="form-check-label" for="Active">
                                 Is Active?
                             </label>
                         </div>
+                      
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary">Save </button>
                             <a href="/Admin/Branchs" class="text-primary d-inline-block">
