@@ -132,7 +132,7 @@ namespace Academy.Controllers
         #region UpdateUserProfile
         [HttpPost]
         [Route("UpdateUserProfile")]
-        public async Task<IActionResult> UpdateUserProfile([FromForm] UpdateUserProfileDTO updateUserProfileDTO, IFormFile Pic)
+        public async Task<IActionResult> UpdateUserProfile([FromForm] UpdateUserProfileDTO updateUserProfileDTO, IFormFile? Pic)
         {
             // Find the user in the Identity system
             var user = await _userManager.FindByIdAsync(updateUserProfileDTO.UserId);
