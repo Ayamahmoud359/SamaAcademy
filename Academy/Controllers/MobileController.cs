@@ -335,6 +335,7 @@ namespace Academy.Controllers
                     e.TrainerName,
                     e.TrainerEmail,
                     e.TrainerPhone,
+                    e.TrainerAddress,
                     e.Image,
                     e.IsActive,
                     e.HiringDate,
