@@ -16,9 +16,9 @@ namespace Academy.DTO
         [Display(Name = "Branch Address")]
         public string BranchAddress { get; set; }
 
-        [Required(ErrorMessage = "Branch Phone is Required")]
+        //[Required(ErrorMessage = "Branch Phone is Required")]
         [Display(Name = "Branch Phone")]
-        public string Phone { get; set; } 
+        public string? Phone { get; set; } 
         public bool IsActive { get; set; }
        
 
