@@ -127,16 +127,29 @@ namespace Academy.Controllers
                 }
 
                 // Update Trainer fields
-                trainer.TrainerName = updateUserProfileDTO.Name;
-                trainer.TrainerEmail = updateUserProfileDTO.Email;
-                trainer.TrainerPhone = updateUserProfileDTO.Phone;
-                trainer.Image = updateUserProfileDTO.Image;
-
-                // Update User fields
-                user.Email = updateUserProfileDTO.Email;
-                user.PhoneNumber = updateUserProfileDTO.Phone;
-                user.UserName = updateUserProfileDTO.Name;
-
+                if (updateUserProfileDTO.Name != null) {
+                    trainer.TrainerName = updateUserProfileDTO.Name;
+                }
+                if (updateUserProfileDTO.Email != null)
+                {
+                    trainer.TrainerEmail = updateUserProfileDTO.Email;
+                    user.Email = updateUserProfileDTO.Email;
+                }
+                if (updateUserProfileDTO.Phone != null)
+                {
+                    trainer.TrainerPhone = updateUserProfileDTO.Phone;
+                    user.PhoneNumber = updateUserProfileDTO.Phone;
+                }
+                if (updateUserProfileDTO.Address != null)
+                {
+                    trainer.TrainerAddress = updateUserProfileDTO.Address;
+                }
+                if(updateUserProfileDTO.Image != null)
+                {
+                    //trainer.Image = updateUserProfileDTO.Image;
+                }
+               
+        
                 // Save changes
                 _context.Trainers.Update(trainer);
                 var userUpdateResult = await _userManager.UpdateAsync(user);
@@ -157,15 +170,30 @@ namespace Academy.Controllers
                 }
 
                 // Update Parent fields
-                parent.ParentName = updateUserProfileDTO.Name;
-                parent.ParentEmail = updateUserProfileDTO.Email;
-                parent.ParentPhone = updateUserProfileDTO.Phone;
-                parent.Image = updateUserProfileDTO.Image;
-
-                // Update User fields
-                user.Email = updateUserProfileDTO.Email;
-                user.PhoneNumber = updateUserProfileDTO.Phone;
-                user.UserName = updateUserProfileDTO.Name;
+                if(updateUserProfileDTO.Name != null)
+                {
+                    parent.ParentName = updateUserProfileDTO.Name;
+                }
+                if (updateUserProfileDTO.Email != null)
+                {
+                    parent.ParentEmail = updateUserProfileDTO.Email;
+                    user.Email = updateUserProfileDTO.Email;
+                }
+                if (updateUserProfileDTO.Phone != null)
+                {
+                    parent.ParentPhone = updateUserProfileDTO.Phone;
+                    user.PhoneNumber = updateUserProfileDTO.Phone;
+                }
+                if (updateUserProfileDTO.Address != null)
+                {
+                    parent.ParentAddress = updateUserProfileDTO.Address;
+                }
+                if (updateUserProfileDTO.Image != null)
+                {
+                    //parent.Image = updateUserProfileDTO.Image;
+                }
+               
+               
 
                 // Save changes
                 _context.Parents.Update(parent);
@@ -526,6 +554,34 @@ namespace Academy.Controllers
                 return Ok(new { status = false, message = ex.Message });
             }
         }
+
+        [HttpGet]
+        [Route("GetChildCompetitionTeamsByChildId")]
+        public async Task<ActionResult> GetChildCompetitionTeamsByChildId(int TraineeId)
+        {
+            try
+            {
+               var teams = await _context.TraineeCompetitionTeams.Where(e => e.TraineeId == TraineeId && e.IsActive).Select(e => new
+               {
+                    e.Id,
+                    e.IsActive,
+                    e.TraineeId,
+                    e.CompetitionTeamId,
+                    CompetitionTeam = _context.CompetitionTeam.Where(a => a.IsActive && a.Id == e.CompetitionTeamId).Select(a => new { 
+                        a.Id, a.Name, a.Image, a.IsActive,
+                        Department = _context.CompetitionDepartment.Where(b => b.IsActive && b.Id == a.CompetitionDepartmentId).Select(b => new { b.Id, b.Name, b.Image, b.IsActive }).FirstOrDefault(),
+                        Trainer = _context.Trainers.Where(b => b.IsActive && b.TrainerId == a.TrainerId).Select(b => new { b.TrainerId, b.TrainerName, b.TrainerEmail, b.TrainerPhone, b.Image, b.IsActive }).FirstOrDefault(),
+                    }).FirstOrDefault(),
+                }).ToListAsync();
+                return Ok(new { status = true, teams });
+               
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
         #endregion
 
         #region GetTrainersByDepartmentId
