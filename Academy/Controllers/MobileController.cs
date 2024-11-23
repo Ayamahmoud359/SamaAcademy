@@ -60,13 +60,13 @@ namespace Academy.Controllers
                     {
                         var trainer = await _context.Trainers
                             .FirstOrDefaultAsync(e => e.TrainerId == user.EntityId);
-                        return Ok(new { status = true, type_id = 1, message = "User logged in successfully!", trainer });
+                        return Ok(new { status = true,userId = user.Id, type_id = 1, message = "User logged in successfully!", trainer });
                     }
                     if (user.EntityId != null && user.EntityName == "Parent")
                     {
                         var parent = await _context.Parents
                             .FirstOrDefaultAsync(e => e.ParentId == user.EntityId);
-                        return Ok(new { status = true, type_id = 2, message = "User logged in successfully!", parent });
+                        return Ok(new { status = true, userId = user.Id, type_id = 2, message = "User logged in successfully!", parent });
                     }
                 }
             }
@@ -361,9 +361,13 @@ namespace Academy.Controllers
                     e.Image,
                     e.IsActive,
                     e.ParentId,
+                    e.BirthDate,
+                    e.Nationality,
+                    e.TraineeAddress,
+                    e.ResidencyNumber,
                     Parent = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).Select(a => new { a.ParentId, a.ParentName, a.ParentEmail, a.ParentPhone, a.Image, a.IsActive }).FirstOrDefault(),
                 }).ToListAsync();
-                return Ok(new { status = true, data =children });
+                return Ok(new { status = true, data = children });
             }
             catch (Exception ex)
             {
