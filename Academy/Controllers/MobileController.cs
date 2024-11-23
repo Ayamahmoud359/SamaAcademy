@@ -518,6 +518,9 @@ namespace Academy.Controllers
                     e.Image,
                     e.IsActive,
                     e.ParentId,
+                    e.BirthDate,
+                    e.ResidencyNumber,
+                    e.Nationality,
                     Parent = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).Select(a => new { a.ParentId, a.ParentName, a.ParentEmail, a.ParentPhone, a.Image, a.IsActive }).FirstOrDefault(),
                 }).FirstOrDefaultAsync();
                 return Ok(new { status = true,data = child });
