@@ -855,6 +855,40 @@ namespace Academy.Controllers
 
         #endregion
 
+        #region CategoryTeams
+        [HttpGet]
+        [Route("GetAllSubscriptionsByCategoryId")]
+        public async Task<ActionResult> GetAllSubscriptionsByCategoryId(int CategoryId)
+        {
+            try
+            {
+                var subscriptions = await _context.Subscriptions.Where(e => e.CategoryId == CategoryId && e.IsActive)
+                    .Select(e => new
+                    {
+                        e.SubscriptionId,
+                        e.StartDate,
+                        e.EndDate,
+                        e.IsActive,
+                        e.TraineeId,
+                        Trainee = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).Select(a => new { a.TraineeId, a.TraineeName, a.TraineePhone, a.TraineeEmail, a.Image, a.IsActive , a.BirthDate , a.Nationality , a.TraineeAddress }).FirstOrDefault(),
+                    }).ToListAsync();
+                   
+                return Ok(new { status = true, subscriptions });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+                
+               
+        }
+           
+        
+
+        #endregion
+
+
+
 
     }
 }
