@@ -770,7 +770,20 @@ namespace Academy.Controllers
                 {
                     return Ok(new { status = false, message = "trainer not found!" });
                 }
-                var teams = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.TrainerId == trainerId).ToListAsync();
+                var teams = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.TrainerId == trainerId)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.Name,
+                        e.Image,
+                        e.IsActive,
+                        e.IsDeleted,
+                        e.TrainerId,
+                        e.CompetitionDepartmentId,
+                        Trainer = _context.Trainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.TrainerId, a.TrainerName, a.TrainerEmail, a.TrainerPhone, a.Image, a.IsActive }).FirstOrDefault(),
+                        Department = _context.CompetitionDepartment.Where(a => a.IsActive && a.Id == e.CompetitionDepartmentId).Select(a => new { a.Id, a.Name, a.Image, a.IsActive }).FirstOrDefault(),
+                    }).ToListAsync();
+                    
                 return Ok(new { status = true, teams });
             }
             catch (Exception ex)
