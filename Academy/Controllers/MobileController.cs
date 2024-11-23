@@ -420,14 +420,14 @@ namespace Academy.Controllers
         #region AddEvaluation
         [HttpPost]
         [Route("AddEvaluation")]
-        public async Task<ActionResult> AddEvaluation([FromBody] EvaluationDTO evaluationDTO)
+        public async Task<ActionResult> AddEvaluation([FromBody] AddEvaluationDTO evaluationDTO)
         {
             try
             {
                 var evaluation = new Exam
                 {
                     TrainerId = evaluationDTO.TrainerId,
-                    ExamDate = evaluationDTO.ExamDate,
+                    ExamDate = evaluationDTO.EvaluationDate,
                     Review = evaluationDTO.Review,
                     Score = evaluationDTO.Score,
                     
@@ -443,8 +443,35 @@ namespace Academy.Controllers
                 return Ok(new { status = false, message = ex.Message });
             }
         }
+
+        [HttpGet]
+        [Route("GetEvaluationListBySubscriptionId")]
+        public async Task<ActionResult> GetEvaluationListBySubscriptionId(int SubscriptionId)
+        {
+            try
+            {
+               var evaluationList = await _context.Exams.Where(e => e.SubscriptionId == SubscriptionId && e.IsDeleted == false).Select(e => new
+               {
+                    e.ExamId,
+                    e.ExamDate,
+                    e.Score,
+                    e.Review,
+                    e.SubscriptionId,
+                    e.IsDeleted,
+                    Trainer = _context.Trainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.TrainerId, a.TrainerName, a.TrainerEmail, a.TrainerPhone, a.Image, a.IsActive }).FirstOrDefault(),
+                    Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == _context.Subscriptions.Where(b => b.IsActive && b.SubscriptionId == e.SubscriptionId).FirstOrDefault().CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).FirstOrDefault(),
+                }).ToListAsync();
+                return Ok(new { status = true, data = evaluationList });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
         #endregion
-        
+
         #region GetAttendancesListByCategoryId
         [HttpGet]
         [Route("GetAttendancesListByCategoryId")]
@@ -475,6 +502,7 @@ namespace Academy.Controllers
                 return Ok(new { status = false, message = ex.Message });
             }
         }
+       
         #endregion
 
         #region GetParentDetailsById
