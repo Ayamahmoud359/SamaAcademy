@@ -76,7 +76,25 @@ namespace Academy.Controllers
         }
 
         #endregion
-        
+
+        #region ChangePassword
+        [HttpPost]
+        [Route("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
+        {
+            var user = await _userManager.FindByIdAsync(changePasswordDTO.UserId);
+            if (user == null)
+            {
+                return Ok(new { status = false, message = "User not found!" });
+            }
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.OldPassword, changePasswordDTO.NewPassword);
+            if (result.Succeeded)
+            {
+                return Ok(new { status = true, message = "Password changed successfully!" });
+            }
+            return Ok(new { status = false, message = "Password change failed!" });
+        }
+        #endregion
         #region GetDepartmetsById 
         [HttpGet]
         [Route("GetDepartmetsByBranchId")]
@@ -87,7 +105,86 @@ namespace Academy.Controllers
 
         }
         #endregion
-        
+        #region UpdateUserProfile
+        [HttpPost]
+        [Route("UpdateUserProfile")]
+        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDTO updateUserProfileDTO)
+        {
+            // Find the user in the Identity system
+            var user = await _userManager.FindByIdAsync(updateUserProfileDTO.UserId);
+            if (user == null)
+            {
+                return Ok(new { status = false, message = "User not found!" });
+            }
+
+            // Update the profile based on the EntityName
+            if (user.EntityName == "Trainer")
+            {
+                var trainer = await _context.Trainers.FirstOrDefaultAsync(e => e.TrainerId == user.EntityId);
+                if (trainer == null)
+                {
+                    return Ok(new { status = false, message = "Trainer not found!" });
+                }
+
+                // Update Trainer fields
+                trainer.TrainerName = updateUserProfileDTO.Name;
+                trainer.TrainerEmail = updateUserProfileDTO.Email;
+                trainer.TrainerPhone = updateUserProfileDTO.Phone;
+                trainer.Image = updateUserProfileDTO.Image;
+
+                // Update User fields
+                user.Email = updateUserProfileDTO.Email;
+                user.PhoneNumber = updateUserProfileDTO.Phone;
+                user.UserName = updateUserProfileDTO.Name;
+
+                // Save changes
+                _context.Trainers.Update(trainer);
+                var userUpdateResult = await _userManager.UpdateAsync(user);
+                if (!userUpdateResult.Succeeded)
+                {
+                    return Ok(new { status = false, message = "Failed to update user profile in Identity!" });
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok(new { status = true, message = "Trainer profile updated successfully!" });
+            }
+            if (user.EntityName == "Parent")
+            {
+                var parent = await _context.Parents.FirstOrDefaultAsync(e => e.ParentId == user.EntityId);
+                if (parent == null)
+                {
+                    return Ok(new { status = false, message = "Parent not found!" });
+                }
+
+                // Update Parent fields
+                parent.ParentName = updateUserProfileDTO.Name;
+                parent.ParentEmail = updateUserProfileDTO.Email;
+                parent.ParentPhone = updateUserProfileDTO.Phone;
+                parent.Image = updateUserProfileDTO.Image;
+
+                // Update User fields
+                user.Email = updateUserProfileDTO.Email;
+                user.PhoneNumber = updateUserProfileDTO.Phone;
+                user.UserName = updateUserProfileDTO.Name;
+
+                // Save changes
+                _context.Parents.Update(parent);
+                var userUpdateResult = await _userManager.UpdateAsync(user);
+                if (!userUpdateResult.Succeeded)
+                {
+                    return Ok(new { status = false, message = "Failed to update user profile in Identity!" });
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok(new { status = true, message = "Parent profile updated successfully!" });
+            }
+
+            // Handle other entity types or unsupported types
+            return Ok(new { status = false, message = "User type not found!" });
+        }
+
+        #endregion
+
         #region GetCategoriesByDepartmentId
         [HttpGet]
         [Route("GetCategoriesByDepartmentId")]
@@ -134,7 +231,7 @@ namespace Academy.Controllers
                     BranchPhone = _context.Branches.Where(a => a.IsActive && a.BranchId == e.BranchId).FirstOrDefault().Phone,
                     BranchImage = _context.Branches.Where(a => a.IsActive && a.BranchId == e.BranchId).FirstOrDefault().Image,
                     Categories = _context.Categories.Where(a => a.IsActive && a.DepartmentId == e.DepartmentId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).ToList()
-                }).ToListAsync();
+                }).FirstOrDefaultAsync();
                 return Ok(new { status = true, data = department });
             }
             catch (Exception ex)
