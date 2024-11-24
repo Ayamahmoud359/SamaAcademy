@@ -201,6 +201,31 @@ namespace Academy.Controllers
 
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> GetBanners(DataSourceLoadOptions loadOptions)
+        {
+
+            IQueryable<BannerDataGridVM> Banners = _context.Banners
+               
+                .Where(d => !d.IsDeleted)
+                .Select(i => new BannerDataGridVM()
+                {
+                    BannerId = i.Id,
+                    Title = i.Title,
+                    IsActive = i.IsActive,
+                    Image = i.Image
+
+
+                });
+
+            return Json(await DataSourceLoader.LoadAsync(Banners, loadOptions));
+
+
+        }
+
+
+
         [HttpGet]
         public async Task<IActionResult> GetTrainers(DataSourceLoadOptions loadOptions)
         {

@@ -1116,10 +1116,23 @@ namespace Academy.Controllers
                 
                
         }
-           
-        
+
+
 
         #endregion
+
+
+        #region Banners 
+        [HttpGet]
+        [Route("GetAllBanners")]
+        public async Task<IActionResult> GetAllBanners()
+        {
+            var banners = await _context.Banners.Where(e => e.IsActive && !e.IsDeleted).ToListAsync();
+            return Ok(new { status = true, data = banners });
+
+        }
+        #endregion
+
 
 
 
