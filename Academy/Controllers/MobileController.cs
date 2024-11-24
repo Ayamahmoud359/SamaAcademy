@@ -6,6 +6,8 @@ using Academy.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using System;
 using System.Linq;
 
 namespace Academy.Controllers
@@ -18,13 +20,15 @@ namespace Academy.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AcademyContext _context;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
 
-        public MobileController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, AcademyContext context)
+        public MobileController(UserManager<ApplicationUser> userManager, IWebHostEnvironment hostEnvironment, SignInManager<ApplicationUser> signInManager, AcademyContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
+            _hostEnvironment = hostEnvironment;
         }
         #region Login
         [HttpPost]
@@ -105,10 +109,30 @@ namespace Academy.Controllers
 
         }
         #endregion
+        #region UploadMedia
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
+
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+
+            string serverFolder = Path.Combine(_hostEnvironment.WebRootPath, folderPath);
+
+            var directory = Path.GetDirectoryName(serverFolder);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return folderPath;
+        }
+
+        #endregion
         #region UpdateUserProfile
         [HttpPost]
         [Route("UpdateUserProfile")]
-        public async Task<IActionResult> UpdateUserProfile([FromBody] UpdateUserProfileDTO updateUserProfileDTO)
+        public async Task<IActionResult> UpdateUserProfile([FromForm] UpdateUserProfileDTO updateUserProfileDTO, IFormFile Pic)
         {
             // Find the user in the Identity system
             var user = await _userManager.FindByIdAsync(updateUserProfileDTO.UserId);
@@ -130,6 +154,12 @@ namespace Academy.Controllers
                 if (updateUserProfileDTO.Name != null) {
                     trainer.TrainerName = updateUserProfileDTO.Name;
                 }
+                if (Pic != null)
+                {
+                    trainer.Image = await UploadImage("uploads/Users/", Pic);
+
+                }
+
                 if (updateUserProfileDTO.Email != null)
                 {
                     trainer.TrainerEmail = updateUserProfileDTO.Email;
@@ -173,6 +203,11 @@ namespace Academy.Controllers
                 if(updateUserProfileDTO.Name != null)
                 {
                     parent.ParentName = updateUserProfileDTO.Name;
+                }
+                if (Pic != null)
+                {
+                    parent.Image = await UploadImage("uploads/Users/", Pic);
+
                 }
                 if (updateUserProfileDTO.Email != null)
                 {
@@ -335,6 +370,7 @@ namespace Academy.Controllers
                     e.TrainerName,
                     e.TrainerEmail,
                     e.TrainerPhone,
+                    e.TrainerAddress,
                     e.Image,
                     e.IsActive,
                     e.HiringDate,
@@ -384,14 +420,14 @@ namespace Academy.Controllers
         #region AddEvaluation
         [HttpPost]
         [Route("AddEvaluation")]
-        public async Task<ActionResult> AddEvaluation([FromBody] EvaluationDTO evaluationDTO)
+        public async Task<ActionResult> AddEvaluation([FromBody] AddEvaluationDTO evaluationDTO)
         {
             try
             {
                 var evaluation = new Exam
                 {
                     TrainerId = evaluationDTO.TrainerId,
-                    ExamDate = evaluationDTO.ExamDate,
+                    ExamDate = evaluationDTO.EvaluationDate,
                     Review = evaluationDTO.Review,
                     Score = evaluationDTO.Score,
                     
@@ -407,8 +443,35 @@ namespace Academy.Controllers
                 return Ok(new { status = false, message = ex.Message });
             }
         }
+
+        [HttpGet]
+        [Route("GetEvaluationListBySubscriptionId")]
+        public async Task<ActionResult> GetEvaluationListBySubscriptionId(int SubscriptionId)
+        {
+            try
+            {
+               var evaluationList = await _context.Exams.Where(e => e.SubscriptionId == SubscriptionId && e.IsDeleted == false).Select(e => new
+               {
+                    e.ExamId,
+                    e.ExamDate,
+                    e.Score,
+                    e.Review,
+                    e.SubscriptionId,
+                    e.IsDeleted,
+                    Trainer = _context.Trainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.TrainerId, a.TrainerName, a.TrainerEmail, a.TrainerPhone, a.Image, a.IsActive }).FirstOrDefault(),
+                    Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == _context.Subscriptions.Where(b => b.IsActive && b.SubscriptionId == e.SubscriptionId).FirstOrDefault().CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).FirstOrDefault(),
+                }).ToListAsync();
+                return Ok(new { status = true, data = evaluationList });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
         #endregion
-        
+
         #region GetAttendancesListByCategoryId
         [HttpGet]
         [Route("GetAttendancesListByCategoryId")]
@@ -439,6 +502,7 @@ namespace Academy.Controllers
                 return Ok(new { status = false, message = ex.Message });
             }
         }
+       
         #endregion
 
         #region GetParentDetailsById
@@ -518,6 +582,10 @@ namespace Academy.Controllers
                     e.Image,
                     e.IsActive,
                     e.ParentId,
+                    e.BirthDate,
+                    e.ResidencyNumber,
+                    e.Nationality,
+                    e.TraineeAddress,
                     Parent = _context.Parents.Where(a => a.IsActive && a.ParentId == e.ParentId).Select(a => new { a.ParentId, a.ParentName, a.ParentEmail, a.ParentPhone, a.Image, a.IsActive }).FirstOrDefault(),
                 }).FirstOrDefaultAsync();
                 return Ok(new { status = true,data = child });
@@ -542,10 +610,13 @@ namespace Academy.Controllers
                 {
                     e.SubscriptionId,
                     e.EndDate,
+                    e.StartDate,
                     e.IsActive,
                     e.TraineeId,
                     Trainee = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).Select(a => new { a.TraineeId, a.TraineeName, a.TraineePhone, a.TraineeEmail, a.Image, a.IsActive }).FirstOrDefault(),
-                    Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).FirstOrDefault(),
+                    Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive,
+                        Department = _context.Departments.Where(b => b.IsActive && b.DepartmentId == a.DepartmentId).Select(b => new { b.DepartmentId, b.DepartmentName, b.DepartmentDescription, b.Image, b.IsActive }).FirstOrDefault(),
+                    }).FirstOrDefault(),
                 }).ToListAsync();
                 return Ok(new { status = true, subscriptions });
             }
@@ -763,7 +834,20 @@ namespace Academy.Controllers
                 {
                     return Ok(new { status = false, message = "trainer not found!" });
                 }
-                var teams = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.TrainerId == trainerId).ToListAsync();
+                var teams = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.TrainerId == trainerId)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.Name,
+                        e.Image,
+                        e.IsActive,
+                        e.IsDeleted,
+                        e.TrainerId,
+                        e.CompetitionDepartmentId,
+                        Trainer = _context.Trainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.TrainerId, a.TrainerName, a.TrainerEmail, a.TrainerPhone, a.Image, a.IsActive }).FirstOrDefault(),
+                        Department = _context.CompetitionDepartment.Where(a => a.IsActive && a.Id == e.CompetitionDepartmentId).Select(a => new { a.Id, a.Name, a.Image, a.IsActive }).FirstOrDefault(),
+                    }).ToListAsync();
+                    
                 return Ok(new { status = true, teams });
             }
             catch (Exception ex)
@@ -797,7 +881,7 @@ namespace Academy.Controllers
 
             }
         }
-
+        
         [HttpGet]
         [Route("GetAllTeamDetailsByTeamId")]
         public async Task<IActionResult> GetAllTeamDetailsByTeamId(int teamId)
@@ -833,6 +917,41 @@ namespace Academy.Controllers
 
 
         #endregion
+        
+
+        #region CategoryTeams
+        [HttpGet]
+        [Route("GetAllSubscriptionsByCategoryId")]
+        public async Task<ActionResult> GetAllSubscriptionsByCategoryId(int CategoryId)
+        {
+            try
+            {
+                var subscriptions = await _context.Subscriptions.Where(e => e.CategoryId == CategoryId && e.IsActive)
+                    .Select(e => new
+                    {
+                        e.SubscriptionId,
+                        e.StartDate,
+                        e.EndDate,
+                        e.IsActive,
+                        e.TraineeId,
+                        Trainee = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).Select(a => new { a.TraineeId, a.TraineeName, a.TraineePhone, a.TraineeEmail, a.Image, a.IsActive , a.BirthDate , a.Nationality , a.TraineeAddress }).FirstOrDefault(),
+                    }).ToListAsync();
+                   
+                return Ok(new { status = true, subscriptions });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+                
+               
+        }
+           
+        
+
+        #endregion
+
+
 
 
     }
