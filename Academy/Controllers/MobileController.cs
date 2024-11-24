@@ -132,7 +132,7 @@ namespace Academy.Controllers
         #region UpdateUserProfile
         [HttpPost]
         [Route("UpdateUserProfile")]
-        public async Task<IActionResult> UpdateUserProfile([FromForm] UpdateUserProfileDTO updateUserProfileDTO, IFormFile Pic)
+        public async Task<IActionResult> UpdateUserProfile([FromForm] UpdateUserProfileDTO updateUserProfileDTO, IFormFile? Pic)
         {
             // Find the user in the Identity system
             var user = await _userManager.FindByIdAsync(updateUserProfileDTO.UserId);
@@ -174,10 +174,7 @@ namespace Academy.Controllers
                 {
                     trainer.TrainerAddress = updateUserProfileDTO.Address;
                 }
-                if(updateUserProfileDTO.Image != null)
-                {
-                    //trainer.Image = updateUserProfileDTO.Image;
-                }
+              
                
         
                 // Save changes
@@ -223,10 +220,7 @@ namespace Academy.Controllers
                 {
                     parent.ParentAddress = updateUserProfileDTO.Address;
                 }
-                if (updateUserProfileDTO.Image != null)
-                {
-                    //parent.Image = updateUserProfileDTO.Image;
-                }
+              
                
                
 
