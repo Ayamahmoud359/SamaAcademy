@@ -68,14 +68,14 @@ namespace Academy.Areas.Admin.Pages.Categories
                     categoryToEdit.IsActive = category.IsActive;
                     if (fileUpload != null && fileUpload.Length > 0)
                     {
-                        if (categoryToEdit.image != null)
-                        {
-                            var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, categoryToEdit.image);
-                            if (System.IO.File.Exists(ImagePath))
-                            {
-                                System.IO.File.Delete(ImagePath);
-                            }
-                        }
+                        //if (categoryToEdit.image != null)
+                        //{
+                        //    var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, categoryToEdit.image);
+                        //    if (System.IO.File.Exists(ImagePath))
+                        //    {
+                        //        System.IO.File.Delete(ImagePath);
+                        //    }
+                        //}
                         string folder = "uploads/Categories/";
                         categoryToEdit.image = await UploadImage(folder, fileUpload);
 

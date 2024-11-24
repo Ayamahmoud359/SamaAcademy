@@ -409,8 +409,178 @@ namespace Academy.Controllers
                 return Ok(new { status = false, message = ex.Message });
             }
         }
+
+        [HttpPost]
+        [Route("AddAttendanceToCategorySubscriptions")]
+        public async Task<ActionResult> AddAttendanceToCategorySubscriptions([FromBody] List<AddAttendanceDTO> attendanceList)
+        {
+            try
+            {
+                if (attendanceList == null || !attendanceList.Any()) { 
+                    return Ok(new { status = false, message = "Attendance list is empty!" });
+                }
+                foreach (var record in attendanceList)
+                {
+                    var attendance = new Absence
+                    {
+                        TrainerId = record.TrainerId,
+                        AbsenceDate = record.Date,
+                        IsAbsent = record.IsAbsent,
+                        SubscriptionId = record.SubscriptionId,
+                        Type = record.Type,
+                        IsDeleted = false,
+                    };
+                    _context.Abscenses.Add(attendance);
+                }
+                    
+                
+                await _context.SaveChangesAsync();
+                return Ok(new { status = true, message = "Attendance added successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
+        [HttpGet]
+        [Route("GetAttendanceToCategorySubscriptions")]
+        public async Task<ActionResult> GetAttendanceToCategorySubscriptions(int categoryId)
+        {
+            try
+            {
+                // Check if the category exists and is active
+                var category = await _context.Categories
+                    .Where(e => e.CategoryId == categoryId && e.IsActive)
+                    .FirstOrDefaultAsync();
+
+                if (category == null)
+                {
+                    return Ok(new { status = false, message = "Category not found!" });
+                }
+
+                // Fetch attendance records for the given category
+                var attendances = await _context.Abscenses
+                    .Include(e => e.Subscription) // Include related subscription
+                    .Where(e => e.Subscription != null && e.Subscription.CategoryId == categoryId)
+                    .GroupBy(a => a.AbsenceDate) // Group by date
+                    .Select(group => new
+                    {
+                        Date = group.Key,
+                        Records = group.Select(a => new
+                        {
+                            a.AbsenceId,
+                            a.AbsenceDate,
+                            a.IsAbsent,
+                            a.Type,
+                            a.SubscriptionId,
+                            a.IsDeleted,
+                            a.TrainerId,
+                            
+                            //Subscription = new
+                            //{
+                            //    a.Subscription!.SubscriptionId,
+                            //    a.Subscription.StartDate,
+                            //    a.Subscription.EndDate,
+                            //    a.Subscription.IsActive,
+                            //    a.Subscription.CategoryId,
+                            //    a.Subscription.TraineeId
+                            //},
+                            
+                            //Child = _context.Trainees
+                            //    .Where(t => t.IsActive && t.TraineeId == a.Subscription!.TraineeId)
+                            //    .Select(t => new
+                            //    {
+                            //        t.TraineeId,
+                            //        t.TraineeName,
+                            //        t.TraineePhone,
+                            //        t.TraineeEmail,
+                            //        t.Image,
+                            //        t.IsActive
+                            //    })
+                            //    .FirstOrDefault(),
+                            
+                            //Trainer = _context.Trainers
+                            //    .Where(t => t.IsActive && t.TrainerId == a.TrainerId)
+                            //    .Select(t => new
+                            //    {
+                            //        t.TrainerId,
+                            //        t.TrainerName,
+                            //        t.TrainerEmail,
+                            //        t.TrainerPhone,
+                            //        t.Image,
+                            //        t.IsActive
+                            //    })
+                            //    .FirstOrDefault()
+                       
+                        }).ToList()
+                    })
+                    .OrderBy(summary => summary.Date)
+                    .ToListAsync();
+
+                return Ok(new { status = true, attendances });
+            }
+            catch (Exception ex)
+            {
+                // Return error details
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
+        // Get attendance records for a specific subscription
+        [HttpGet("GetAttendanceBySubscriptionId")]
+        public async Task<IActionResult> GetAttendanceBySubscription(int subscriptionId)
+        {
+            try
+            {
+                // Validate if the subscription exists
+                var subscription = await _context.Subscriptions
+                    .Where(s => s.SubscriptionId == subscriptionId && s.IsActive && s.IsDeleted == false)
+                    .FirstOrDefaultAsync();
+
+                if (subscription == null)
+                {
+                    return Ok(new { status = false, message = "Subscription not found!" });
+                }
+
+                // Fetch attendance records for the given subscription
+                var attendanceRecords = await _context.Abscenses
+                    .Where(a => a.SubscriptionId == subscriptionId)
+                    .OrderBy(a => a.AbsenceDate) // Order by date
+                    .Select(a => new
+                    {
+                        a.AbsenceId,
+                        a.AbsenceDate,
+                        a.IsAbsent,
+                        a.Type,
+                        a.TrainerId,
+                        Trainer = _context.Trainers
+                            .Where(t => t.IsActive && t.TrainerId == a.TrainerId)
+                            .Select(t => new
+                            {
+                                t.TrainerId,
+                                t.TrainerName,
+                                t.TrainerEmail,
+                                t.TrainerPhone,
+                                t.Image
+                            })
+                            .FirstOrDefault()
+                    })
+                    .ToListAsync();
+
+                return Ok(new { status = true, attendanceRecords });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
         #endregion
-        
+
         #region AddEvaluation
         [HttpPost]
         [Route("AddEvaluation")]

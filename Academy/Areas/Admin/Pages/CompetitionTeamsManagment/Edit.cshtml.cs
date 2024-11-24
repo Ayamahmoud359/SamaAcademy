@@ -83,14 +83,14 @@ namespace Academy.Areas.Admin.Pages.CompetitionTeamsManagment
                     competitionTeam.IsActive = CompetitionTeamVM.IsActive;
                     if (fileUpload != null && fileUpload.Length > 0)
                     {
-                        if (competitionTeam.Image != null)
-                        {
-                            var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, competitionTeam.Image);
-                            if (System.IO.File.Exists(ImagePath))
-                            {
-                                System.IO.File.Delete(ImagePath);
-                            }
-                        }
+                        //if (competitionTeam.Image != null)
+                        //{
+                        //    var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, competitionTeam.Image);
+                        //    if (System.IO.File.Exists(ImagePath))
+                        //    {
+                        //        System.IO.File.Delete(ImagePath);
+                        //    }
+                        //}
                         string folder = "uploads/CompetitionDepartments/";
                         competitionTeam.Image = await UploadImage(folder, fileUpload);
 

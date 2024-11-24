@@ -144,14 +144,14 @@ namespace Academy.Areas.Admin.Pages.Trainees
                 TraineeToEdit.BirthDate = Trainee.BirthDate;
                 if (fileUpload != null && fileUpload.Length > 0)
                 {
-                    if (TraineeToEdit.Image != null)
-                    {
-                        var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, TraineeToEdit.Image);
-                        if (System.IO.File.Exists(ImagePath))
-                        {
-                            System.IO.File.Delete(ImagePath);
-                        }
-                    }
+                    //if (TraineeToEdit.Image != null)
+                    //{
+                    //    var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, TraineeToEdit.Image);
+                    //    if (System.IO.File.Exists(ImagePath))
+                    //    {
+                    //        System.IO.File.Delete(ImagePath);
+                    //    }
+                    //}
                     string folder = "uploads/Trainees/";
                     TraineeToEdit.Image = await UploadImage(folder, fileUpload);
 

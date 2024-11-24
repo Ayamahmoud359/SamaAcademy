@@ -105,14 +105,14 @@ namespace Academy.Areas.Admin.Pages.Trainers
 
                 if (fileUpload != null && fileUpload.Length > 0)
                 {
-                    if (TrainerToEdit.Image != null)
-                    {
-                        var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, TrainerToEdit.Image);
-                        if (System.IO.File.Exists(ImagePath))
-                        {
-                            System.IO.File.Delete(ImagePath);
-                        }
-                    }
+                    //if (TrainerToEdit.Image != null)
+                    //{
+                    //    var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, TrainerToEdit.Image);
+                    //    if (System.IO.File.Exists(ImagePath))
+                    //    {
+                    //        System.IO.File.Delete(ImagePath);
+                    //    }
+                    //}
                     string folder = "uploads/Trainers/";
                     TrainerToEdit.Image = await UploadImage(folder, fileUpload);
 
