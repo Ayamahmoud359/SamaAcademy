@@ -74,14 +74,14 @@ namespace Academy.Areas.Admin.Pages.Branchs
                    
                     if (fileUpload != null && fileUpload.Length > 0)
                     {
-                        if (branch.Image!= null)
-                        {
-                            var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, branch.Image);
-                            if (System.IO.File.Exists(ImagePath))
-                            {
-                                System.IO.File.Delete(ImagePath);
-                            }
-                        }
+                        //if (branch.Image!= null)
+                        //{
+                        //    var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, branch.Image);
+                        //    if (System.IO.File.Exists(ImagePath))
+                        //    {
+                        //        System.IO.File.Delete(ImagePath);
+                        //    }
+                        //}
                         string folder = "uploads/Branchs/";
                         branch.Image = await UploadImage(folder, fileUpload);
 

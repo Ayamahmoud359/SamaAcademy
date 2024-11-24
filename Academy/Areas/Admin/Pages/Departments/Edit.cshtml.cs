@@ -76,14 +76,14 @@ namespace Academy.Areas.Admin.Pages.Departments
                     department.IsActive = Dept.IsActive;
                     if (fileUpload != null && fileUpload.Length > 0)
                     {
-                        if (department.Image != null)
-                        {
-                            var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, department.Image);
-                            if (System.IO.File.Exists(ImagePath))
-                            {
-                                System.IO.File.Delete(ImagePath);
-                            }
-                        }
+                        //if (department.Image != null)
+                        //{
+                        //    var ImagePath = Path.Combine(_hostEnvironment.WebRootPath, department.Image);
+                        //    if (System.IO.File.Exists(ImagePath))
+                        //    {
+                        //        System.IO.File.Delete(ImagePath);
+                        //    }
+                        //}
                         string folder = "uploads/Departments/";
                         department.Image = await UploadImage(folder, fileUpload);
 
