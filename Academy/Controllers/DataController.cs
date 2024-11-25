@@ -2,8 +2,10 @@
 using Academy.DataGridVM;
 using Academy.DTO;
 using Academy.Models;
+using Academy.ViewModels;
 using DevExtreme.AspNet.Data;
 using DevExtreme.AspNet.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,9 +17,12 @@ namespace Academy.Controllers
     {
         private readonly AcademyContext _context;
 
-        public DataController(AcademyContext context)
+        private readonly UserManager<ApplicationUser> _UserManger;
+
+        public DataController(AcademyContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _UserManger = userManager;
         }
         [HttpGet]
         public async Task<IActionResult> GetDepartments(DataSourceLoadOptions loadOptions)
@@ -35,6 +40,21 @@ namespace Academy.Controllers
 
             return Json(await DataSourceLoader.LoadAsync(Depts, loadOptions));
 
+
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetUsers(DataSourceLoadOptions loadOptions)
+        {
+            IQueryable<UsersDataGridVM> users = _UserManger.Users.Select(i => new UsersDataGridVM()
+            {
+                Id = i.Id,
+                FullName = i.FullName,
+                Email = i.Email,
+                Phone = i.PhoneNumber,
+                UserName= i.UserName
+
+            });
+            return Json(await DataSourceLoader.LoadAsync(users, loadOptions));
 
         }
         [HttpGet]

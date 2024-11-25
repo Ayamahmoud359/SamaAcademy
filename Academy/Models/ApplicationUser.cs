@@ -6,5 +6,8 @@ namespace Academy.Models
     {
         public int EntityId { get; set; }
         public string? EntityName { get; set; }
+        public string? Image { get; set; }
+        public string? FullName { get; set; }
+        public string? Address { get; set; }
     }
 }
