@@ -52,18 +52,20 @@ namespace Academy.Areas.Admin.Pages.Parents
       
 
         }
- 
 
-public class Country
-{
-    public Name Name { get; set; }
-    public string Cca2 { get; set; }
-}
 
-public class Name
-{
-    public string Common { get; set; }
-}
+
+
+//public class Country
+//{
+//    public Name Name { get; set; }
+//    public string Cca2 { get; set; }
+//}
+
+//public class Name
+//{
+//    public string Common { get; set; }
+//}
 
 public async Task<IActionResult> OnGet(int id)
         {
@@ -73,18 +75,29 @@ public async Task<IActionResult> OnGet(int id)
                 if (id != 0)
                 {
                     trainee.ParentId = id;
-                    using (var client = new HttpClient())
-                    {
-                        var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
-                        var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+                    await CountryData.InitializeAsync();
 
-                        Nationalities = countries.Select(c => new SelectListItem
-                        {
-                            Text = c.Name.Common,
-                            Value = c.Cca2
-                        }).ToList();
-                        
-                    }
+                    var countries = CountryData.GetCountries();
+
+                    Nationalities = countries.Select(c => new SelectListItem
+                    {
+                        Text = c.Name,
+                        Value = c.Code
+                    }).ToList();
+                    
+                    //using (var client = new HttpClient())
+                    //{
+                    //    var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                    //    var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+
+                    //    Nationalities = countries.Select(c => new SelectListItem
+                    //    {
+                    //        Text = c.Name.Common,
+                    //        Value = c.Cca2
+                    //    }).ToList();
+
+                    //}
+
                     return Page();
                 }
 
@@ -107,18 +120,29 @@ public async Task<IActionResult> OnGet(int id)
            
                 try
                 {
-                using (var client = new HttpClient())
+
+                //using (var client = new HttpClient())
+                //{
+                //    var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                //    var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+
+                //    Nationalities = countries.Select(c => new SelectListItem
+                //    {
+                //        Text = c.Name.Common,
+                //        Value = c.Cca2
+                //    }).ToList();
+
+                //}
+
+                var countries = CountryData.GetCountries();
+
+                Nationalities = countries.Select(c => new SelectListItem
                 {
-                    var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
-                    var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+                    Text = c.Name,
+                    Value = c.Code
+                }).ToList();
 
-                    Nationalities = countries.Select(c => new SelectListItem
-                    {
-                        Text = c.Name.Common,
-                        Value = c.Cca2
-                    }).ToList();
 
-                }
                 if (!ModelState.IsValid)
                 {
                     _toastNotification.AddErrorToastMessage("Something Went Wrong");

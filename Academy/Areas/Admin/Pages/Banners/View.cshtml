@@ -1,0 +1,46 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.Banners.ViewModel
+@{
+    ViewBag.Title = "Banners";
+    ViewBag.pTitle = "View Details";
+    ViewBag.pageTitle = "Banners";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <!-- Department Card 3 -->
+
+        <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">Banner Information</h4>
+            </div><!-- end card header -->
+
+            <div class="card-img-container" style="text-align: center; margin-bottom: 20px;">
+                <img src="/@Model.Banner.Image" alt="Category Image" class="img-fluid" style="max-height: 250px; object-fit: cover;">
+            </div>
+
+            @* <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Department Image"> *@
+            <div class="card-body">
+                @*  <h5 class="card-title">Department of Human Resources</h5>
+                <p class="card-text">The HR Department is dedicated to employee development, recruitment, and ensuring a positive work environment.</p> *@
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Title:</strong>        @Model.Banner.Title</li>
+                    
+                    @if (Model.Banner.IsActive)
+                    {
+                        <li class="list-group-item"><strong>Status:</strong>    Active</li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item"><strong>Status:</strong>    Not Active</li>
+                    }
+
+                </ul>
+               
+
+            </div>
+        </div>
+    </div>
+</div>
