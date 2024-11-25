@@ -16,7 +16,7 @@
                     <button type="button" class="btn btn-success add-btn"
                             data-bs-toggle="modal" id="create-btn"
                             data-bs-target="#AddModal">
-                        <i class="ri-add-line align-bottom me-1"></i> @sharedResource["Add"]
+                        <i class="ri-add-line align-bottom me-1"></i> Add
                     </button>
 
                 </div>
@@ -100,61 +100,87 @@
         <div class="modal-content">
 
             <div class="modal-header bg-light p-3">
-                <h5 class="modal-title" id="exampleModalLabel">@(sharedResource["Add User"])</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add User</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="close-modal"></button>
             </div>
 
-            <form asp-area="Admin" asp-page="/ManageCoupon/Index" asp-page-handler="AddUser">
+            <form asp-area="Admin" asp-page="/UserManagment/Index" asp-page-handler="AddUser">
                 <div class="modal-body">
                     <input type="hidden" id="id-field" />
                     <div class="row g-3">
                         <div class="col-lg-6">
                             <div>
-                                <label for="@Model.userVM.FullName" class="form-label">@(sharedResource["FullName"])</label>
+                                <label for="@Model.userVM.FullName" class="form-label">FullName</label>
                                 <input type="text" asp-for="@Model.userVM.FullName" class="form-control" placeholder="Enter FullName" required />
                                 <span asp-validation-for="@Model.userVM.FullName" class="text-danger"></span>
                             </div>
                         </div>
+                       
                         <div class="col-lg-6">
                             <div>
-                                <label for="@Model.userVM.FullName" class="form-label">@(sharedResource["FullName"])</label>
-                                <input type="text" asp-for="@Model.userVM.FullName" class="form-control" placeholder="Enter FullName" required />
-                                <span asp-validation-for="@Model.userVM.FullName" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div>
-                                <label for="@Model.userVM.UserName" class="form-label">@(sharedResource["UserName"])</label>
-                                <input type="text" asp-for="@Model.userVM.UserName" class="form-control" placeholder="Enter FullName" required />
+                                <label for="@Model.userVM.UserName" class="form-label">UserName</label>
+                                <input type="text" asp-for="@Model.userVM.UserName" class="form-control" placeholder="Enter UserName" required />
                                 <span asp-validation-for="@Model.userVM.UserName" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                         <div class="col-lg-6">
                             <div>
-                                <label for="@Model.userVM.Email" class="form-label">@(sharedResource["Email"])</label>
-                                <input type="email" asp-for="@Model.userVM.Email" class="form-control" placeholder="Enter Email" required />
-                                <span asp-validation-for="@Model.userVM.Email" class="text-danger"></span>
-                            </div>
-                        </div>
-
-
-                        <div class="col-lg-6">
-                            <div>
-                                <label for="@Model.userVM.Email" class="form-label">@(sharedResource["Email"])</label>
-                                <input type="email" asp-for="@Model.userVM.Email" class="form-control" placeholder="Enter Email" required />
-                                <span asp-validation-for="@Model.userVM.Email" class="text-danger"></span>
+                                <label for="@Model.userVM.Password" class="form-label">Password <small class="text-danger">*</small></label>
+                                <input type="text" asp-for="@Model.userVM.Password" class="form-control" placeholder="Enter Password" required />
+                                <span asp-validation-for="@Model.userVM.Password" class="text-danger"></span>
                             </div>
                         </div>
 
                         <div class="col-lg-6">
                             <div>
-                                <label for="@Model.userVM.Phone" class="form-label">@(sharedResource["Phone"])</label>
-                                <input type="email" asp-for="@Model.userVM.Phone" class="form-control" placeholder="Enter Email" required />
+                                <label for="@Model.userVM.Email" class="form-label">Email</label>
+                                <input type="email" asp-for="@Model.userVM.Email" class="form-control" placeholder="Enter Email" required />
+                            </div>
+                        </div>
+
+
+                       
+
+                        <div class="col-lg-6">
+                            <div>
+                                <label for="@Model.userVM.Phone" class="form-label">Phone <small class="text-danger">*</small></label>
+                                <input type="text" asp-for="@Model.userVM.Phone" class="form-control" placeholder="Enter Phone" required />
                                 <span asp-validation-for="@Model.userVM.Phone" class="text-danger"></span>
                             </div>
                         </div>
-                        
-                        
+
+                        <div class="col-lg-6">
+                            <div>
+                                <label for="@Model.userVM.Address" class="form-label">Address</label>
+                                <input type="text" asp-for="@Model.userVM.Address" class="form-control" placeholder="Enter Address" required />
+                                <span asp-validation-for="@Model.userVM.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <label for="car-rental-name">Role <small class="text-danger">*</small></label>
+
+                            <select asp-for="@Model.userVM.EntityType" id="RoleSelect" onclick="ChooseBranch(this.value)" class="form-select required" aria-label="Default select example" required>
+                                <option selected disabled value="0">Select Role</option>
+                                <option value="Admin">Admin</option>
+                                <option value="GeneralManager"> General Manager</option>
+                                <option value="Branchmanager">Branch manager</option>
+                                <option value="Branchaccountant">Branch accountant</option>
+                            </select>
+                            <span asp-validation-for="@Model.userVM.EntityType" class="text-danger"></span>
+
+                        </div>
+
+
+                        <div class="col-lg-12" id="BranchDiv" style="display:none">
+                            <label for="car-rental-name">Branch <small class="text-danger">*</small></label>
+
+                            <select  id="BranchSelect" asp-for="@Model.userVM.BranchId" class="form-select required" aria-label="Default select example" required>
+                                <span asp-validation-for="@Model.userVM.BranchId" class="text-danger"></span>
+
+                            </select>
+
+                        </div>
 
 
                        
@@ -163,8 +189,8 @@
                 </div>
                 <div class="modal-footer">
                     <div class="hstack gap-2 justify-content-end">
-                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">@sharedResource["Close"]</button>
-                        <button type="submit" asp-page="Index" asp-page-handler="AddCoupon" class="btn btn-success" id="add-btn">@sharedResource["Add"]</button>
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" asp-area="admin" asp-page="/UserManagment/Index" asp-page-handler="AddUser" class="btn btn-success" id="add-btn">Add</button>
                     </div>
                 </div>
             </form>
@@ -172,3 +198,54 @@
         </div>
     </div>
 </div>
+<script>
+
+
+
+    function ChooseBranch(Id) {
+        console.log(Id);
+
+        // AJAX Request
+        if (Id == 'Branchmanager' || Id == "Branchaccountant") {
+            $.ajax({
+                url: "/admin/UserManagment?handler=GetBranches", // Adjust if using Razor Pages convention
+                type: 'GET',
+                success: function (data) {
+                    console.log(data);
+
+                    // Assuming `data` is an array of branch objects with `id` and `name` properties
+                    const branchSelect = document.getElementById('BranchSelect');
+                    branchSelect.innerHTML = ''; // Clear existing options
+
+                    // Add default "Select a branch" option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.textContent = 'Select a branch';
+                    defaultOption.value = '';
+                    defaultOption.disabled = true;
+                    defaultOption.selected = true;
+                    branchSelect.appendChild(defaultOption);
+
+                    // Append new options from data
+                    data.forEach(branch => {
+                        const option = document.createElement('option');
+                        option.value = branch.BranchId; // Assuming the branch ID is `id`
+                        option.textContent = branch.BranchName; // Assuming the branch name is `name`
+                        branchSelect.appendChild(option);
+                    });
+                    // Add the required attribute to the <select> element
+                    branchSelect.setAttribute('required', 'required');
+
+                    // Show the BranchDiv
+                    document.getElementById('BranchDiv').style.display = 'block';
+                },
+                error: function (error) {
+                    console.error('Error loading branches:', error);
+                }
+            });
+        }
+        else{
+
+document.getElementById('BranchDiv').style.display = 'none';
+        }
+    }
+</script>

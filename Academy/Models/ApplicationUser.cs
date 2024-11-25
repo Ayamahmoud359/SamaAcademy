@@ -9,5 +9,7 @@ namespace Academy.Models
         public string? Image { get; set; }
         public string? FullName { get; set; }
         public string? Address { get; set; }
+        public int? BranchId { get; set; }
+
     }
 }
