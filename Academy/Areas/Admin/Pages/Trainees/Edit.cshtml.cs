@@ -38,16 +38,16 @@ namespace Academy.Areas.Admin.Pages.Trainees
 
         public Trainee Trainee { get; set; }
 
-        public class Country
-        {
-            public Name Name { get; set; }
-            public string Cca2 { get; set; }
-        }
+        //public class Country
+        //{
+        //    public Name Name { get; set; }
+        //    public string Cca2 { get; set; }
+        //}
 
-        public class Name
-        {
-            public string Common { get; set; }
-        }
+        //public class Name
+        //{
+        //    public string Common { get; set; }
+        //}
         public async Task<IActionResult> OnGetAsync(int? id)
         {
 
@@ -57,18 +57,29 @@ namespace Academy.Areas.Admin.Pages.Trainees
                Trainee= await _context.Trainees.FirstOrDefaultAsync(m => m.TraineeId == id);
                 if (Trainee != null)
                 {
-                    using (var client = new HttpClient())
+
+                    await CountryData.InitializeAsync();
+
+                    var countries = CountryData.GetCountries();
+
+                    Nationalities = countries.Select(c => new SelectListItem
                     {
-                        var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
-                        var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+                        Text = c.Name,
+                        Value = c.Code
+                    }).ToList();
 
-                        Nationalities = countries.Select(c => new SelectListItem
-                        {
-                            Text = c.Name.Common,
-                            Value = c.Cca2
-                        }).ToList();
+                    //using (var client = new HttpClient())
+                    //{
+                    //    var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                    //    var countries = JsonConvert.DeserializeObject<List<Country>>(response);
 
-                    }
+                    //    Nationalities = countries.Select(c => new SelectListItem
+                    //    {
+                    //        Text = c.Name.Common,
+                    //        Value = c.Cca2
+                    //    }).ToList();
+
+                    //}
                     return Page();
                 }
                 return RedirectToPage("../NotFound");
@@ -90,18 +101,27 @@ namespace Academy.Areas.Admin.Pages.Trainees
 
             try
             {
-                using (var client = new HttpClient())
+
+                var countries = CountryData.GetCountries();
+
+                Nationalities = countries.Select(c => new SelectListItem
                 {
-                    var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
-                    var countries = JsonConvert.DeserializeObject<List<Country>>(response);
+                    Text = c.Name,
+                    Value = c.Code
+                }).ToList();
 
-                    Nationalities = countries.Select(c => new SelectListItem
-                    {
-                        Text = c.Name.Common,
-                        Value = c.Cca2
-                    }).ToList();
+                //using (var client = new HttpClient())
+                //{
+                //    var response = await client.GetStringAsync("https://restcountries.com/v3.1/all");
+                //    var countries = JsonConvert.DeserializeObject<List<Country>>(response);
 
-                }
+                //    Nationalities = countries.Select(c => new SelectListItem
+                //    {
+                //        Text = c.Name.Common,
+                //        Value = c.Cca2
+                //    }).ToList();
+
+                //}
 
                 var TraineeToEdit = await _context.Trainees.FirstOrDefaultAsync(m => m.TraineeId == Trainee.TraineeId);
                 if (Trainee.UserName != TraineeToEdit.UserName)
