@@ -174,7 +174,10 @@ namespace Academy.Controllers
                 {
                     trainer.TrainerAddress = updateUserProfileDTO.Address;
                 }
-              
+                //if(updateUserProfileDTO.Image != null)
+                //{
+                //    //trainer.Image = updateUserProfileDTO.Image;
+                //}
                
         
                 // Save changes
@@ -220,7 +223,10 @@ namespace Academy.Controllers
                 {
                     parent.ParentAddress = updateUserProfileDTO.Address;
                 }
-              
+                //if (updateUserProfileDTO.Image != null)
+                //{
+                //    //parent.Image = updateUserProfileDTO.Image;
+                //}
                
                
 
@@ -594,7 +600,6 @@ namespace Academy.Controllers
                     ExamDate = evaluationDTO.EvaluationDate,
                     Review = evaluationDTO.Review,
                     Score = evaluationDTO.Score,
-                    
                     SubscriptionId = evaluationDTO.SubscriptionId,
                     IsDeleted = false,
                 };
@@ -1128,6 +1133,266 @@ namespace Academy.Controllers
         #endregion
 
 
+        #region CompetitionTeams
+        [HttpGet]
+        [Route("GetAllChildrenByTeamId")]
+        public async Task<ActionResult> GetAllChildrenByTeamId(int TeamId)
+        {
+            try
+            {
+                var children = await _context.TraineeCompetitionTeams.Where(e => e.CompetitionTeamId == TeamId && e.IsActive)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.IsActive,
+                        e.TraineeId,
+                        e.CompetitionTeamId,
+                        Trainee = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).Select(a => new { a.TraineeId, a.TraineeName, a.TraineePhone, a.TraineeEmail, a.Image, a.IsActive }).FirstOrDefault(),
+                    }).ToListAsync();
+
+                return Ok(new { status = true, children });
+
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+
+
+        }
+
+        #endregion
+
+
+
+        #region CompetitionTeamEvaluation
+        [HttpPost]
+        [Route("AddCompetitionTeamEvaluationToChild")]
+        public async Task<ActionResult> AddCompetitionTeamEvaluationToChild([FromBody] AddCompetitionTeamEvaluationDTO evaluationDTO)
+        {
+            try
+            {
+                var evaluation = new CompetitionTeamEvaluation
+                {
+                    TrainerId = evaluationDTO.TrainerId,
+                    Date = evaluationDTO.EvaluationDate,
+                    Review = evaluationDTO.Review,
+                    Score = evaluationDTO.Score,
+                    TraineeCompetitionTeamId = evaluationDTO.TraineeCompetitionTeamId,
+                    IsDeleted = false,
+                };
+                _context.CompetitionTeamEvaluations.Add(evaluation);
+                await _context.SaveChangesAsync();
+                return Ok(new { status = true, message = "Evaluation added successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("GetEvaluationListByTraineeTeamId")]
+        public async Task<ActionResult> GetEvaluationListByTraineeTeamId(int childTeamId)
+        {
+            try
+            {
+                var evaluationList = await _context.CompetitionTeamEvaluations.Where(e => e.TraineeCompetitionTeamId == childTeamId && e.IsDeleted == false).Select(e => new
+                {
+                    e.CompetitionTeamEvaluationId,
+                    e.Date,
+                    e.Score,
+                    e.Review,
+                    e.TraineeCompetitionTeamId,
+                    e.IsDeleted,
+                    Trainer = _context.Trainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.TrainerId, a.TrainerName, a.TrainerEmail, a.TrainerPhone, a.Image, a.IsActive }).FirstOrDefault(),
+                    Team = _context.CompetitionTeam.Where(a => a.IsActive && a.Id == _context.TraineeCompetitionTeams.Where(b => b.IsActive && b.Id == e.TraineeCompetitionTeamId).FirstOrDefault().CompetitionTeamId).Select(a => new { a.Id, a.Name, a.Image, a.IsActive }).FirstOrDefault(),
+                }).ToListAsync();
+                return Ok(new { status = true, data = evaluationList });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+        #endregion
+
+
+
+        #region CompetitionTeamAttendance
+
+        [HttpPost]
+        [Route("AddAttendanceToTeamChildren")]
+        public async Task<ActionResult> AddAttendanceToTeamChildren([FromBody] List<AddCompetitionTeamAttendanceDTO> attendanceList)
+        {
+            try
+            {
+                if (attendanceList == null || !attendanceList.Any())
+                {
+                    return Ok(new { status = false, message = "Attendance list is empty!" });
+                }
+                foreach (var record in attendanceList)
+                {
+                    var attendance = new CompetitionTeamAbsence
+                    {
+                        TrainerId = record.TrainerId,
+                        AbsenceDate = record.Date,
+                        IsAbsent = record.IsAbsent,
+                        TraineeCompetitionTeamId = record.TraineeCompetitionTeamId,
+                        Type = record.Type,
+                        IsDeleted = false,
+                    };
+                    _context.CompetitionTeamAbsences.Add(attendance);
+                }
+
+
+                await _context.SaveChangesAsync();
+                return Ok(new { status = true, message = "Attendance added successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
+        [HttpGet]
+        [Route("GetAttendanceToTeamChildren")]
+        public async Task<ActionResult> GetAttendanceToTeamChildren(int teamId)
+        {
+            try
+            {
+                // Check if the team exists and is active
+                var team = await _context.CompetitionTeam.Where(e => e.Id == teamId && e.IsActive)
+                    .FirstOrDefaultAsync();
+
+                if (team == null)
+                {
+                    return Ok(new { status = false, message = "Team not found!" });
+                }
+
+                // Fetch attendance records for the given category
+                var attendances = await _context.CompetitionTeamAbsences
+                    .Include(e => e.TraineeCompetitionTeam) // Include related subscription
+                    .Where(e => e.TraineeCompetitionTeam != null && e.TraineeCompetitionTeam.CompetitionTeamId == teamId)
+                    .GroupBy(a => a.AbsenceDate) // Group by date
+                    .Select(group => new
+                    {
+                        Date = group.Key,
+                        Records = group.Select(a => new
+                        {
+                            a.CompetitionTeamAbsenceId,
+                            a.AbsenceDate,
+                            a.IsAbsent,
+                            a.Type,
+                            a.TraineeCompetitionTeamId,
+                            a.IsDeleted,
+                            a.TrainerId,
+
+                            //Subscription = new
+                            //{
+                            //    a.Subscription!.SubscriptionId,
+                            //    a.Subscription.StartDate,
+                            //    a.Subscription.EndDate,
+                            //    a.Subscription.IsActive,
+                            //    a.Subscription.CategoryId,
+                            //    a.Subscription.TraineeId
+                            //},
+
+                            //Child = _context.Trainees
+                            //    .Where(t => t.IsActive && t.TraineeId == a.Subscription!.TraineeId)
+                            //    .Select(t => new
+                            //    {
+                            //        t.TraineeId,
+                            //        t.TraineeName,
+                            //        t.TraineePhone,
+                            //        t.TraineeEmail,
+                            //        t.Image,
+                            //        t.IsActive
+                            //    })
+                            //    .FirstOrDefault(),
+
+                            //Trainer = _context.Trainers
+                            //    .Where(t => t.IsActive && t.TrainerId == a.TrainerId)
+                            //    .Select(t => new
+                            //    {
+                            //        t.TrainerId,
+                            //        t.TrainerName,
+                            //        t.TrainerEmail,
+                            //        t.TrainerPhone,
+                            //        t.Image,
+                            //        t.IsActive
+                            //    })
+                            //    .FirstOrDefault()
+
+                        }).ToList()
+                    })
+                    .OrderBy(summary => summary.Date)
+                    .ToListAsync();
+
+                return Ok(new { status = true, attendances });
+            }
+            catch (Exception ex)
+            {
+                // Return error details
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
+        // Get attendance records for a specific subscription
+        [HttpGet("GetAttendanceByTraineeCompetitionTeamId")]
+        public async Task<IActionResult> GetAttendanceByTraineeCompetitionTeamId(int traineeCompetitionTeamId)
+        {
+            try
+            {
+                // Validate if the subscription exists
+                var child = await _context.TraineeCompetitionTeams
+                    .Where(s => s.Id == traineeCompetitionTeamId && s.IsActive && s.IsDeleted == false)
+                    .FirstOrDefaultAsync();
+
+                if (child == null)
+                {
+                    return Ok(new { status = false, message = "Child not found!" });
+                }
+
+                // Fetch attendance records for the given subscription
+                var attendanceRecords = await _context.CompetitionTeamAbsences
+                    .Where(a => a.TraineeCompetitionTeamId == traineeCompetitionTeamId)
+                    .OrderBy(a => a.AbsenceDate) // Order by date
+                    .Select(a => new
+                    {
+                        a.CompetitionTeamAbsenceId,
+                        a.AbsenceDate,
+                        a.IsAbsent,
+                        a.Type,
+                        a.TrainerId,
+                        Trainer = _context.Trainers
+                            .Where(t => t.IsActive && t.TrainerId == a.TrainerId)
+                            .Select(t => new
+                            {
+                                t.TrainerId,
+                                t.TrainerName,
+                                t.TrainerEmail,
+                                t.TrainerPhone,
+                                t.Image
+                            })
+                            .FirstOrDefault()
+                    })
+                    .ToListAsync();
+
+                return Ok(new { status = true, attendanceRecords });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
+        #endregion
 
 
 

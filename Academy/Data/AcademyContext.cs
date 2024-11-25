@@ -30,8 +30,10 @@ namespace Academy.Data
         public virtual DbSet<Trainer> Trainers { get; set; }
         public virtual DbSet<Champion> Champions { get; set; }
         public virtual DbSet<Absence> Abscenses { get; set; }
+        public virtual DbSet<CompetitionTeamAbsence> CompetitionTeamAbsences { get; set; }
         public virtual DbSet<Subscription> Subscriptions { get; set; }
         public virtual DbSet<Exam> Exams { get; set; }
+        public virtual DbSet<CompetitionTeamEvaluation> CompetitionTeamEvaluations { get; set; }
         public virtual DbSet<Banner> Banners { get; set; }
         public virtual DbSet<TrainerCategories> CategoryTrainers { get; set; }
         // public virtual DbSet<SubCategoryTrainer> SubCategoryTrainer { get; set; }

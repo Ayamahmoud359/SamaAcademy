@@ -57,8 +57,8 @@
     <None Include="wwwroot\lib\jquery\dist\jquery.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DevExtreme.AspNet.Core" Version="21.2.6" />
-    <PackageReference Include="DevExtreme.AspNet.Data" Version="3.0.0" />
+	<PackageReference Include="DevExtreme.AspNet.Data" Version="4.0.2" />
+	<PackageReference Include="DevExtreme.AspNet.Core" Version="24.1.7" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />

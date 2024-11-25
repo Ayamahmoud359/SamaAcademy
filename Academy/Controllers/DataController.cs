@@ -45,7 +45,9 @@ namespace Academy.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers(DataSourceLoadOptions loadOptions)
         {
-            IQueryable<UsersDataGridVM> users = _UserManger.Users.Select(i => new UsersDataGridVM()
+            IQueryable<UsersDataGridVM> users = _UserManger.Users
+                .Where(e=> e.EntityName == "Admin" || e.EntityName == "GeneralManager" || e.EntityName == "Branchmanager" || e.EntityName == "Branchaccountant")
+                .Select(i => new UsersDataGridVM()
             {
                 Id = i.Id,
                 FullName = i.FullName,
