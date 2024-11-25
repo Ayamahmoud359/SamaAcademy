@@ -25,7 +25,9 @@ namespace Academy.Areas.Admin.Pages.UserManagment
         }
         public IActionResult OnGetGetBranches()
         {
-            var branchs = _context.Branches.ToList();
+            var branchs = _context.Branches
+                .Where(b => b.IsActive == true && !b.IsDeleted)
+                .ToList();
             return new JsonResult(branchs);
         }
         public async Task<IActionResult> OnPostAddUser()
