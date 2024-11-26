@@ -1039,7 +1039,16 @@ namespace Academy.Controllers
                 {
                     return Ok(new { status = false, message = "team not found!" });
                 }
-                var teamChildren = await _context.TraineeCompetitionTeams.Where(e => e.IsActive && !e.IsDeleted && e.CompetitionTeamId == teamId).ToListAsync();
+                var teamChildren = await _context.TraineeCompetitionTeams.Where(e => e.IsActive && !e.IsDeleted && e.CompetitionTeamId == teamId)
+                    .Select(e => new
+                    {
+                        e.Id,
+                        e.IsActive,
+                        e.TraineeId,
+                        e.CompetitionTeamId,
+                        Trainee = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).Select(a => new { a.TraineeId, a.TraineeName, a.TraineePhone, a.TraineeEmail, a.Image, a.IsActive , a.TraineeAddress, a.BirthDate }).FirstOrDefault(),
+                    })
+                    .ToListAsync();
                 return Ok(new { status = true, teamChildren });
             }
             catch (Exception ex)
