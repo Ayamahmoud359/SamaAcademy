@@ -99,6 +99,42 @@ namespace Academy.Controllers
             return Ok(new { status = false, message = "Password change failed!" });
         }
         #endregion
+
+        #region ForgetPassword
+        [HttpPost]
+        [Route("ForgetPassword")]
+        public async Task<IActionResult> ForgetPassword(string login, string newPassword, string confirmNewPassword)
+        {
+
+            var user = await _userManager.FindByEmailAsync(login)
+                  ?? await _userManager.FindByNameAsync(login);
+
+           
+            if (user != null)
+            {
+                if(newPassword != confirmNewPassword)
+                {
+                    return Ok(new { status = false, message = "Passwords do not match!" });
+                }
+                // Update the password
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var result = await _userManager.ResetPasswordAsync(user, token, newPassword);
+                if (result.Succeeded)
+                {
+                    return Ok(new { status = true, message = "Password reset successfully!" });
+                }
+
+
+                
+            }
+
+            // Return an invalid response
+            return Ok(new { status = false, message = "Invalid user" });
+        }
+
+        #endregion
+
+
         #region GetDepartmetsById 
         [HttpGet]
         [Route("GetDepartmetsByBranchId")]
