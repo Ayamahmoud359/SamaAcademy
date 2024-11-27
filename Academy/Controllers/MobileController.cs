@@ -246,6 +246,58 @@ namespace Academy.Controllers
             return Ok(new { status = false, message = "User type not found!" });
         }
 
+
+        [HttpPost]
+        [Route("UpdateChildData")]
+        public async Task<IActionResult> UpdateChildData([FromForm] UpdateChildProfileDTO updateChildProfileDTO, IFormFile? Pic)
+        {
+            try
+            {
+                var child = await _context.Trainees.FirstOrDefaultAsync(e => e.TraineeId == updateChildProfileDTO.TraineeId);
+
+                if (child == null)
+                {
+                    return Ok(new { status = false, message = "Child not found!" });
+                }
+                if(updateChildProfileDTO.TraineeName != null)
+                {
+                    child.TraineeName = updateChildProfileDTO.TraineeName;
+
+                }
+                if (updateChildProfileDTO.TraineePhone != null)
+                {
+                    child.TraineePhone = updateChildProfileDTO.TraineePhone;
+
+                }
+                if (updateChildProfileDTO.BirthDate != null)
+                {
+                    child.BirthDate = updateChildProfileDTO.BirthDate;
+
+                }
+                if (updateChildProfileDTO.TraineeAddress != null)
+                {
+                    child.TraineeAddress = updateChildProfileDTO.TraineeAddress;
+
+                }
+                if (Pic != null)
+                {
+                    child.Image = await UploadImage("uploads/Users/", Pic);
+
+                }
+                _context.Trainees.Update(child);
+                await _context.SaveChangesAsync();
+                return Ok(new { status = true, message = "Child profile updated successfully!" });
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+
+           
+        }
+
+
         #endregion
 
         #region GetCategoriesByDepartmentId
