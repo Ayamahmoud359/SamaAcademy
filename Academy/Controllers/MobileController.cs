@@ -60,17 +60,49 @@ namespace Academy.Controllers
                 if (result.Succeeded)
                 {
                     // Determine the user type and return the appropriate response
-                    if (user.EntityId != null && user.EntityName == "Trainer")
+                    // 1- Trainer
+                    if (user.EntityName == "Trainer")
                     {
                         var trainer = await _context.Trainers
                             .FirstOrDefaultAsync(e => e.TrainerId == user.EntityId);
                         return Ok(new { status = true,userId = user.Id, type_id = 1, message = "User logged in successfully!", trainer });
                     }
-                    if (user.EntityId != null && user.EntityName == "Parent")
+                    // 2- Parent
+                    if (user.EntityName == "Parent")
                     {
                         var parent = await _context.Parents
                             .FirstOrDefaultAsync(e => e.ParentId == user.EntityId);
                         return Ok(new { status = true, userId = user.Id, type_id = 2, message = "User logged in successfully!", parent });
+                    }
+
+                    // 3- Trainee
+                    if (user.EntityName == "Trainee")
+                    {
+                        var trainee = await _context.Trainees
+                            .FirstOrDefaultAsync(e => e.TraineeId == user.EntityId);
+                        return Ok(new { status = true, userId = user.Id, type_id = 3, message = "User logged in successfully!", trainee });
+                    }
+
+                    // 4- Admin
+                    if (user.EntityName == "Admin")
+                    {
+                        return Ok(new { status = true, userId = user.Id, type_id = 4, message = "User logged in successfully!", user });
+                    }
+
+                    // 5- GeneralManager
+                    if (user.EntityName == "GeneralManager")
+                    {
+                       return Ok(new { status = true, userId = user.Id, type_id = 5, message = "User logged in successfully!", user });
+                    }
+                    // 6- BranchManager
+                    if (user.EntityName == "BranchManager")
+                    {
+                        return Ok(new { status = true, userId = user.Id, type_id = 6, message = "User logged in successfully!", user });
+                    }
+                    // 7- BranchAccountant
+                    if (user.EntityName == "BranchAccountant")
+                    {
+                        return Ok(new { status = true, userId = user.Id, type_id = 7, message = "User logged in successfully!", user });
                     }
                 }
             }
