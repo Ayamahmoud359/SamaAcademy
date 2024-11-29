@@ -1536,7 +1536,7 @@ namespace Academy.Controllers
                 {
                     return Ok(new { status = false, message = "User not found!" });
                 }
-                var userRoles = await _userManager.GetRolesAsync(user);
+                //var userRoles = await _userManager.GetRolesAsync(user);
                 var userDetails = new
                 {
                     user.Id,
@@ -1548,7 +1548,7 @@ namespace Academy.Controllers
                     user.EntityName,
                     user.BranchId,
                     user.Image,
-                    userRoles
+                  //  userRoles
                 };
                 return Ok(new { status = true, data = userDetails });
             }
