@@ -1524,6 +1524,45 @@ namespace Academy.Controllers
         #endregion
 
 
+        #region GetUserDetailsById
+        [HttpGet]
+        [Route("GetUserDetailsById")]
+        public async Task<ActionResult> GetUserDetailsById(string userId)
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    return Ok(new { status = false, message = "User not found!" });
+                }
+                var userRoles = await _userManager.GetRolesAsync(user);
+                var userDetails = new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.PhoneNumber,
+                    user.Address,
+                    user.FullName,
+                    user.EntityName,
+                    user.BranchId,
+                    userRoles
+                };
+                return Ok(new { status = true, data = userDetails });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+                
+           
+           
+        }
+
+        #endregion
+
+
 
     }
 }
