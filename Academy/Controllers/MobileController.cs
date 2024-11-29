@@ -1547,6 +1547,7 @@ namespace Academy.Controllers
                     user.FullName,
                     user.EntityName,
                     user.BranchId,
+                    user.Image,
                     userRoles
                 };
                 return Ok(new { status = true, data = userDetails });
