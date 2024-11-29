@@ -31,6 +31,7 @@ namespace Academy.Seeding
                     UserName = adminEmail,
                     Email = adminEmail,
                     EmailConfirmed = true,
+                    FullName = "Admin",
                     EntityName = "Admin",
                 };
 

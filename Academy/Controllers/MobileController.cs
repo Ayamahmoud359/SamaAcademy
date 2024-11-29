@@ -316,6 +316,67 @@ namespace Academy.Controllers
 
 
         [HttpPost]
+        [Route("UpdateIdentityUserProfile")]
+        public async Task<IActionResult> UpdateIdentityUserProfile([FromForm] UpdateUserProfileDTO updateUserProfileDTO, IFormFile? Pic)
+        {
+            // Find the user in the Identity system
+            var user = await _userManager.FindByIdAsync(updateUserProfileDTO.UserId);
+            if (user == null)
+            {
+                return Ok(new { status = false, message = "User not found!" });
+            }
+
+            // Update the profile based on the EntityName
+            if (user != null)
+            {
+               
+
+                // Update Trainer fields
+                if (updateUserProfileDTO.Name != null)
+                {
+                    user.FullName = updateUserProfileDTO.Name;
+                }
+                if (Pic != null)
+                {
+                    user.Image = await UploadImage("uploads/Users/", Pic);
+
+                }
+
+                if (updateUserProfileDTO.Email != null)
+                {
+                   
+                    user.Email = updateUserProfileDTO.Email;
+                }
+                if (updateUserProfileDTO.Phone != null)
+                {
+                    user.PhoneNumber = updateUserProfileDTO.Phone;
+                }
+                if (updateUserProfileDTO.Address != null)
+                {
+                    user.Address = updateUserProfileDTO.Address;
+                }
+              
+
+                // Save changes
+               
+                var userUpdateResult = await _userManager.UpdateAsync(user);
+                if (!userUpdateResult.Succeeded)
+                {
+                    return Ok(new { status = false, message = "Failed to update user profile in Identity!" });
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok(new { status = true, message = "User profile updated successfully!" });
+            }
+            
+          
+            return Ok(new { status = false, message = "User not found!" });
+        }
+
+
+
+
+        [HttpPost]
         [Route("UpdateChildData")]
         public async Task<IActionResult> UpdateChildData([FromForm] UpdateChildProfileDTO updateChildProfileDTO, IFormFile? Pic)
         {
