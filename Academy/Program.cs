@@ -4,6 +4,7 @@ using Academy.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NToastNotify;
+using Academy.Seeding;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.Password.RequireNonAlphanumeric = false; // Requires at least one special character
     options.Password.RequiredLength = 6; // Minimum length of the password
 })
+.AddRoles<IdentityRole>()
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
@@ -78,6 +80,16 @@ else
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+// Seed roles and admin user
+using (var scope = app.Services.CreateScope())
+{
+    var serviceProvider = scope.ServiceProvider;
+    await DataSeeder.SeedRolesAndAdminUser(serviceProvider);
+}
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
