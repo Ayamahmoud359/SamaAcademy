@@ -8,15 +8,15 @@ namespace Academy.Seeding
         public static async Task SeedRolesAndAdminUser(IServiceProvider serviceProvider)
         {
             // Get required services
-            //var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
             // Create the Admin role if it doesn't exist
-            //string adminRoleName = "Admin";
-            //if (!await roleManager.RoleExistsAsync(adminRoleName))
-            //{
-            //    await roleManager.CreateAsync(new IdentityRole(adminRoleName));
-            //}
+            string adminRoleName = "Admin";
+            if (!await roleManager.RoleExistsAsync(adminRoleName))
+            {
+                await roleManager.CreateAsync(new IdentityRole(adminRoleName));
+            }
 
             // Create the Admin user if it doesn't exist
             string adminEmail = "admin@info.com";
@@ -36,9 +36,17 @@ namespace Academy.Seeding
                 if (createUserResult.Succeeded)
                 {
                     // Assign the Admin role to the user
-                    //await userManager.AddToRoleAsync(adminUser, adminRoleName);
+                    await userManager.AddToRoleAsync(adminUser, adminRoleName);
                 }
             }
+            //if(adminUser != null)
+            //{
+            //    if(!await userManager.IsInRoleAsync(adminUser, adminRoleName))
+            //    {
+            //        await userManager.AddToRoleAsync(adminUser, adminRoleName);
+            //    }
+              
+            //}
         }
     }
 
