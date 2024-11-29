@@ -13,9 +13,11 @@ namespace Academy.Seeding
 
             // Create the Admin role if it doesn't exist
             string adminRoleName = "Admin";
-            if (!await roleManager.RoleExistsAsync(adminRoleName))
+            var adminRole = await roleManager.FindByNameAsync(adminRoleName);
+            if (adminRole == null)
             {
-                await roleManager.CreateAsync(new IdentityRole(adminRoleName));
+                adminRole = new IdentityRole(adminRoleName);
+                await roleManager.CreateAsync(adminRole);
             }
 
             // Create the Admin user if it doesn't exist

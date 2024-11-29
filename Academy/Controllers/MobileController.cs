@@ -1574,6 +1574,16 @@ namespace Academy.Controllers
         }
         #endregion
 
+        #region Trainers 
+        [HttpGet]
+        [Route("GetAllTrainers")]
+        public async Task<IActionResult> GetAllTrainers()
+        {
+            var trainers = await _context.Trainers.Where(e => e.IsActive && !e.IsDeleted).ToListAsync();
+            return Ok(new { status = true, data = trainers });
+        }
+        #endregion
+
 
 
     }
