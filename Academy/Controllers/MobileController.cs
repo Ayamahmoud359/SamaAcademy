@@ -1564,6 +1564,17 @@ namespace Academy.Controllers
         #endregion
 
 
+        #region Parents 
+        [HttpGet]
+        [Route("GetAllParents")]
+        public async Task<IActionResult> GetAllParents()
+        {
+            var parents = await _context.Parents.Where(e => e.IsActive && !e.IsDeleted).ToListAsync();
+            return Ok(new { status = true, data = parents });
+        }
+        #endregion
+
+
 
     }
 }
