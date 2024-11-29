@@ -1168,7 +1168,30 @@ namespace Academy.Controllers
                 {
                     return Ok(new { status = false, message = "Department not found!" });
                 }
-                var teams = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.CompetitionDepartmentId == departmentId).ToListAsync();
+                var teams = await _context.CompetitionTeam.Where(e => e.IsActive && !e.IsDeleted && e.CompetitionDepartmentId == departmentId)
+                    .Select(e=> new
+                    {
+                        e.Id,
+                        e.Name,
+                        e.TrainerId,
+                        e.Image,
+                        e.IsActive,
+                        e.IsDeleted,
+                        e.CompetitionDepartmentId,
+                        Trainer = _context.Trainers.Where(t=> t.TrainerId == e.TrainerId && t.IsActive && !t.IsDeleted)
+                        .Select(tt=> new
+                        {
+                            tt.TrainerId,
+                            tt.Image,
+                            tt.IsActive,
+                            tt.IsDeleted,
+                            tt.TrainerName,
+                            tt.TrainerPhone,
+                            tt.TrainerEmail,
+                            tt.TrainerAddress,
+                        }).FirstOrDefault()
+                    })
+                    .ToListAsync();
                 return Ok(new { status = true, teams });
             }
             catch (Exception ex)
