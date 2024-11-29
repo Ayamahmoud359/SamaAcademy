@@ -450,8 +450,15 @@ namespace Academy.Controllers
                     e.IsActive,
                     e.DepartmentId,
                     DepartmentName = _context.Departments.Where(a => a.IsActive && a.DepartmentId == e.DepartmentId).FirstOrDefault().DepartmentName,
+                    Trainers = _context.CategoryTrainers
+                    .Where(a => a.IsActive && a.CategoryId == e.CategoryId)
+                    .Select(a => new 
+                        {    a.TrainerId,
+                            TrainerData = _context.Trainers.Where(b => b.IsActive && b.TrainerId == a.TrainerId).Select(b => new { b.TrainerId, b.TrainerName, b.TrainerEmail, b.TrainerPhone, b.Image, b.IsActive }).FirstOrDefault()
+                        }).ToList()
 
-                }).FirstOrDefaultAsync();
+
+                    }).FirstOrDefaultAsync();
                 return Ok(new { status = true,data = category });
             }
             catch (Exception ex) {
