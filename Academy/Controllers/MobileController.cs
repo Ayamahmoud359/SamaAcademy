@@ -1675,6 +1675,54 @@ namespace Academy.Controllers
         }
         #endregion
 
+        [HttpPost]
+        [Route("EditChildSubscription")]
+        public async Task<IActionResult> EditChildSubscription(EditSubscriptionVM SubscriptionVM)
+        {
+            try
+            {
+                var oldSubscription = _context.Subscriptions.FirstOrDefault(e => e.SubscriptionId == SubscriptionVM.SubscriptionId);
+                if (oldSubscription != null)
+                {
+                    if (SubscriptionVM.EndDate == SubscriptionVM.StartDate || SubscriptionVM.EndDate < SubscriptionVM.StartDate)
+                    {
+                        return Ok(new { status = false, message = "EndDate must be greater than StartDate" });
+
+                    }
+
+
+                    if (SubscriptionVM.StartDate != null)
+                    {
+                        oldSubscription.StartDate = SubscriptionVM.StartDate;
+                    }
+                    if (SubscriptionVM.EndDate != null)
+                    {
+                        oldSubscription.EndDate = SubscriptionVM.EndDate;
+
+                    }
+                    if (SubscriptionVM.IsActive != null)
+                    {
+                        var oldActiveValue = oldSubscription.IsActive;
+                        oldSubscription.IsActive = SubscriptionVM.IsActive ?? oldActiveValue;
+
+                    }
+                    _context.Attach(oldSubscription).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+                    return Ok(new { status = true, message = "Subscription updated successfully" });
+                }
+
+                return Ok(new { status = false, message = "Subscription not found" });
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+
+            }
+
+
+        }
+
 
 
     }
