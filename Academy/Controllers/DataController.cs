@@ -53,7 +53,8 @@ namespace Academy.Controllers
                 FullName = i.FullName,
                 Email = i.Email,
                 Phone = i.PhoneNumber,
-                UserName= i.UserName
+                UserName= i.UserName,
+                Role= i.EntityName,
 
             });
             return Json(await DataSourceLoader.LoadAsync(users, loadOptions));
