@@ -1739,7 +1739,7 @@ namespace Academy.Controllers
         }
 
 
-        #region BranchChildrenSearch
+        #region ChildrenSearch
 
         [HttpGet]
         [Route("GetBranchChildrenSearch")]
@@ -1761,6 +1761,54 @@ namespace Academy.Controllers
                                    
                                     .ThenInclude(c => c.Department)
                                     .Select(e=> new
+                                    {
+                                        e.SubscriptionId,
+                                        e.StartDate,
+                                        e.EndDate,
+                                        e.IsActive,
+                                        e.TraineeId,
+                                        Trainee = new
+                                        {
+                                            e.Trainee.TraineeId,
+                                            e.Trainee.TraineeName,
+                                            e.Trainee.TraineePhone,
+                                            e.Trainee.TraineeEmail,
+                                            e.Trainee.Image,
+                                            e.Trainee.IsActive,
+                                            e.Trainee.ParentId,
+                                            e.Trainee.BirthDate,
+                                        }
+                                    })
+                                    .ToListAsync();
+                return Ok(new { status = true, data = children });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+
+            }
+
+
+
+        }
+
+        [HttpGet]
+        [Route("GetCategoryChildrenSearch")]
+        public async Task<IActionResult> GetCategoryChildrenSearch(int CategoryId, string Search)
+        {
+            try
+            {
+                var category = _context.Categories.FirstOrDefault(e => e.CategoryId == CategoryId);
+                if (category == null)
+                {
+                    return Ok(new { status = false, message = "Category not found!" });
+                }
+                var children = await _context.Subscriptions
+                                    .Where(ch => ch.CategoryId == CategoryId &&
+                                                 (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.Contains(Search)))
+
+                                    .Include(ch => ch.Trainee)
+                                    .Select(e => new
                                     {
                                         e.SubscriptionId,
                                         e.StartDate,
