@@ -1526,48 +1526,43 @@ namespace Academy.Controllers
                             a.IsDeleted,
                             a.TrainerId,
 
-                            //Subscription = new
-                            //{
-                            //    a.Subscription!.SubscriptionId,
-                            //    a.Subscription.StartDate,
-                            //    a.Subscription.EndDate,
-                            //    a.Subscription.IsActive,
-                            //    a.Subscription.CategoryId,
-                            //    a.Subscription.TraineeId
-                            //},
+                            Child = _context.Trainees
+                                .Where(t => t.IsActive && t.TraineeId == a.TraineeCompetitionTeam.TraineeId)
+                                .Select(t => new
+                                {
+                                    t.TraineeId,
+                                    t.TraineeName,
+                                    t.TraineePhone,
+                                    t.TraineeEmail,
+                                    t.Image,
+                                    t.IsActive
+                                })
+                                .FirstOrDefault(),
 
-                            //Child = _context.Trainees
-                            //    .Where(t => t.IsActive && t.TraineeId == a.Subscription!.TraineeId)
-                            //    .Select(t => new
-                            //    {
-                            //        t.TraineeId,
-                            //        t.TraineeName,
-                            //        t.TraineePhone,
-                            //        t.TraineeEmail,
-                            //        t.Image,
-                            //        t.IsActive
-                            //    })
-                            //    .FirstOrDefault(),
+                           
 
-                            //Trainer = _context.Trainers
-                            //    .Where(t => t.IsActive && t.TrainerId == a.TrainerId)
-                            //    .Select(t => new
-                            //    {
-                            //        t.TrainerId,
-                            //        t.TrainerName,
-                            //        t.TrainerEmail,
-                            //        t.TrainerPhone,
-                            //        t.Image,
-                            //        t.IsActive
-                            //    })
-                            //    .FirstOrDefault()
+                          
 
                         }).ToList()
                     })
                     .OrderBy(summary => summary.Date)
                     .ToListAsync();
 
-                return Ok(new { status = true, attendances });
+                var trainer = _context.Trainers
+                    .Where(t => t.IsActive && t.TrainerId == team.TrainerId)
+                    .Select(t => new
+                    {
+                        t.TrainerId,
+                        t.TrainerName,
+                        t.TrainerEmail,
+                        t.TrainerPhone,
+                        t.Image,
+                        t.IsActive
+                    })
+                    .FirstOrDefault();
+
+
+                return Ok(new { status = true, attendances , trainer });
             }
             catch (Exception ex)
             {
