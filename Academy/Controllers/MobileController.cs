@@ -5,6 +5,7 @@ using Academy.ViewModels;
 //using DevExpress.XtraPrinting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Operations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -671,7 +672,7 @@ namespace Academy.Controllers
                             a.SubscriptionId,
                             a.IsDeleted,
                             a.TrainerId,
-                            
+
                             //Subscription = new
                             //{
                             //    a.Subscription!.SubscriptionId,
@@ -681,20 +682,20 @@ namespace Academy.Controllers
                             //    a.Subscription.CategoryId,
                             //    a.Subscription.TraineeId
                             //},
-                            
-                            //Child = _context.Trainees
-                            //    .Where(t => t.IsActive && t.TraineeId == a.Subscription!.TraineeId)
-                            //    .Select(t => new
-                            //    {
-                            //        t.TraineeId,
-                            //        t.TraineeName,
-                            //        t.TraineePhone,
-                            //        t.TraineeEmail,
-                            //        t.Image,
-                            //        t.IsActive
-                            //    })
-                            //    .FirstOrDefault(),
-                            
+
+                            Child = _context.Trainees
+                                .Where(t => t.IsActive && t.TraineeId == a.Subscription!.TraineeId)
+                                .Select(t => new
+                                {
+                                    t.TraineeId,
+                                    t.TraineeName,
+                                    t.TraineePhone,
+                                    t.TraineeEmail,
+                                    t.Image,
+                                    t.IsActive
+                                })
+                                .FirstOrDefault(),
+
                             //Trainer = _context.Trainers
                             //    .Where(t => t.IsActive && t.TrainerId == a.TrainerId)
                             //    .Select(t => new
@@ -707,13 +708,27 @@ namespace Academy.Controllers
                             //        t.IsActive
                             //    })
                             //    .FirstOrDefault()
-                       
+
                         }).ToList()
                     })
                     .OrderBy(summary => summary.Date)
                     .ToListAsync();
 
-                return Ok(new { status = true, attendances });
+                var trainerId = _context.CategoryTrainers.FirstOrDefault(e => e.CategoryId == categoryId).TrainerId;
+                var trainer = _context.Trainers
+                                .Where(t => t.IsActive && t.TrainerId == trainerId)
+                                .Select(t => new
+                                {
+                                    t.TrainerId,
+                                    t.TrainerName,
+                                    t.TrainerEmail,
+                                    t.TrainerPhone,
+                                    t.Image,
+                                    t.IsActive
+                                })
+                                .FirstOrDefault();
+
+                return Ok(new { status = true, attendances , trainer });
             }
             catch (Exception ex)
             {
@@ -1723,6 +1738,63 @@ namespace Academy.Controllers
 
         }
 
+
+        #region BranchChildrenSearch
+
+        [HttpGet]
+        [Route("GetBranchChildrenSearch")]
+        public async Task<IActionResult> GetBranchChildrenSearch(int BranchId, string Search)
+        {
+            try
+            {
+                var branch = _context.Branches.FirstOrDefault(e => e.BranchId == BranchId);
+                if (branch == null)
+                {
+                    return Ok(new { status = false, message = "Branch not found!" });
+                }
+                var children = await _context.Subscriptions
+                                    .Where(ch => ch.Category.Department.BranchId == BranchId &&
+                                                 (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.Contains(Search)))
+                                   
+                                    .Include(ch => ch.Trainee)
+                                    .Include(ch => ch.Category)
+                                   
+                                    .ThenInclude(c => c.Department)
+                                    .Select(e=> new
+                                    {
+                                        e.SubscriptionId,
+                                        e.StartDate,
+                                        e.EndDate,
+                                        e.IsActive,
+                                        e.TraineeId,
+                                        Trainee = new
+                                        {
+                                            e.Trainee.TraineeId,
+                                            e.Trainee.TraineeName,
+                                            e.Trainee.TraineePhone,
+                                            e.Trainee.TraineeEmail,
+                                            e.Trainee.Image,
+                                            e.Trainee.IsActive,
+                                            e.Trainee.ParentId,
+                                            e.Trainee.BirthDate,
+                                        }
+                                    })
+                                    .ToListAsync();
+                return Ok(new { status = true, data = children });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+
+            }
+
+
+
+        }
+
+
+
+        #endregion
 
 
     }
