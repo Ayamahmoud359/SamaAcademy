@@ -11,6 +11,10 @@ namespace Academy.Areas.Admin.Pages.UserManagment
     {
         [BindProperty]
         public AddUserVM userVM { get; set; }
+
+        [BindProperty]
+        public string Id { set; get; }
+
         private readonly AcademyContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         public IndexModel(AcademyContext context, UserManager<ApplicationUser> userManager)
@@ -82,5 +86,37 @@ namespace Academy.Areas.Admin.Pages.UserManagment
             }
 
         }
+
+        ///Delete User from database
+        
+        public async Task<IActionResult> OnPostDeleteUser()
+        {
+            try
+            {
+                var user = await _userManager.FindByIdAsync(Id);
+                if (user != null)
+                {
+                    var result = await _userManager.DeleteAsync(user);
+                    if (result.Succeeded)
+                    {
+                        return Redirect("/Admin/UserManagment/Index");
+                    }
+                    else
+                    {
+                        return Redirect("/Admin/UserManagment/Index");
+                    }
+                }
+                else
+                {
+                    return Redirect("/Admin/UserManagment/Index");
+                }
+            }
+            catch (Exception)
+            {
+                return Redirect("/Admin/UserManagment/Index");
+            }
+        }
+
+
     }
 }

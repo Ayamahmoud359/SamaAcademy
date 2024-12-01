@@ -1,8 +1,11 @@
-﻿@using Microsoft.AspNetCore.Localization;
+﻿@using Academy.Models
+@using Microsoft.AspNetCore.Localization;
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.Mvc.Localization
 @using Microsoft.Extensions.Localization
+@inject UserManager<ApplicationUser> _userManager
 <!doctype html>
+
 <html lang="en" id="htmlRoot" data-layout="vertical" data-topbar="light" data-sidebar="dark" data-sidebar-size="lg">
 <head>
    
@@ -85,15 +88,17 @@
 
 
     </style>
-  @*   @{
-        if (!(User.Identity.IsAuthenticated && (User.IsInRole("Admin"))))
+    @{
+
+
+        if (!User.Identity.IsAuthenticated || !_userManager.Users.Any(e => e.EntityName == "admin"))
         {
 
             Context.Response.Redirect(Url.Content("~/Identity/Account/login?returnUrl=" + Context.Request.Path));
         }
 
 
-    } *@
+    }
     @Html.Partial("~/Pages/Shared/Partials/_title_meta.cshtml")   
     @*  @{
         var locale = Context.Request.HttpContext.Features.Get<IRequestCultureFeature>();

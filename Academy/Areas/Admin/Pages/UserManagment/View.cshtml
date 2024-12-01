@@ -1,0 +1,42 @@
+﻿@page
+@model Academy.Areas.Admin.Pages.UserManagment.ViewModel
+
+@{
+    ViewBag.Title = "Users";
+    ViewBag.pTitle = "View User";
+    ViewBag.pageTitle = "Users";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+       
+        <!-- Department Card 3 -->
+  
+            <div class="card">
+            <div class="card-header align-items-center d-flex">
+                <h4 class="card-title mb-0 flex-grow-1">User Information</h4>
+            </div><!-- end card header -->
+
+           
+
+                @* <img src="https://via.placeholder.com/350x200" class="card-img-top" alt="Department Image"> *@
+            <div class="card-body">
+                <!-- Optional section -->
+                @*
+                <h5 class="card-title">Department of Human Resources</h5>
+                <p class="card-text">The HR Department is dedicated to employee development, recruitment, and ensuring a positive work environment.</p>
+                *@
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>FullName:</strong> @Model.User.FullName</li>
+                    <li class="list-group-item"><strong>UserName:</strong> @(Model.User.UserName ?? "")</li>
+                    <li class="list-group-item"><strong>Email:</strong> @(Model.User.Email ?? "")</li>
+                    <li class="list-group-item"><strong>Address:</strong> @(Model.User.Address ?? "")</li>
+                    <li class="list-group-item"><strong>Role:</strong> @(Model.User.EntityName ?? "")</li>
+                </ul>
+                <!-- Links to other pages -->
+            </div>
+
+            </div>
+    </div>
+</div>
