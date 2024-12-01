@@ -709,26 +709,26 @@ namespace Academy.Controllers
                             //    })
                             //    .FirstOrDefault()
 
-                        }).ToList()
+                        }).ToList(),
+                        trainer = _context.Trainers
+                            .Where(t => t.IsActive && t.TrainerId == group.FirstOrDefault().TrainerId)
+                            .Select(t => new
+                            {
+                                t.TrainerId,
+                                t.TrainerName,
+                                t.TrainerEmail,
+                                t.TrainerPhone,
+                                t.Image,
+                                t.IsActive
+                            })
+                            .FirstOrDefault()
                     })
                     .OrderBy(summary => summary.Date)
                     .ToListAsync();
 
-                var trainerId = _context.CategoryTrainers.FirstOrDefault(e => e.CategoryId == categoryId).TrainerId;
-                var trainer = _context.Trainers
-                                .Where(t => t.IsActive && t.TrainerId == trainerId)
-                                .Select(t => new
-                                {
-                                    t.TrainerId,
-                                    t.TrainerName,
-                                    t.TrainerEmail,
-                                    t.TrainerPhone,
-                                    t.Image,
-                                    t.IsActive
-                                })
-                                .FirstOrDefault();
+                
 
-                return Ok(new { status = true, attendances , trainer });
+                return Ok(new { status = true, attendances });
             }
             catch (Exception ex)
             {
@@ -1543,26 +1543,27 @@ namespace Academy.Controllers
 
                           
 
-                        }).ToList()
+                        }).ToList(),
+                        trainer = _context.Trainers
+                            .Where(t => t.IsActive && t.TrainerId == group.FirstOrDefault().TrainerId)
+                            .Select(t => new
+                            {
+                                t.TrainerId,
+                                t.TrainerName,
+                                t.TrainerEmail,
+                                t.TrainerPhone,
+                                t.Image,
+                                t.IsActive
+                            })
+                            .FirstOrDefault()
                     })
                     .OrderBy(summary => summary.Date)
                     .ToListAsync();
 
-                var trainer = _context.Trainers
-                    .Where(t => t.IsActive && t.TrainerId == team.TrainerId)
-                    .Select(t => new
-                    {
-                        t.TrainerId,
-                        t.TrainerName,
-                        t.TrainerEmail,
-                        t.TrainerPhone,
-                        t.Image,
-                        t.IsActive
-                    })
-                    .FirstOrDefault();
+              
 
 
-                return Ok(new { status = true, attendances , trainer });
+                return Ok(new { status = true, attendances });
             }
             catch (Exception ex)
             {
