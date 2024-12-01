@@ -1844,29 +1844,27 @@ namespace Academy.Controllers
             try
             {
                
-                var children = await _context.Subscriptions
+                var children = await _context.Trainees
                                     .Where(ch =>
-                                                 (string.IsNullOrEmpty(Search) || ch.Trainee!.TraineeName.ToLower().Contains(Search.ToLower())) 
+                                                 (string.IsNullOrEmpty(Search) || ch.TraineeName.ToLower().Contains(Search.ToLower())) 
                                            )
 
-                                    .Include(ch => ch.Trainee)
+                                    
                                     .Select(e => new
                                     {
-                                        e.SubscriptionId,
-                                        e.StartDate,
-                                        e.EndDate,
+                                       
                                         e.IsActive,
                                         e.TraineeId,
                                         Trainee = new
                                         {
-                                            e.Trainee.TraineeId,
-                                            e.Trainee.TraineeName,
-                                            e.Trainee.TraineePhone,
-                                            e.Trainee.TraineeEmail,
-                                            e.Trainee.Image,
-                                            e.Trainee.IsActive,
-                                            e.Trainee.ParentId,
-                                            e.Trainee.BirthDate,
+                                            e.TraineeId,
+                                            e.TraineeName,
+                                            e.TraineePhone,
+                                            e.TraineeEmail,
+                                            e.Image,
+                                            e.IsActive,
+                                            e.ParentId,
+                                            e.BirthDate,
                                         }
                                     })
                                     .ToListAsync();
