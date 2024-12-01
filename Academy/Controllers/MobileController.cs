@@ -978,7 +978,7 @@ namespace Academy.Controllers
             {
                 var today = DateOnly.FromDateTime(DateTime.Now);
 
-                var subscriptions = await _context.Subscriptions.Where(e => e.TraineeId == TraineeId && e.IsActive && (e.EndDate == null || e.EndDate >today)).Select(e => new
+                var subscriptions = await _context.Subscriptions.Where(e => e.TraineeId == TraineeId && e.IsActive && (e.EndDate == null || e.EndDate > today)).Select(e => new
                 {
                     e.SubscriptionId,
                     e.EndDate,
@@ -997,6 +997,42 @@ namespace Academy.Controllers
                 return Ok(new { status = false, message = ex.Message });
             }
         }
+
+
+        [HttpGet]
+        [Route("GetAllChildSubscriptionsByChildId")]
+        public async Task<ActionResult> GetAllChildSubscriptionsByChildId(int TraineeId)
+        {
+            try
+            {
+                
+                var subscriptions = await _context.Subscriptions.Where(e => e.TraineeId == TraineeId).Select(e => new
+                {
+                    e.SubscriptionId,
+                    e.EndDate,
+                    e.StartDate,
+                    e.IsActive,
+                    e.TraineeId,
+                    Trainee = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).Select(a => new { a.TraineeId, a.TraineeName, a.TraineePhone, a.TraineeEmail, a.Image, a.IsActive }).FirstOrDefault(),
+                    Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).Select(a => new {
+                        a.CategoryId,
+                        a.CategoryName,
+                        a.CategoryDescription,
+                        a.image,
+                        a.IsActive,
+                        Department = _context.Departments.Where(b => b.IsActive && b.DepartmentId == a.DepartmentId).Select(b => new { b.DepartmentId, b.DepartmentName, b.DepartmentDescription, b.Image, b.IsActive }).FirstOrDefault(),
+                    }).FirstOrDefault(),
+                }).ToListAsync();
+                return Ok(new { status = true, subscriptions });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
+
 
         [HttpGet]
         [Route("GetChildCompetitionTeamsByChildId")]
