@@ -1754,9 +1754,9 @@ namespace Academy.Controllers
                 }
                 var children = await _context.Subscriptions
                                     .Where(ch => ch.Category.Department.BranchId == BranchId &&
-                                                 (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.Contains(Search)))
+                                                 (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.ToLower().Contains(Search.ToLower()))
                                    
-                                    .Include(ch => ch.Trainee)
+                                    ).Include(ch => ch.Trainee)
                                     .Include(ch => ch.Category)
                                    
                                     .ThenInclude(c => c.Department)
@@ -1805,7 +1805,53 @@ namespace Academy.Controllers
                 }
                 var children = await _context.Subscriptions
                                     .Where(ch => ch.CategoryId == CategoryId &&
-                                                 (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.Contains(Search)))
+                                                 (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.ToLower().Contains(Search.ToLower())))
+
+                                    .Include(ch => ch.Trainee)
+                                    .Select(e => new
+                                    {
+                                        e.SubscriptionId,
+                                        e.StartDate,
+                                        e.EndDate,
+                                        e.IsActive,
+                                        e.TraineeId,
+                                        Trainee = new
+                                        {
+                                            e.Trainee.TraineeId,
+                                            e.Trainee.TraineeName,
+                                            e.Trainee.TraineePhone,
+                                            e.Trainee.TraineeEmail,
+                                            e.Trainee.Image,
+                                            e.Trainee.IsActive,
+                                            e.Trainee.ParentId,
+                                            e.Trainee.BirthDate,
+                                        }
+                                    })
+                                    .ToListAsync();
+                return Ok(new { status = true, data = children });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+
+            }
+
+
+
+        }
+
+
+        [HttpGet]
+        [Route("GetPublicChildrenSearch")]
+        public async Task<IActionResult> GetPublicChildrenSearch(string Search)
+        {
+            try
+            {
+               
+                var children = await _context.Subscriptions
+                                    .Where(ch =>
+                                                 (string.IsNullOrEmpty(Search) || ch.Trainee!.TraineeName.ToLower().Contains(Search.ToLower())) 
+                                           )
 
                                     .Include(ch => ch.Trainee)
                                     .Select(e => new
