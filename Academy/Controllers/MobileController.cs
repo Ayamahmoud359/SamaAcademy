@@ -1785,7 +1785,7 @@ namespace Academy.Controllers
                     return Ok(new { status = false, message = "Branch not found!" });
                 }
                 var children = await _context.Subscriptions
-                                    .Where(ch => ch.Category.Department.BranchId == BranchId &&
+                                    .Where(ch => ch.IsActive && ch.IsDeleted == false && ch.Category.Department.BranchId == BranchId &&
                                                  (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.ToLower().Contains(Search.ToLower()))
                                    
                                     ).Include(ch => ch.Trainee)
@@ -1836,7 +1836,7 @@ namespace Academy.Controllers
                     return Ok(new { status = false, message = "Category not found!" });
                 }
                 var children = await _context.Subscriptions
-                                    .Where(ch => ch.CategoryId == CategoryId &&
+                                    .Where(ch => ch.CategoryId == CategoryId && ch.IsActive && ch.IsDeleted == false &&
                                                  (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.ToLower().Contains(Search.ToLower())))
 
                                     .Include(ch => ch.Trainee)
@@ -1881,7 +1881,7 @@ namespace Academy.Controllers
             {
                
                 var children = await _context.Trainees
-                                    .Where(ch =>
+                                    .Where(ch => ch.IsActive && ch.IsDeleted == false &&
                                                  (string.IsNullOrEmpty(Search) || ch.TraineeName.ToLower().Contains(Search.ToLower())) 
                                            )
 
