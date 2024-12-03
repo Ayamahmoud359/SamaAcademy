@@ -1,5 +1,6 @@
 ﻿using Academy.Data;
 using Academy.DTO;
+using Academy.Helpers;
 using Academy.Models;
 using Academy.ViewModels;
 //using DevExpress.XtraPrinting;
@@ -1773,56 +1774,163 @@ namespace Academy.Controllers
 
         #region ChildrenSearch
 
+        //[HttpGet]
+        //[Route("GetBranchChildrenSearch")]
+        //public async Task<IActionResult> GetBranchChildrenSearch(int BranchId, string Search)
+        //{
+        //    try
+        //    {
+        //        var branch = _context.Branches.FirstOrDefault(e => e.BranchId == BranchId);
+        //        if (branch == null)
+        //        {
+        //            return Ok(new { status = false, message = "Branch not found!" });
+        //        }
+
+        //        var children = await _context.Subscriptions
+        //                            .Where(ch => ch.IsActive && ch.IsDeleted == false && ch.Category.Department.BranchId == BranchId &&
+        //                                         (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.ToLower().Contains(Search.ToLower()))
+
+        //                            ).Include(ch => ch.Trainee)
+        //                            .Include(ch => ch.Category)
+
+        //                            .ThenInclude(c => c.Department)
+        //                            .Select(e=> new
+        //                            {
+        //                                e.SubscriptionId,
+        //                                e.StartDate,
+        //                                e.EndDate,
+        //                                e.IsActive,
+        //                                e.TraineeId,
+        //                                Trainee = new
+        //                                {
+        //                                    e.Trainee.TraineeId,
+        //                                    e.Trainee.TraineeName,
+        //                                    e.Trainee.TraineePhone,
+        //                                    e.Trainee.TraineeEmail,
+        //                                    e.Trainee.Image,
+        //                                    e.Trainee.IsActive,
+        //                                    e.Trainee.ParentId,
+        //                                    e.Trainee.BirthDate,
+        //                                }
+        //                            })
+        //                            .ToListAsync();
+        //        return Ok(new { status = true, data = children });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(new { status = false, message = ex.Message });
+
+        //    }
+
+
+
+        //}
+
+
         [HttpGet]
         [Route("GetBranchChildrenSearch")]
         public async Task<IActionResult> GetBranchChildrenSearch(int BranchId, string Search)
         {
             try
             {
-                var branch = _context.Branches.FirstOrDefault(e => e.BranchId == BranchId);
+                var branch = await _context.Branches.FirstOrDefaultAsync(e => e.BranchId == BranchId);
                 if (branch == null)
                 {
                     return Ok(new { status = false, message = "Branch not found!" });
                 }
-                var children = await _context.Subscriptions
-                                    .Where(ch => ch.IsActive && ch.IsDeleted == false && ch.Category.Department.BranchId == BranchId &&
-                                                 (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.ToLower().Contains(Search.ToLower()))
-                                   
-                                    ).Include(ch => ch.Trainee)
-                                    .Include(ch => ch.Category)
-                                   
-                                    .ThenInclude(c => c.Department)
-                                    .Select(e=> new
-                                    {
-                                        e.SubscriptionId,
-                                        e.StartDate,
-                                        e.EndDate,
-                                        e.IsActive,
-                                        e.TraineeId,
-                                        Trainee = new
-                                        {
-                                            e.Trainee.TraineeId,
-                                            e.Trainee.TraineeName,
-                                            e.Trainee.TraineePhone,
-                                            e.Trainee.TraineeEmail,
-                                            e.Trainee.Image,
-                                            e.Trainee.IsActive,
-                                            e.Trainee.ParentId,
-                                            e.Trainee.BirthDate,
-                                        }
-                                    })
-                                    .ToListAsync();
-                return Ok(new { status = true, data = children });
+
+                var subscriptions = await _context.Subscriptions
+                    .Where(ch => ch.IsActive && !ch.IsDeleted && ch.Category.Department.BranchId == BranchId)
+                    .Include(ch => ch.Trainee)
+                    .Include(ch => ch.Category)
+                    .ThenInclude(c => c.Department)
+                    .Select(e => new
+                    {
+                        e.SubscriptionId,
+                        e.StartDate,
+                        e.EndDate,
+                        e.IsActive,
+                        e.TraineeId,
+                        Trainee = new
+                        {
+                            e.Trainee.TraineeId,
+                            e.Trainee.TraineeName,
+                            e.Trainee.TraineePhone,
+                            e.Trainee.TraineeEmail,
+                            e.Trainee.Image,
+                            e.Trainee.IsActive,
+                            e.Trainee.ParentId,
+                            e.Trainee.BirthDate,
+                        }
+                    })
+                    .ToListAsync(); // Fetch data into memory
+
+                if (!string.IsNullOrEmpty(Search))
+                {
+                    var input = AppFunctions.NormalizeArabicText(Search.ToLower());
+                    subscriptions = subscriptions
+                        .Where(sub => AppFunctions.NormalizeArabicText(sub.Trainee.TraineeName).ToLower().Contains(input))
+                        .ToList(); // Apply filtering in memory
+                }
+
+                return Ok(new { status = true, data = subscriptions });
             }
             catch (Exception ex)
             {
                 return Ok(new { status = false, message = ex.Message });
-
             }
-
-
-
         }
+
+
+
+        //[HttpGet]
+        //[Route("GetCategoryChildrenSearch")]
+        //public async Task<IActionResult> GetCategoryChildrenSearch(int CategoryId, string Search)
+        //{
+        //    try
+        //    {
+        //        var category = _context.Categories.FirstOrDefault(e => e.CategoryId == CategoryId);
+        //        if (category == null)
+        //        {
+        //            return Ok(new { status = false, message = "Category not found!" });
+        //        }
+        //        var children = await _context.Subscriptions
+        //                            .Where(ch => ch.CategoryId == CategoryId && ch.IsActive && ch.IsDeleted == false &&
+        //                                         (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.ToLower().Contains(Search.ToLower())))
+
+        //                            .Include(ch => ch.Trainee)
+        //                            .Select(e => new
+        //                            {
+        //                                e.SubscriptionId,
+        //                                e.StartDate,
+        //                                e.EndDate,
+        //                                e.IsActive,
+        //                                e.TraineeId,
+        //                                Trainee = new
+        //                                {
+        //                                    e.Trainee.TraineeId,
+        //                                    e.Trainee.TraineeName,
+        //                                    e.Trainee.TraineePhone,
+        //                                    e.Trainee.TraineeEmail,
+        //                                    e.Trainee.Image,
+        //                                    e.Trainee.IsActive,
+        //                                    e.Trainee.ParentId,
+        //                                    e.Trainee.BirthDate,
+        //                                }
+        //                            })
+        //                            .ToListAsync();
+        //        return Ok(new { status = true, data = children });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(new { status = false, message = ex.Message });
+
+        //    }
+
+
+
+        //}
+
 
         [HttpGet]
         [Route("GetCategoryChildrenSearch")]
@@ -1830,47 +1938,104 @@ namespace Academy.Controllers
         {
             try
             {
-                var category = _context.Categories.FirstOrDefault(e => e.CategoryId == CategoryId);
+                var category = await _context.Categories.FirstOrDefaultAsync(e => e.CategoryId == CategoryId);
                 if (category == null)
                 {
                     return Ok(new { status = false, message = "Category not found!" });
                 }
-                var children = await _context.Subscriptions
-                                    .Where(ch => ch.CategoryId == CategoryId && ch.IsActive && ch.IsDeleted == false &&
-                                                 (string.IsNullOrEmpty(Search) || ch.Trainee.TraineeName.ToLower().Contains(Search.ToLower())))
 
-                                    .Include(ch => ch.Trainee)
-                                    .Select(e => new
-                                    {
-                                        e.SubscriptionId,
-                                        e.StartDate,
-                                        e.EndDate,
-                                        e.IsActive,
-                                        e.TraineeId,
-                                        Trainee = new
-                                        {
-                                            e.Trainee.TraineeId,
-                                            e.Trainee.TraineeName,
-                                            e.Trainee.TraineePhone,
-                                            e.Trainee.TraineeEmail,
-                                            e.Trainee.Image,
-                                            e.Trainee.IsActive,
-                                            e.Trainee.ParentId,
-                                            e.Trainee.BirthDate,
-                                        }
-                                    })
-                                    .ToListAsync();
-                return Ok(new { status = true, data = children });
+                var subscriptions = await _context.Subscriptions
+                    .Where(ch => ch.CategoryId == CategoryId && ch.IsActive && !ch.IsDeleted)
+                    .Include(ch => ch.Trainee)
+                    .Select(e => new
+                    {
+                        e.SubscriptionId,
+                        e.StartDate,
+                        e.EndDate,
+                        e.IsActive,
+                        e.TraineeId,
+                        Trainee = new
+                        {
+                            e.Trainee.TraineeId,
+                            e.Trainee.TraineeName,
+                            e.Trainee.TraineePhone,
+                            e.Trainee.TraineeEmail,
+                            e.Trainee.Image,
+                            e.Trainee.IsActive,
+                            e.Trainee.ParentId,
+                            e.Trainee.BirthDate,
+                        }
+                    })
+                    .ToListAsync(); // Fetch data into memory
+
+                if (!string.IsNullOrEmpty(Search))
+                {
+                    var input = AppFunctions.NormalizeArabicText(Search.ToLower());
+                    subscriptions = subscriptions
+                        .Where(sub => AppFunctions.NormalizeArabicText(sub.Trainee.TraineeName).ToLower().Contains(input))
+                        .ToList(); // Apply filtering in memory
+                }
+
+                return Ok(new { status = true, data = subscriptions });
             }
             catch (Exception ex)
             {
                 return Ok(new { status = false, message = ex.Message });
-
             }
-
-
-
         }
+
+
+
+
+        //[HttpGet]
+        //[Route("GetPublicChildrenSearch")]
+        //public async Task<IActionResult> GetPublicChildrenSearch(string Search)
+        //{
+        //    try
+        //    {
+        //        var query = _context.Trainees
+        //            .Where(ch => ch.IsActive && !ch.IsDeleted);
+
+        //        if (!string.IsNullOrEmpty(Search))
+        //        {
+        //            var input = AppFunctions.NormalizeArabicText(Search.ToLower());
+        //            query = query.Where(ch => AppFunctions.NormalizeArabicText(ch.TraineeName).ToLower().Contains(input));
+        //        }
+
+
+
+        //        var children = await query
+
+
+        //                            .Select(e => new
+        //                            {
+
+        //                                e.IsActive,
+        //                                e.TraineeId,
+        //                                Trainee = new
+        //                                {
+        //                                    e.TraineeId,
+        //                                    e.TraineeName,
+        //                                    e.TraineePhone,
+        //                                    e.TraineeEmail,
+        //                                    e.Image,
+        //                                    e.IsActive,
+        //                                    e.ParentId,
+        //                                    e.BirthDate,
+        //                                }
+        //                            })
+        //                            .ToListAsync();
+        //        return Ok(new { status = true, data = children });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Ok(new { status = false, message = ex.Message });
+
+        //    }
+
+
+
+        //}
 
 
         [HttpGet]
@@ -1879,46 +2044,50 @@ namespace Academy.Controllers
         {
             try
             {
-               
-                var children = await _context.Trainees
-                                    .Where(ch => ch.IsActive && ch.IsDeleted == false &&
-                                                 (string.IsNullOrEmpty(Search) || ch.TraineeName.ToLower().Contains(Search.ToLower())) 
-                                           )
+                var query = _context.Trainees
+                    .Where(ch => ch.IsActive && !ch.IsDeleted);
 
-                                    
-                                    .Select(e => new
-                                    {
-                                       
-                                        e.IsActive,
-                                        e.TraineeId,
-                                        Trainee = new
-                                        {
-                                            e.TraineeId,
-                                            e.TraineeName,
-                                            e.TraineePhone,
-                                            e.TraineeEmail,
-                                            e.Image,
-                                            e.IsActive,
-                                            e.ParentId,
-                                            e.BirthDate,
-                                        }
-                                    })
-                                    .ToListAsync();
+                var children = await query
+                    .Select(e => new
+                    {
+                        e.IsActive,
+                        e.TraineeId,
+                        Trainee = new
+                        {
+                            e.TraineeId,
+                            e.TraineeName,
+                            e.TraineePhone,
+                            e.TraineeEmail,
+                            e.Image,
+                            e.IsActive,
+                            e.ParentId,
+                            e.BirthDate,
+                        }
+                    })
+                    .ToListAsync(); // Fetch data into memory
+
+                if (!string.IsNullOrEmpty(Search))
+                {
+                    var input = AppFunctions.NormalizeArabicText(Search.ToLower());
+                    children = children
+                        .Where(ch => AppFunctions.NormalizeArabicText(ch.Trainee.TraineeName).ToLower().Contains(input))
+                        .ToList(); // Filter in-memory
+                }
+
                 return Ok(new { status = true, data = children });
             }
             catch (Exception ex)
             {
                 return Ok(new { status = false, message = ex.Message });
-
             }
-
-
-
         }
 
 
 
         #endregion
+
+
+
 
 
     }
