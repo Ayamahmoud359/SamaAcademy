@@ -986,9 +986,11 @@ namespace Academy.Controllers
                     e.StartDate,
                     e.IsActive,
                     e.TraineeId,
+                   
                     Trainee = _context.Trainees.Where(a => a.IsActive && a.TraineeId == e.TraineeId).Select(a => new { a.TraineeId, a.TraineeName, a.TraineePhone, a.TraineeEmail, a.Image, a.IsActive }).FirstOrDefault(),
                     Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == e.CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive,
-                        Department = _context.Departments.Where(b => b.IsActive && b.DepartmentId == a.DepartmentId).Select(b => new { b.DepartmentId, b.DepartmentName, b.DepartmentDescription, b.Image, b.IsActive }).FirstOrDefault(),
+                        Department = _context.Departments.Where(b => b.IsActive && b.DepartmentId == a.DepartmentId).Select(b => new { b.DepartmentId, b.DepartmentName, b.DepartmentDescription, b.Image, b.IsActive,b.BranchId }).FirstOrDefault(),
+                        Branch = _context.Branches.Where(b => b.IsActive && b.BranchId == a.Department.BranchId).Select(b => new { b.BranchId, b.BranchName, b.BranchAddress, b.Phone, b.Image, b.IsActive }).FirstOrDefault(),
                     }).FirstOrDefault(),
                 }).ToListAsync();
                 return Ok(new { status = true, subscriptions });
@@ -1021,7 +1023,8 @@ namespace Academy.Controllers
                         a.CategoryDescription,
                         a.image,
                         a.IsActive,
-                        Department = _context.Departments.Where(b => b.IsActive && b.DepartmentId == a.DepartmentId).Select(b => new { b.DepartmentId, b.DepartmentName, b.DepartmentDescription, b.Image, b.IsActive }).FirstOrDefault(),
+                        Department = _context.Departments.Where(b => b.IsActive && b.DepartmentId == a.DepartmentId).Select(b => new { b.DepartmentId, b.DepartmentName, b.DepartmentDescription, b.Image, b.IsActive,b.BranchId }).FirstOrDefault(),
+                        Branch = _context.Branches.Where(b => b.IsActive && b.BranchId == a.Department.BranchId).Select(b => new { b.BranchId, b.BranchName, b.BranchAddress, b.Phone, b.Image, b.IsActive }).FirstOrDefault(),
                     }).FirstOrDefault(),
                 }).ToListAsync();
                 return Ok(new { status = true, subscriptions });
