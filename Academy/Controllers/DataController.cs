@@ -46,7 +46,7 @@ namespace Academy.Controllers
         public async Task<IActionResult> GetUsers(DataSourceLoadOptions loadOptions)
         {
             IQueryable<UsersDataGridVM> users = _UserManger.Users
-                .Where(e=> e.EntityName == "Admin" || e.EntityName == "GeneralManager" || e.EntityName == "Branchmanager" || e.EntityName == "Branchaccountant")
+                .Where(e=> e.EntityName == "Admin" || e.EntityName == "GeneralManager" || e.EntityName == "BranchManager" || e.EntityName == "BranchAccountant")
                 .Select(i => new UsersDataGridVM()
             {
                 Id = i.Id,
