@@ -1009,7 +1009,7 @@ namespace Academy.Controllers
             try
             {
                 
-                var subscriptions = await _context.Subscriptions.Where(e => e.TraineeId == TraineeId).Select(e => new
+                var subscriptions = await _context.Subscriptions.Where(e => e.TraineeId == TraineeId && !e.IsDeleted).Select(e => new
                 {
                     e.SubscriptionId,
                     e.EndDate,
