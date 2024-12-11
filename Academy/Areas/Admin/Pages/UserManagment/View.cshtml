@@ -6,6 +6,8 @@
     ViewBag.pTitle = "View User";
     ViewBag.pageTitle = "Users";
     Layout = "~/Pages/Shared/_Layout.cshtml";
+
+    
 }
 
 <div class="row">
@@ -33,6 +35,12 @@
                     <li class="list-group-item"><strong>Email:</strong> @(Model.User.Email ?? "")</li>
                     <li class="list-group-item"><strong>Address:</strong> @(Model.User.Address ?? "")</li>
                     <li class="list-group-item"><strong>Role:</strong> @(Model.User.EntityName ?? "")</li>
+                    @if (Model.UserBranch != null)
+                    {
+                        <li class="list-group-item"><strong>Branch:</strong> @(Model.UserBranch.BranchName ?? "")</li>
+
+                    }
+                
                 </ul>
                 <!-- Links to other pages -->
             </div>
