@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace Academy.Controllers
 {
@@ -2088,6 +2089,67 @@ namespace Academy.Controllers
 
 
         #endregion
+
+
+        #region CategoryTeamEvaluation
+        [HttpPost]
+        [Route("AddCategoryTeamEvaluation")]
+        public async Task<ActionResult> AddCategoryTeamEvaluation([FromBody] AddCategoryTeamEvaluationDTO evaluationDTO)
+        {
+            try
+            {
+               
+                var evaluation = new CategoryTeamEvaluation
+                {
+                    TrainerId = evaluationDTO.TrainerId,
+                    EvaluationDate = evaluationDTO.EvaluationDate,
+                    CategoryId = evaluationDTO.CategoryId,
+                    IsDeleted = false,
+                };
+                if (evaluationDTO.Image != null && evaluationDTO.Image.Length > 0)
+                {
+                    string folder = "uploads/CategoryEvaluations/";
+                    evaluation.EvaluationImage = await UploadImage(folder, evaluationDTO.Image);
+
+                }
+                _context.CategoryTeamEvaluations.Add(evaluation);
+                await _context.SaveChangesAsync();
+                return Ok(new { status = true, message = "Evaluation added successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("GetCategoryTeamEvaluationListByCategoryId")]
+        public async Task<ActionResult> GetCategoryTeamEvaluationListByCategoryId(int CategoryId)
+        {
+            try
+            {
+                var evaluationList = await _context.CategoryTeamEvaluations.Where(e => e.CategoryId == CategoryId && e.IsDeleted == false).Select(e => new
+                {
+                    e.CategoryTeamEvaluationId,
+                    e.EvaluationDate,
+                    e.EvaluationImage,
+                    e.CategoryId,
+                    e.IsDeleted,
+                    Trainer = _context.Trainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.TrainerId, a.TrainerName, a.TrainerEmail, a.TrainerPhone, a.Image, a.IsActive }).FirstOrDefault(),
+                    Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).FirstOrDefault(),
+                }).ToListAsync();
+                return Ok(new { status = true, data = evaluationList });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
+        #endregion
+
+
 
 
 

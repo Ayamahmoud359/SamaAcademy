@@ -9,7 +9,9 @@ namespace Academy.Models
         public string CategoryName { get; set; }
       
         public string? CategoryDescription{ get; set; }
-   
+        public string? image { get; set; }
+
+        public bool IsDeleted { get; set; }
         public bool IsActive { get; set; }
         //Department Id
         [ForeignKey("Department")]
@@ -20,7 +22,7 @@ namespace Academy.Models
         public ICollection<TrainerCategories> TrainerCategories { get; set; } = new List<TrainerCategories>();
         // A category can have many trainees (through subscriptions)
         public ICollection<Subscription> Subscriptions { get; set; } = new List<Subscription>();
-        public bool IsDeleted { get; set; }
-        public string? image { get; set; }
+        public ICollection<CategoryTeamEvaluation> CategoryTeamEvaluations { get; set; } = new List<CategoryTeamEvaluation>();
+       
     }
 }
