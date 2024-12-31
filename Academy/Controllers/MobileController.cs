@@ -2094,10 +2094,16 @@ namespace Academy.Controllers
         #region CategoryTeamEvaluation
         [HttpPost]
         [Route("AddCategoryTeamEvaluation")]
-        public async Task<ActionResult> AddCategoryTeamEvaluation([FromBody] AddCategoryTeamEvaluationDTO evaluationDTO)
+        public async Task<ActionResult> AddCategoryTeamEvaluation([FromForm] AddCategoryTeamEvaluationDTO evaluationDTO, IFormFile Image)
         {
             try
             {
+                var category = _context.Categories.FirstOrDefault(e => e.CategoryId == evaluationDTO.CategoryId);
+
+                if (category == null)
+                {
+                    return Ok(new { status = false, message = "Category not found!" });
+                }
                
                 var evaluation = new CategoryTeamEvaluation
                 {
@@ -2106,10 +2112,10 @@ namespace Academy.Controllers
                     CategoryId = evaluationDTO.CategoryId,
                     IsDeleted = false,
                 };
-                if (evaluationDTO.Image != null && evaluationDTO.Image.Length > 0)
+                if (Image != null && Image.Length > 0)
                 {
                     string folder = "uploads/CategoryEvaluations/";
-                    evaluation.EvaluationImage = await UploadImage(folder, evaluationDTO.Image);
+                    evaluation.EvaluationImage = await UploadImage(folder, Image);
 
                 }
                 _context.CategoryTeamEvaluations.Add(evaluation);

@@ -8,7 +8,7 @@ namespace Academy.ViewModels
       
 
         public DateOnly? EvaluationDate { get; set; }
-        public IFormFile Image { get; set; } = null!;
+       // public IFormFile Image { get; set; } = null!;
         public int CategoryId { get; set; }
       
         public int TrainerId { get; set; }
