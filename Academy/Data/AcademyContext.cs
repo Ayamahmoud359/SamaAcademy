@@ -36,6 +36,7 @@ namespace Academy.Data
         public virtual DbSet<CompetitionTeamEvaluation> CompetitionTeamEvaluations { get; set; }
         public virtual DbSet<Banner> Banners { get; set; }
         public virtual DbSet<CategoryTeamEvaluation> CategoryTeamEvaluation { get; set; }
+        public virtual DbSet<AllCompetitionTeamEvaluation> AllCompetitionTeamEvaluations { get; set; }
         public virtual DbSet<TrainerCategories> CategoryTrainers { get; set; }
         // public virtual DbSet<SubCategoryTrainer> SubCategoryTrainer { get; set; }
 
