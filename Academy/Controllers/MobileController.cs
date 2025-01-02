@@ -2118,7 +2118,7 @@ namespace Academy.Controllers
                     evaluation.EvaluationImage = await UploadImage(folder, Image);
 
                 }
-                _context.CategoryTeamEvaluations.Add(evaluation);
+                _context.CategoryTeamEvaluation.Add(evaluation);
                 await _context.SaveChangesAsync();
                 return Ok(new { status = true, message = "Evaluation added successfully!" });
             }
@@ -2134,7 +2134,7 @@ namespace Academy.Controllers
         {
             try
             {
-                var evaluationList = await _context.CategoryTeamEvaluations.Where(e => e.CategoryId == CategoryId && e.IsDeleted == false).Select(e => new
+                var evaluationList = await _context.CategoryTeamEvaluation.Where(e => e.CategoryId == CategoryId && e.IsDeleted == false).Select(e => new
                 {
                     e.CategoryTeamEvaluationId,
                     e.EvaluationDate,
