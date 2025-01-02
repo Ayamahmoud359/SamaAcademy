@@ -2118,7 +2118,7 @@ namespace Academy.Controllers
                     evaluation.EvaluationImage = await UploadImage(folder, Image);
 
                 }
-                _context.CategoryTeamEvaluations.Add(evaluation);
+                _context.CategoryTeamEvaluation.Add(evaluation);
                 await _context.SaveChangesAsync();
                 return Ok(new { status = true, message = "Evaluation added successfully!" });
             }
@@ -2134,7 +2134,7 @@ namespace Academy.Controllers
         {
             try
             {
-                var evaluationList = await _context.CategoryTeamEvaluations.Where(e => e.CategoryId == CategoryId && e.IsDeleted == false).Select(e => new
+                var evaluationList = await _context.CategoryTeamEvaluation.Where(e => e.CategoryId == CategoryId && e.IsDeleted == false).Select(e => new
                 {
                     e.CategoryTeamEvaluationId,
                     e.EvaluationDate,
@@ -2142,7 +2142,7 @@ namespace Academy.Controllers
                     e.CategoryId,
                     e.IsDeleted,
                     Trainer = _context.Trainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.TrainerId, a.TrainerName, a.TrainerEmail, a.TrainerPhone, a.Image, a.IsActive }).FirstOrDefault(),
-                    Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).FirstOrDefault(),
+                    //Category = _context.Categories.Where(a => a.IsActive && a.CategoryId == CategoryId).Select(a => new { a.CategoryId, a.CategoryName, a.CategoryDescription, a.image, a.IsActive }).FirstOrDefault(),
                 }).ToListAsync();
                 return Ok(new { status = true, data = evaluationList });
             }
@@ -2156,6 +2156,71 @@ namespace Academy.Controllers
         #endregion
 
 
+
+
+
+        #region AllCompetitionTeamEvaluation
+        [HttpPost]
+        [Route("AddCompetitionTeamEvaluation")]
+        public async Task<ActionResult> AddCompetitionTeamEvaluation([FromForm] AddAllCompetitionTeamEvaluationDTO evaluationDTO, IFormFile Image)
+        {
+            try
+            {
+                var team = _context.CompetitionTeam.FirstOrDefault(e => e.Id == evaluationDTO.CompetitionTeamId);
+
+                if (team == null)
+                {
+                    return Ok(new { status = false, message = "Competition Team not found!" });
+                }
+
+                var evaluation = new AllCompetitionTeamEvaluation
+                {
+                    TrainerId = evaluationDTO.TrainerId,
+                    EvaluationDate = evaluationDTO.EvaluationDate,
+                    CompetitionTeamId = evaluationDTO.CompetitionTeamId,
+                    IsDeleted = false,
+                };
+                if (Image != null && Image.Length > 0)
+                {
+                    string folder = "uploads/CompetitionTeamEvaluations/";
+                    evaluation.EvaluationImage = await UploadImage(folder, Image);
+
+                }
+                _context.AllCompetitionTeamEvaluations.Add(evaluation);
+                await _context.SaveChangesAsync();
+                return Ok(new { status = true, message = "Evaluation added successfully!" });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("GetCompetitionTeamEvaluationListByTeamId")]
+        public async Task<ActionResult> GetCompetitionTeamEvaluationListByTeamId(int CompetitionTeamId)
+        {
+            try
+            {
+                var evaluationList = await _context.AllCompetitionTeamEvaluations.Where(e => e.CompetitionTeamId == CompetitionTeamId && e.IsDeleted == false).Select(e => new
+                {
+                    e.AllCompetitionTeamEvaluationId,
+                    e.EvaluationDate,
+                    e.EvaluationImage,
+                    e.CompetitionTeamId,
+                    e.IsDeleted,
+                    Trainer = _context.Trainers.Where(a => a.IsActive && a.TrainerId == e.TrainerId).Select(a => new { a.TrainerId, a.TrainerName, a.TrainerEmail, a.TrainerPhone, a.Image, a.IsActive }).FirstOrDefault(),
+                }).ToListAsync();
+                return Ok(new { status = true, data = evaluationList });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { status = false, message = ex.Message });
+            }
+        }
+
+
+        #endregion
 
 
 
