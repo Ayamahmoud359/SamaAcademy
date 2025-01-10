@@ -1,0 +1,724 @@
+﻿@page
+@model Academy.Pages.SearchData.IndexModel
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sama Talents Academy</title>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f8f9fa;
+            background-image: url('https://i.imgur.com/K3cL7PS.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        #header-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        input[type="text"] {
+            width: 90%;
+            max-width: 500px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+            input[type="text"]:focus {
+                border-color: #0056b3;
+                outline: none;
+            }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+                transform: scale(1.1);
+            }
+
+            button:active {
+                transform: scale(1.05);
+            }
+
+        #verifyBox {
+            display: none;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            margin: 20px 0;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+            #verifyBox h3 {
+                margin: 0 0 15px 0;
+                font-size: 20px;
+                color: #007bff;
+                border-bottom: 2px solid #007bff;
+                display: inline-block;
+                padding: 5px 10px;
+            }
+
+        #result {
+            margin: 20px 0;
+            padding: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        #userDetails {
+            margin: 15px 0;
+            padding: 20px;
+            font-size: 16px;
+            background-color: #28a745;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+            #userDetails h4 {
+                margin: 10px 0;
+                color: #fff;
+                font-size: 18px;
+            }
+
+        ul.suggestions {
+            width: 90%;
+            max-width: 500px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            background: #fff;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            z-index: 100;
+        }
+
+            ul.suggestions li {
+                padding: 10px;
+                cursor: pointer;
+                border-bottom: 1px solid #ddd;
+            }
+
+                ul.suggestions li:last-child {
+                    border-bottom: none;
+                }
+
+                ul.suggestions li:hover {
+                    background-color: #f0f8ff;
+                }
+
+        #loadingSpinner {
+            font-size: 18px;
+            color: #007bff;
+            margin: 15px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .whatsapp-button {
+            display: none;
+            margin: 15px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #25d366;
+            border: none;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+            .whatsapp-button:hover {
+                background-color: #128c7e;
+            }
+
+        .copy-button {
+            margin: 15px 0;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .copy-button:hover {
+                background-color: #0056b3;
+            }
+
+        .user-info-box {
+            background-color: #28a745;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+            .user-info-box h4 {
+                font-size: 18px;
+                margin: 10px 0;
+            }
+
+            .user-info-box p {
+                font-size: 16px;
+            }
+
+            .user-info-box button {
+                margin-top: 15px;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #fff;
+                font-size: 16px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+                .user-info-box button:hover {
+                    background-color: #0056b3;
+                }
+
+        #errorBox {
+            display: none;
+            background-color: #dc3545;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #whatsappContact {
+            display: none;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #25d366;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+            #whatsappContact:hover {
+                background-color: #128c7e;
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="header-text">Sama Talents Academy</div>
+    </header>
+    <main>
+        <div style="position: relative; width: 90%; max-width: 500px;">
+            <input type="text" id="parentName" placeholder="ادخل اسم ولي الأمر" oninput="showSuggestions()">
+            <ul id="suggestions" class="suggestions" style="display: none;"></ul>
+        </div>
+        <button onclick="startVerification()">بحث</button>
+        <div id="loadingSpinner">🔄 جارٍ التحقق...</div>
+
+        <!-- Error Box -->
+        <div id="errorBox">
+            <p>البيانات المدخلة غير صحيحة. الرجاء التحقق من صحة البيانات.</p>
+            <a id="whatsappButton" class="whatsapp-button" href="https://wa.me/966596749004" target="_blank">تواصل عبر واتساب لحل مشكلتك</a>
+        </div>
+
+        <div id="verifyBox">
+            <h3>خانة التحقق</h3>
+            <label for="childName">ادخل اسم ابن من ابنائك الموجود بالاكاديمية؟</label>
+            <input type="text" id="childName" placeholder="ادخل اسم ابنك" oninput="normalizeChildName()">
+            <button onclick="verifyChildName()">تحقق</button>
+        </div>
+
+        <div id="result"></div>
+
+        <div id="userDetails" class="user-info-box" style="display: none;">
+            <h4>التحقق ناجح!</h4>
+            <p>اسم المستخدم: <span id="userName"></span></p>
+            <p>كلمة المرور الخاصة بك هي: <span id="password">123456789</span></p>
+            <p>يمكنك تغيير كلمة المرور لاحقًا من داخل البرنامج.</p>
+            <button onclick="copyUsername()">نسخ اسم المستخدم</button>
+        </div>
+
+        <a href="https://wa.me/966596749004" id="whatsappContact">تواصل معنا عبر واتساب لحل مشكلتك</a>
+    </main>
+
+    <script>
+                const data = [
+          { "ParentName": "احمد محمد", "UserName": "ahmed.mohamed", "Trainees": ["عبدالله أحمد محمد", "عبدالرحمن أحمد محمد", "تاليا أحمد محمد"] },
+          { "ParentName": "احمد موسى", "UserName": "ahmed.mousa", "Trainees": ["يونس أحمد موسي"] },
+          { "ParentName": "احمد البحيري", "UserName": "ahmed.behari", "Trainees": ["زين أحمد البحيري"] },
+          { "ParentName": "أحمد عادل الدبيكي", "UserName": "ahmed.aldebaki", "Trainees": ["أبي أحمد عادل الدبيكي", "أنس أحمد عادل الدبيكي"] },
+          { "ParentName": "عمر أبو قفه", "UserName": "omar.abokfa", "Trainees": ["عبدالرحمن عمر أبو قفه", "شام عمر أبو قفه"] },
+          { "ParentName": "محمد أبو سباع", "UserName": "mohamed.abosebaa", "Trainees": ["بانه محمد أبو سباع"] },
+          { "ParentName": "وسيم محمود", "UserName": "wassim.mahmoud", "Trainees": ["تيم وسيم محمود"] },
+          { "ParentName": "نبيل كريم", "UserName": "nabil.kareem", "Trainees": ["عمر نبيل كريم"] },
+          { "ParentName": "عاطف محمود", "UserName": "atef.mahmoud", "Trainees": ["زياد عاطف محمود"] },
+          { "ParentName": "كريم أبو النجا", "UserName": "aboelnaga", "Trainees": ["فيروز كريم أبو النجا"] },
+          { "ParentName": "شريف أحمد", "UserName": "sherief.ahmed", "Trainees": ["أحمد شريف أحمد"] },
+          { "ParentName": "بلال معيلش", "UserName": "belal.meaelsh", "Trainees": ["زيد بلال معيلش"] },
+          { "ParentName": "احمد غزلان", "UserName": "ahmed.ghozlan", "Trainees": ["أدم أحمد غزلان"] },
+          { "ParentName": "عمرو عمار", "UserName": "amr.amaar", "Trainees": ["عبدالرحمن عمرو عمار", "أنس عمرو عمار"] },
+          { "ParentName": "يوسف برهومي", "UserName": "youssef.barhomi", "Trainees": ["محمد يوسف برهومي"] },
+          { "ParentName": "اسلام أبوسريع", "UserName": "islam", "Trainees": ["أسيل إسلام أبوسريع"] },
+          { "ParentName": "قاسم اغا", "UserName": "qasem.agha", "Trainees": ["أحمد قاسم أغا", "رهف قاسم أغا"] },
+          { "ParentName": "محمد سامى ادريس", "UserName": "mohamed.sami", "Trainees": ["هاشم محمد سامى إدريس", "كرم محمد سامى ادريس"] },
+          { "ParentName": "امير عبد العظيم", "UserName": "amir.abdelazim", "Trainees": ["أدم أمير عبدالعظيم", "اسر أمير عبدالعظيم"] },
+          { "ParentName": "احمد فتحي", "UserName": "ahmed.fathy", "Trainees": ["قيس أحمد فتحي", "حمزه أحمد فتحي"] },
+          { "ParentName": "علاء محمود إبراهيم", "UserName": "alaa", "Trainees": ["مؤمن علاء محمود إبراهيم"] },
+          { "ParentName": "محمد علي محمد السيد", "UserName": "mohamed.ali", "Trainees": ["رودينا محمد علي محمد السيد"] },
+          { "ParentName": "محمود محروس", "UserName": "mahmoud.mahrous", "Trainees": ["أحمد محمود محروس", "ساندي محمود محروس", "هايدي محمود محروس"] },
+          { "ParentName": "خالد علم الدين", "UserName": "khaled.almeldin", "Trainees": ["ياسين خالد علم الدين", "أكرم خالد علم الدين"] },
+          { "ParentName": "احمد السيد علام", "UserName": "ahmed.elsaid", "Trainees": ["عبدالله احمد السيد"] },
+          { "ParentName": "لافي بن لافي العتيبي", "UserName": "lafybn.lafy", "Trainees": ["نواف لافي بن لافي العتيبي"] },
+          { "ParentName": "محمد عطاالله", "UserName": "mohamed.atallah", "Trainees": ["عمر محمد عطاالله"] },
+          { "ParentName": "جمال نبيل", "UserName": "gamal.nabil", "Trainees": ["مازن جمال نبيل"] },
+          { "ParentName": "مصطفي مدبولي", "UserName": "mostafa.madboly", "Trainees": ["كنزي مصطفي مدبولي"] },
+          { "ParentName": "عبد العزيز بدله", "UserName": "abdelazziz.bdlh", "Trainees": ["ماسه عبد العزيز بدله"] },
+          { "ParentName": "رضا قنديل", "UserName": "reda.qandil", "Trainees": ["عمر رضا قنديل"] },
+          { "ParentName": "محمد عصفور", "UserName": "mohamed.asfour", "Trainees": ["مالك محمد عصفور", "عمر محمد عصفور"] },
+          { "ParentName": "مصطفى حسين", "UserName": "moustafa.Hussien", "Trainees": ["عبدالله مصطفى حسين"] },
+          { "ParentName": "معتز جمال", "UserName": "moataz.gamal", "Trainees": ["يحي معتز جمال", "لينا معتز جمال"] },
+          { "ParentName": "محمد محمود سيد", "UserName": "mohamed.mahmoud", "Trainees": ["علي محمد محمود سيد", "جوري محمد محمود سيد", "ساره محمد محمود سيد"] },
+          { "ParentName": "معتز خليف", "UserName": "moataz.khelif", "Trainees": ["مازن معتز خليف"] },
+          { "ParentName": "عماد أبو يابس", "UserName": "emad.abo-yabes", "Trainees": ["عمر عماد أبويابس", "نورا عماد أبو يابس", "حلا عماد أبو يابس"] },
+          { "ParentName": "احمد الهنداوي", "UserName": "ahmed.el-hendawy", "Trainees": ["عمر احمد الهنداوي"] },
+          { "ParentName": "اسلام عبد الحفيظ", "UserName": "islam.abdelhafiz", "Trainees": ["يوسف اسلام عبد الحفيظ"] },
+          { "ParentName": "عصام محمود", "UserName": "essam.mahmoud", "Trainees": ["محمود عصام محمود", "فريده عصام محمود"] },
+          { "ParentName": "الفيصل فتحي", "UserName": "el-faisal.fathy", "Trainees": ["عمر الفيصل فتحي"] },
+          { "ParentName": "احمد إيهاب", "UserName": "ahmed.ehab", "Trainees": ["إيهاب احمد إيهاب", "ايلين احمد إيهاب"] },
+          { "ParentName": "محمد عبدالرؤوف", "UserName": "mohamed.abdelraouf", "Trainees": ["معاذ محمد عبدالرؤوف"] },
+          { "ParentName": "احمد القناوي", "UserName": "ahmed.el-qenawy", "Trainees": ["يوسف أحمد القناوي"] },
+          { "ParentName": "محمد سوسق", "UserName": "mohamed.sawsaq", "Trainees": ["عبدالهادي محمد سوسق"] },
+          { "ParentName": "محمود سوسق", "UserName": "mahmoud.sawsaq", "Trainees": ["عبدالرحمن محمود سوسق", "رهام محمود سوسق"] },
+          { "ParentName": "هشام فوزي", "UserName": "hesham.fawzy", "Trainees": ["كريم هشام فوزي"] },
+          { "ParentName": "انس درويش", "UserName": "anas.darwish", "Trainees": ["إياد أنس درويش"] },
+          { "ParentName": "إبراهيم خليفة", "UserName": "ibrahim.khalifa", "Trainees": ["ياسين إبراهيم خليفة"] },
+          { "ParentName": "عبد الرحمن فتحي", "UserName": "abdulrahman.fathy", "Trainees": ["حمزه عبدالرحمن فتحي"] },
+          { "ParentName": "أحمد سعيد السيد ابراهيم", "UserName": "ahmed.saeed", "Trainees": ["عدي أحمد سعيد السيد ابراهيم"] },
+          { "ParentName": "وسام إيهاب", "UserName": "wessam.ehab", "Trainees": ["يحي وسام إيهاب"] },
+          { "ParentName": "إسماعيل طلبه", "UserName": "ismail.tolba", "Trainees": ["مصطفي إسماعيل طلبه"] },
+          { "ParentName": "محمد عبد الباسط", "UserName": "mohamed.abdulbasit", "Trainees": ["يوسف محمد عبدالباسط"] },
+          { "ParentName": "طارق السبع", "UserName": "tarek.elsaba", "Trainees": ["عمر طارق السبع"] },
+          { "ParentName": "ايمن هلالي", "UserName": "ayman.hilaly", "Trainees": ["سيلا أيمن هلالي"] },
+          { "ParentName": "احمد نايل", "UserName": "ahmed.nayel", "Trainees": ["يسرا أحمد نايل"] },
+          { "ParentName": "سعود السليمان", "UserName": "saud.al-Suleiman", "Trainees": ["دانية سعود السليمان"] },
+          { "ParentName": "حسن رأفت", "UserName": "hassan.Rafat", "Trainees": ["سجا حسن رأفت", "كادي حسن رأفت"] },
+          { "ParentName": "خالد بن فهيد السبيعي", "UserName": "khalid.bin-fahid", "Trainees": ["ريما خالد بن فهيد السبيعي"] },
+          { "ParentName": "خالد فاروق", "UserName": "khalid.farouk", "Trainees": ["منة الله خالد فاروق", "مصطفى خالد فاروق"] },
+          { "ParentName": "احمد عبد الحليم", "UserName": "ahmed.abdul-halim", "Trainees": ["فريدة أحمد عبدالحليم", "عاليه احمد عبدالحليم"] },
+          { "ParentName": "اشرف محمود ممتاز", "UserName": "ashraf.momtaz", "Trainees": ["لي لي أشرف محمود ممتاز", "جومانا أشرف محمود ممتاز"] },
+          { "ParentName": "مصطفى خليفه", "UserName": "mustafa.khalifa", "Trainees": ["خديجه مصطفى خليفه"] },
+          { "ParentName": "عبد الرحمن فايز", "UserName": "abdulrahman.fayez", "Trainees": ["كارما عبدالرحمن فايز", "جودي عبدالرحمن فايز"] },
+          { "ParentName": "احمد طعيمة", "UserName": "ahmed.taaima", "Trainees": ["سيلا أحمد طعيمة"] },
+          { "ParentName": "هاني فاروق", "UserName": "hany.farouk", "Trainees": ["حنين هاني فاروق", "نورهان هاني فاروق"] },
+          { "ParentName": "وليد زهير", "UserName": "walid", "Trainees": ["ليندا وليد زهير"] },
+          { "ParentName": "محمد سويلم", "UserName": "mohamed.swilem", "Trainees": ["رودينا محمد سويلم"] },
+          { "ParentName": "امير شلتوت", "UserName": "amir.shaltout", "Trainees": ["رودينا أمير شلتوت"] },
+          { "ParentName": "محمد جمال", "UserName": "mohamed.gamal", "Trainees": ["يوسف محمد جمال", "شهد محمد جمال"] },
+
+        { "ParentName": "احمد مصطفي محمد", "UserName": "ahmed.mostafa", "Trainees": ["روفانا احمد مصطفي محمد", "ملك احمد مصطفي محمد"] },
+          { "ParentName": "محمد صالح", "UserName": "mohamed.saleh", "Trainees": ["صبا محمد صالح"] },
+          { "ParentName": "عبد الرحمن عبد العزيز", "UserName": "abdelrahman.abdelaziz", "Trainees": ["جنى عبدالرحمن عبدالعزيز"] },
+          { "ParentName": "عمرو حسن ريميش", "UserName": "amr.hassan", "Trainees": ["تاليا عمرو حسن رميش"] },
+          { "ParentName": "محمد فادي كتيبي", "UserName": "mohamed.fady", "Trainees": ["يارا محمد فادي كاتبي"] },
+          { "ParentName": "احمد رضا عيسي", "UserName": "ahmed.reda", "Trainees": ["ليان أحمد رضا عيسي"] },
+          { "ParentName": "احمد علي", "UserName": "ahmed.ali", "Trainees": ["جود أحمد علي"] },
+          { "ParentName": "محمد يحي محمد", "UserName": "mohamed.yehya", "Trainees": ["أبوبكر محمد يحي محمد"] },
+          { "ParentName": "هاني مطاوع رشوان", "UserName": "hany.rashwan", "Trainees": ["عمر هاني مطاوع رشوان"] },
+          { "ParentName": "احمد حسني بكير", "UserName": "ahmed.hosny", "Trainees": ["ياسين أحمد حسني بكير"] },
+          { "ParentName": "عبدالمقصود يسري", "UserName": "abdelmaksod.yousry", "Trainees": ["محمد عبدالمقصود يسري", "أنس عبدالمقصود يسري"] },
+          { "ParentName": "عرفه السيد", "UserName": "arafa", "Trainees": ["محمد عرفه السيد"] },
+          { "ParentName": "محمد سميرعلي سليمان", "UserName": "mohamed.samir", "Trainees": ["مالك محمد سمير علي سليمان"] },
+          { "ParentName": "محمد عوض", "UserName": "mohamed.awad", "Trainees": ["حفصه محمد عوض"] },
+          { "ParentName": "محمد كرام", "UserName": "mohamed.kraam", "Trainees": ["هنا محمد كرام"] },
+          { "ParentName": "خالد الزوماني", "UserName": "khaled.elzomany", "Trainees": ["ناصر خالد الزوماني"] },
+          { "ParentName": "احمد ادريس", "UserName": "ahmed.edres", "Trainees": ["إسلام أحمد إدريس", "عماد أحمد إدريس"] },
+          { "ParentName": "محمود رضا", "UserName": "mahmoud.reda", "Trainees": ["رضا محمود رضا"] },
+          { "ParentName": "اسلام محمود", "UserName": "islam.mahmoud", "Trainees": ["عمر إسلام محمود"] },
+          { "ParentName": "ثابت بني فضل", "UserName": "thabet.fadel", "Trainees": ["زيد ثابت بني فاضل", "حسن ثابت بني فاضل"] },
+          { "ParentName": "عوض الله مطر", "UserName": "awadallah.mater", "Trainees": ["مصعب عوض الله مطر"] },
+          { "ParentName": "باسم جمال", "UserName": "basem.gamal", "Trainees": ["مازن باسم جمال"] },
+          { "ParentName": "محمد عيسى", "UserName": "mohamed.eisa", "Trainees": ["عمر محمد عيسى", "رغد محمد عيسى", "المعتصم محمد عيسى"] },
+          { "ParentName": "محمود جمال", "UserName": "mahmoud.gamal", "Trainees": ["يوسف محمود جمال"] },
+          { "ParentName": "احمد عزت", "UserName": "ahmed.ezzat", "Trainees": ["ريناد أحمد عزت", "محمد أحمد عزت"] },
+          { "ParentName": "رامي عرفات", "UserName": "ramy.arafat", "Trainees": ["تلا رامي عرفات", "ذياد رامي عرفات"] },
+          { "ParentName": "محمد صبري عبدالجواد", "UserName": "mohamed.sabry", "Trainees": ["ذياد محمد صبرى عبدالجواد"] },
+          { "ParentName": "عمر هنداوي", "UserName": "omar.hendawi", "Trainees": ["كريم عمر هنداوي", "وائل عمر هنداوي"] },
+          { "ParentName": "أيمن المولى", "UserName": "ayman.elmoly", "Trainees": ["جمال أيمن المولى"] },
+          { "ParentName": "ناصر الطلحي", "UserName": "nasel.eltalhy", "Trainees": ["تركي ناصر الطلحي"] },
+          { "ParentName": "سامي صالح", "UserName": "samy.saleh", "Trainees": ["منة سامي صالح", "محمد سامي صالح"] },
+          { "ParentName": "سنان علي", "UserName": "snan.ali", "Trainees": ["علي سنان علي"] },
+          { "ParentName": "شريف قاسم", "UserName": "sherief.qasem", "Trainees": ["يوسف شريف قاسم"] },
+          { "ParentName": "رأفت النواجحة", "UserName": "raafat.elnowagha", "Trainees": ["يوسف رأفت النواجحة"] },
+          { "ParentName": "شريف الشامي", "UserName": "sherief.elshamy", "Trainees": ["نور شريف الشامي", "مريم شريف الشامي"] },
+          { "ParentName": "محمد ابوزيد", "UserName": "mohamed.abozaid", "Trainees": ["على محمد ابوزيد"] },
+          { "ParentName": "عبدالله مقلد", "UserName": "abdullah.mokld", "Trainees": ["محمد عبدالله مقلد"] },
+          { "ParentName": "تامر سعد البنا", "UserName": "tamer.saad", "Trainees": ["عبدالرحمن تامر سعد البنا", "عمر تامر سعد البنا"] },
+          { "ParentName": "محمد عبدالنبى خشان", "UserName": "mohamed.abdelnaby", "Trainees": ["أحمد محمد عبدالنبى خشان"] },
+          { "ParentName": "عمر عبدالناصر عبدالله", "UserName": "omar.abdelnaser", "Trainees": ["يارا عمر عبدالناصر عبدالله"] },
+          { "ParentName": "محمد عبدالحكيم على", "UserName": "mohamed.abdelhakim", "Trainees": ["كارما محمد عبدالحكيم على"] },
+          { "ParentName": "سعد حسين آل عمر", "UserName": "saad.hessien", "Trainees": ["رواف سعد حسين آل عمر", "لندا سعد حسين آل عمر"] },
+          { "ParentName": "عاصف أحمد عاصف", "UserName": "asef.ahmed", "Trainees": ["أحمد عاصف أحمد عاصف", "منال عاصف أحمد عاصف"] },
+          { "ParentName": "أحمد عدلى الشيخ", "UserName": "ahmed.adly", "Trainees": ["حمزه أحمد عدلى الشيخ", "نادين أحمد عدلى الشيخ"] },
+          { "ParentName": "ماجد شايح العنزى", "UserName": "maged.shaih", "Trainees": ["عبدالله ماجد شايح العنزى", "سعود ماجد شايح العنزى"] },
+          { "ParentName": "عوض محمود النجار", "UserName": "awad.mahmoud", "Trainees": ["يامن عوض محمود النجار"] },
+          { "ParentName": "ماهر أحمد محمد", "UserName": "maher.ahmed", "Trainees": ["فهد ماهر أحمد محمد"] },
+          { "ParentName": "محمد عصام الدين مجاهد", "UserName": "mohamed.essam", "Trainees": ["منار محمد عصام الدين مجاهد"] },
+          { "ParentName": "حسن باجورى", "UserName": "hassan.bagory", "Trainees": ["أنس حسن باجورى"] },
+          { "ParentName": "محمد ماهر", "UserName": "mohamed.mahir", "Trainees": ["فارس محمد ماهر"] },
+          { "ParentName": "محمود ماهرالخياط", "UserName": "mahmoud.maher", "Trainees": ["زياد محمود ماهرالخياط"] },
+          { "ParentName": "سامح عبدالعزيز", "UserName": "sameh.abdelaziz", "Trainees": ["احمد سامح عبدالعزيز"] },
+          { "ParentName": "عبدالرحمن ابراهيم", "UserName": "abdulrahman.ibrahim", "Trainees": ["حمزه عبدالرحمن ابراهيم", "مروان عبدالرحمن ابراهيم", "روان عبدالرحمن إبراهيم"] },
+          { "ParentName": "حسين كامل البدوي", "UserName": "hussien.kamel", "Trainees": ["عبدالعزيز حسين كامل البدوي"] },
+          { "ParentName": "احمد اكرام", "UserName": "ahmed.ikram", "Trainees": ["مالك احمد اكرام"] },
+          { "ParentName": "علاء لطفى يحيي", "UserName": "alaa.yehya", "Trainees": ["عمر علاء لطفي يحيي", "سمية علاء لطفي يحيي"] },
+          { "ParentName": "غسان عمر حميدان", "UserName": "ghassan.hamidan", "Trainees": ["لين غسان عمر حميدان"] },
+          { "ParentName": "سامح عبدالرحمن", "UserName": "sameh.abdulrahman", "Trainees": ["محمد سامح عبدالرحمن"] },
+          { "ParentName": "حازم محي الدين", "UserName": "hazim.mohi", "Trainees": ["براء حازم محي الدين"] },
+          { "ParentName": "مجدي عبدالغني", "UserName": "magdy.abdelghany", "Trainees": ["يحي مجدي عبدالغني", "عمران مجدي عبدالغني"] },
+          { "ParentName": "هاني عطيه", "UserName": "hany.atia", "Trainees": ["أنس هاني عطيه"] },
+          { "ParentName": "خالد الحميدان", "UserName": "khalid.al-humaidan", "Trainees": ["أحمد خالد الحميدان", "صالح خالد الحميدان"] },
+          { "ParentName": "عمرو رميش", "UserName": "amr.rmesh", "Trainees": ["إياد عمرو رميش", "آدم عمرو رميش"] },
+          { "ParentName": "نادر ملص", "UserName": "nader.malas", "Trainees": ["سلطان نادر ملص"] },
+          { "ParentName": "سويلم السويلم", "UserName": "suwailem.al-suwailem", "Trainees": ["سلطان سويلم السويلم"] },
+          { "ParentName": "عاصم أمين", "UserName": "asim.amin", "Trainees": ["سادن عاصم أمين", "إياد عاصم أمين", "باسل عاصم أمين"] },
+          { "ParentName": "رامي أحمد", "UserName": "ramy.ahmed", "Trainees": ["أحمد رامي أحمد"] },
+          { "ParentName": "عبدالله المطيري", "UserName": "abdullah.almutairi", "Trainees": ["محمد عبدالله المطيري"] },
+          { "ParentName": "محمد سيد", "UserName": "mohamed.sayed", "Trainees": ["لاتويا محمد سيد"] },
+          { "ParentName": "محمد الشاذلي", "UserName": "mohamed.al-shazly", "Trainees": ["ليان محمد الشاذلي"] },
+          { "ParentName": "أمير رشاد", "UserName": "amir.rashad", "Trainees": ["ليليان أمير رشاد"] },
+          { "ParentName": "محمد حسانين", "UserName": "mohamed.hassanin", "Trainees": ["كيان محمد حسانين"] },
+          { "ParentName": "بهاء إبراهيم البسيونى", "UserName": "bahaa.ibrahim", "Trainees": ["عمر بهاء إبراهيم", "نور بهاء إبراهيم"] },
+          { "ParentName": "نور الدين", "UserName": "nour-eldeen", "Trainees": ["محمد نور الدين"] },
+        { "ParentName": "احمد محمد", "UserName": "ahmed.al-ahmar", "Trainees": ["ادم احمد الأحمر", "سيلا احمد الأحمر"] },
+        { "ParentName": "احمد حسونة", "UserName": "ahmed.hasona", "Trainees": ["بسام احمد حسونة"] },
+        { "ParentName": "بسام جمال", "UserName": "basam.gamal", "Trainees": ["مازن بسام جمال"] },
+        { "ParentName": "صفوان الموالي", "UserName": "safwan.al-maoal", "Trainees": ["ادم صفوان الموال"] },
+        { "ParentName": "حسام عبد النبي", "UserName": "hossam.abd-alnaby", "Trainees": ["حمزة حسام عبد النبي"] },
+        { "ParentName": "خالد الشمري", "UserName": "khaled.al-shamry", "Trainees": ["عبد العزيز خالد الشمري", "محمد خالد الشمري"] },
+        { "ParentName": "احمد سامي", "UserName": "ahmed.sami", "Trainees": ["مصطفى احمد سامي"] },
+        { "ParentName": "محمد حسن", "UserName": "mohamed.hassan", "Trainees": ["حسن محمد حسن"] },
+        { "ParentName": "محمد بدر", "UserName": "mohamed.badr", "Trainees": ["سجدة محمد بدر"] },
+        { "ParentName": "احمد عبدلله", "UserName": "ahmed.abdullah", "Trainees": ["فيروز احمد عبدلله", "جودي احمد عبد الله"] },
+        { "ParentName": "محمد كلش", "UserName": "mohamed.kalsh", "Trainees": ["ماريا محمد كلش", "سيدار محمد كلش"] },
+        { "ParentName": "محمد عبد السلام", "UserName": "mohamed.abd-alsalam", "Trainees": ["ملك محمد عبد السلام"] },
+        { "ParentName": "محمد السيد عباس إبراهيم", "UserName": "mohamed.sayid", "Trainees": ["ياسين محمد السيد", "ریماس محمد السيد"] },
+        { "ParentName": "محمد انس", "UserName": "mohamed.anas", "Trainees": ["غزل محمد انس"] },
+        { "ParentName": "بدوي احمد", "UserName": "badawi.ahmed", "Trainees": ["خديجة بدوي احمد"] },
+        { "ParentName": "حاتم محمود", "UserName": "hatim.mahmoud", "Trainees": ["سيليا حاتم محمود"] },
+        { "ParentName": "احمد محمود شحاته", "UserName": "ahmed.mahmoudsh", "Trainees": ["يوسف احمد محمود شحاته"] },
+        { "ParentName": "ابراهيم حسين عبد المعطى", "UserName": "ebrahim.hessien", "Trainees": ["آدم ابراهيم حسين عبد المعطى"] },
+        { "ParentName": "محمد ناصر محمد الشهراني", "UserName": "alshahrani", "Trainees": ["ناصر محمد ناصر محمد الشهراني", "علي محمد ناصر محمد الشهراني"] },
+        { "ParentName": "نوح إبراهيم الحربي", "UserName": "alharbi", "Trainees": ["فارس نوح إبراهيم الحربي", "اصيل نوح إبراهيم الحربي"] },
+        { "ParentName": "محمد فهد الفطيس", "UserName": "alftis", "Trainees": ["فهد محمد فهد الفطيس"] },
+        { "ParentName": "إبراهيم محمد إبراهيم", "UserName": "ibrahim", "Trainees": ["طه إبراهيم محمد إبراهيم", "يحيي إبراهيم محمد إبراهيم"] },
+        { "ParentName": "أحمد عمر سالم العبيدي", "UserName": "alobeidi", "Trainees": ["عبد العزيز أحمد عمر سالم العبيدي"] },
+        { "ParentName": "سعد بريجس الرحماني", "UserName": "saad.al-rahmani", "Trainees": ["محمد سعد بريجس الرحماني"] },
+        { "ParentName": "مفرح المعيني", "UserName": "al-muaini", "Trainees": ["عبد الاله مفرح المعيني"] },
+        { "ParentName": "حسام مصطفى المالكي", "UserName": "almalki", "Trainees": ["مصطفي حسام مصطفي المالكي"] },
+        { "ParentName": "مقحص إبراهيم", "UserName": "maqahs", "Trainees": ["سلطان مقحص إبراهيم", "لندا مقحص إبراهيم"] },
+        { "ParentName": "مشعل عائض الغامدي", "UserName": "al-ghamdi", "Trainees": ["منصور مشعل عائض الغامدي"] },
+        { "ParentName": "ناصر حسين عبدالله الهزاع", "UserName": "alhazaa", "Trainees": ["شادن ناصر حسين عبدالله الهزاع"] },
+        { "ParentName": "خالد سعيد إبراهيم", "UserName": "khaled.saaed", "Trainees": ["زياد خالد سعيد إبراهيم"] },
+        { "ParentName": "احمد علي سعد المناوي", "UserName": "ahmed.alis", "Trainees": ["مازن احمد علي سعد المناوي"] },
+        { "ParentName": "محمد كريم قنديل", "UserName": "mohamed.kareem", "Trainees": ["سلمى محمد كريم قنديل", "ياسمينا محمد كريم قنديل"] },
+        { "ParentName": "محمود سوساك", "UserName": "mahmoud.susak", "Trainees": ["رهام محمود سوساك"] },
+        { "ParentName": "عمرومحمد امام", "UserName": "amr.mohamed", "Trainees": ["نور عمرومحمد امام"] },
+        { "ParentName": "حسين بن يحي الوحيشي", "UserName": "hessien.bnyehia", "Trainees": ["ساره حسين بن يحي الوحيشي"] },
+        { "ParentName": "هيثم محمود الشتات", "UserName": "haitham.mahmoud", "Trainees": ["رنا هيثم محمود الشتات"] },
+        { "ParentName": "محمد طاهر حمدان", "UserName": "mohamed.taher", "Trainees": ["عائشه محمد طاهر حمدان"] },
+        { "ParentName": "عبدالرحمن علي عبدالله", "UserName": "abdelrahman.ali", "Trainees": ["هديل عبدالرحمن علي عبدالله"] },
+        { "ParentName": "حزمي عيد السبيعي", "UserName": "hzmi.eid", "Trainees": ["سارا حزمي عيد السبيعي"] },
+        { "ParentName": "عمرو محمد امام", "UserName": "amr.mohamedem", "Trainees": ["عالية عمرو محمد امام"] },
+        { "ParentName": "احمد عزمى عثمان", "UserName": "ahmed.azmi", "Trainees": ["جميله احمد عزمى عثمان"] },
+        { "ParentName": "محمد علي علي", "UserName": "mohamed.alii", "Trainees": ["داليدا محمد علي علي"] },
+        { "ParentName": "خالد جمعه البيزات", "UserName": "khaled.gomaa", "Trainees": ["سدين خالد جمعه البيزات"] },
+        { "ParentName": "احمد بكار الابعج", "UserName": "ahmed.bakar", "Trainees": ["سيلينا احمد بكار البعج"] },
+        { "ParentName": "محمد إبراهيم الفار", "UserName": "mohamed.ebrahim", "Trainees": ["اودليا محمد إبراهيم الفار"] },
+        { "ParentName": "خالد كمال مرسي", "UserName": "khaled.kamal", "Trainees": ["تاليا خالد كمال مرسي"] },
+        { "ParentName": "أشرف السيد حماد", "UserName": "ashraf.elsayed", "Trainees": ["عاليه أشرف السيد حماد"] },
+        { "ParentName": "محمد سمير هندى", "UserName": "mohamed.samirh", "Trainees": ["هدى محمد سمير هندى"] },
+        { "ParentName": "اسالم فتحي منصور", "UserName": "islam.fathy", "Trainees": ["يسر اسلام فتحي منصور"] },
+        { "ParentName": "طارق مصطفى مصطفي", "UserName": "tarek.mostafa", "Trainees": ["ياسين طارق مصطفي مصطفي"] },
+        { "ParentName": "عمر محمد الدسوقي", "UserName": "omar.mohamedd", "Trainees": ["محمد عمر محمد الدسوقي"] },
+        { "ParentName": "إبراهيم ممدوح حبى", "UserName": "ebrahim.mamdouh", "Trainees": ["ريان إبراهيم ممدوح حبى"] },
+        { "ParentName": "احمد السيد سليم", "UserName": "ahmed.elsayed", "Trainees": ["كادي احمد السيد سليم"] },
+        { "ParentName": "محمد مسعد العريان", "UserName": "mohamed.mosaad", "Trainees": ["مريم محمد مسعد العريان"] },
+        { "ParentName": "خالد عابدين حجازي", "UserName": "khaled.abdeen", "Trainees": ["كرما خالد عابدين حجازي"] },
+        { "ParentName": "محمد صبري احمد", "UserName": "mohamed.sabryy", "Trainees": ["لين محمد صبري احمد"] },
+        { "ParentName": "خالد محمد عاصى", "UserName": "khaled.mohamed", "Trainees": ["فريده خالد محمد عاصى"] },
+        { "ParentName": "مصطفى محمود البسيونى", "UserName": "mostafa.mahmoud", "Trainees": ["تاليا مصطفى محمود البسيونى"] },
+        { "ParentName": "يوسف احمد خمسان", "UserName": "youssef.ahmedd", "Trainees": ["وتين يوسف احمد خمسان"] },
+        { "ParentName": "محمد سليمان الطروش", "UserName": "mohamed.soliman", "Trainees": ["مريم محمد سليمان الاطروش"] },
+        { "ParentName": "عبد الله إبراهيم الشامى", "UserName": "abdullah.ebrahim", "Trainees": ["هنا عبد الله إبراهيم الشامى"] },
+        { "ParentName": "عبد العزيز الماحي خوجلي", "UserName": "abdelazziz.almahi", "Trainees": ["تالا عبد العزيز الماحي خوجلي"] },
+        { "ParentName": "محمد احمد الديب", "UserName": "mohamed.ahmedd", "Trainees": ["سلسبيل محمد احمد الديب"] },
+        { "ParentName": "عبد الرحمن خميس الفولي", "UserName": "abdelrahman.khames", "Trainees": ["هنا عبد الرحمن خميس الفولي"] },
+        { "ParentName": "شكري جمال شكري", "UserName": "shoukry.gamal", "Trainees": ["ملك شكري جمال شكري"] },
+        { "ParentName": "لؤى صالح على", "UserName": "louay.saleh", "Trainees": ["دانة لؤى صالح على", "جود لؤى صالح على"] },
+        { "ParentName": "وسام مروان الشاعر", "UserName": "wissam.marwan", "Trainees": ["لارا وسام مروان الشاعر", "مايا وسام مروان الشاعر"] },
+        { "ParentName": "عمرو محمد القوني", "UserName": "amr.mohamedd", "Trainees": ["لينة عمرو محمد القوني"] },
+        { "ParentName": "اسلام يوسف سعفان", "UserName": "islam.youssef", "Trainees": ["فريدة اسلام يوسف سعفان"] },
+        { "ParentName": "كريم محمد خليف", "UserName": "kareem.mohamed", "Trainees": ["ياسمين كريم محمد خليف"] },
+        { "ParentName": "محمد احمد حبيب", "UserName": "mohamed.ahmeed", "Trainees": ["اروى محمد احمد حبيب", "أدم محمد احمد حبيب"] },
+        { "ParentName": "احمد حسن عزب", "UserName": "ahmed.hassan", "Trainees": ["مريم احمد حسن عزب"] },
+        { "ParentName": "عامر عبدالجبار خباز", "UserName": "amer.abdulgbar", "Trainees": ["نجاح عامر عبدالجبار خباز"] },
+        { "ParentName": "وائل السعيد منا", "UserName": "wael.elsaid", "Trainees": ["كنزي وائل السعيد منا"] },
+        { "ParentName": "محمد رشاد ابراهيم", "UserName": "mohamd.rashad", "Trainees": ["هنا محمد رشاد ابراهيم", "جنى محمد رشاد ابراهيم", "زياد محمد رشاد إبراهيم"] },
+        { "ParentName": "سعود عبد العزيز السليمان", "UserName": "sood.abdelazziz", "Trainees": ["ريم سعود عبد العزيز السليمان"] },
+        { "ParentName": "احمد حامد عبدالحافظ", "UserName": "ahmed.hamedd", "Trainees": ["جويرية احمد حامد عبدالحافظ", "أدم أحمد حامد عبدالحافظ", "مأمون أحمد حامد عبدالحافظ"] },
+        { "ParentName": "امير سمير شلتوت", "UserName": "amir.samir", "Trainees": ["لينا امير سمير شلتوت"] },
+        { "ParentName": "مجدي عبد الفتاح مصطفي", "UserName": "magdy.abdelfatah", "Trainees": ["شويكار مجدي عبد الفتاح مصطفي"] },
+        { "ParentName": "محمد سامى بري", "UserName": "mohamed.samyy", "Trainees": ["ليليا محمد سامى بري"] },
+        { "ParentName": "سعدي شعبان السيد", "UserName": "saady.shaaban", "Trainees": ["جوين سعدي شعبان السيد"] },
+        { "ParentName": "مصطفى علي المرسي", "UserName": "mostafa.ali", "Trainees": ["فريده مصطفي علي المرسي"] },
+        { "ParentName": "عبدالعزيز بخش", "UserName": "abdelazziz.bkhshh", "Trainees": ["يارا عبدالعزيز بخش"] },
+        { "ParentName": "احمد حلمي عوضين", "UserName": "ahmed.helmi", "Trainees": ["مليكه احمد حلمي عوضين"] },
+          { "ParentName": "احمد جابر علي", "UserName": "ahmed.gaber", "Trainees": ["دينا احمد جابر علي"] },
+          { "ParentName": "حسام الدين محمد", "UserName": "hossam.eldin", "Trainees": ["رقيه حسام الدين محمد"] },
+          { "ParentName": "يحي عوضه", "UserName": "yehia.awda", "Trainees": ["مرح يحي عوضه", "رغد يحي عوضه"] },
+          { "ParentName": "محمد فالته", "UserName": "mohamed.flath", "Trainees": ["ديم محمد فلاته"] },
+          { "ParentName": "بندر مطلق الروالي", "UserName": "bandr.motlk", "Trainees": ["جوليا بندر مطلق الروالي"] },
+          { "ParentName": "عبدالرحمن بديع الكتبي", "UserName": "abdelrahman.badia", "Trainees": ["روز عبدالرحمن بديع الكتبي"] },
+          { "ParentName": "محمد جمال عنبي", "UserName": "mohamed.anaby", "Trainees": ["قصي محمد جمال عنبي", "سامي محمد جمال عنبي"] },
+          { "ParentName": "محمد محمد أحمد", "UserName": "mohamed.mohamed", "Trainees": ["يحي محمد محمد أحمد", "رهف محمد محمد أحمد"] },
+          { "ParentName": "مصطفى كامل", "UserName": "mostafa.kamel", "Trainees": ["كامل مصطفى كامل", "مالك مصطفى كامل"] },
+          { "ParentName": "أشرف مرسي", "UserName": "ashraf.moursy", "Trainees": ["سارة أشرف مرسي", "إبراهيم أشرف مرسي"] },
+          { "ParentName": "هيثم مجدي الشاهد", "UserName": "haitham.magdy", "Trainees": ["عمر هيثم مجدي الشاهد", "مريم هيثم مجدي الشاهد"] },
+          { "ParentName": "أحمد عبدالفتاح الحبشي", "UserName": "ahmed.abdelfatah", "Trainees": ["ماسة أحمد عبدالفتاح الحبشي"] },
+          { "ParentName": "أحمد إسماعيل", "UserName": "ahmed.esmail", "Trainees": ["حمزة أحمد إسماعيل"] },
+          { "ParentName": "أحمد ماهر", "UserName": "ahmed.maher", "Trainees": ["منه أحمد ماهر", "عمرو أحمد ماهر"] },
+          { "ParentName": "محمد عبدالكريم عثمان", "UserName": "mohamed.abdelkareem", "Trainees": ["حمزة محمد عبدالكريم عثمان"] },
+          { "ParentName": "عمرو محمد العالم", "UserName": "amr.mohameddd", "Trainees": ["مصطفى عمرو محمد العالم"] },
+          { "ParentName": "سامح محمد رخا", "UserName": "sameh.mohamed", "Trainees": ["إياد سامح محمد رخا"] },
+          { "ParentName": "محمد عبدالعزيز", "UserName": "mohamed.abdelazziz", "Trainees": ["زياد محمد عبدالعزيز", "نور الدين محمد عبدالعزيز"] },
+          { "ParentName": "خالد فؤاد", "UserName": "khaled.foaad", "Trainees": ["غنى خالد فؤاد"] },
+          { "ParentName": "عبدالله غريب", "UserName": "abdullah.ghareeb", "Trainees": ["محمد عبدالله غريب"] },
+          { "ParentName": "محمد صلاح عبدالغفار", "UserName": "mohamed.salah", "Trainees": ["محمد محمد صلاح عبدالغفار"] },
+          { "ParentName": "وائل إبراهيم الجمل", "UserName": "wael.ibrahim", "Trainees": ["محمد وائل إبراهيم الجمل", "جنى وائل إبراهيم الجمل"] },
+          { "ParentName": "محمد السيد شبانة", "UserName": "mohamed.elsayed", "Trainees": ["أدم محمد السيد شبانة", "أسيل محمد السيد شبانة"] },
+          { "ParentName": "رائد محمود البصلة", "UserName": "raed.mahmoud", "Trainees": ["ورد رائد محمود البصلة"] },
+          { "ParentName": "أحمد عثمان", "UserName": "ahmed.osman", "Trainees": ["روان احمد عثمان", "ليليا احمد عثمان", "تاليا أحمد عثمان"] },
+          { "ParentName": "محمود عبداللطيف", "UserName": "mahmoud.abdelatif", "Trainees": ["محمد محمود عبداللطيف"] },
+          { "ParentName": "سعد محمد", "UserName": "saad.mohamed", "Trainees": ["منه الله سعد محمد"] },
+          { "ParentName": "محمد إبراهيم", "UserName": "mohamad.ebrahim", "Trainees": ["حبيبه محمد إبراهيم", "ملك محمد إبراهيم"] },
+          { "ParentName": "علاء ممدوح", "UserName": "alaa.mamduh", "Trainees": ["إبراهيم علاء ممدوح", "محمد علاء ممدوح"] },
+          { "ParentName": "عيسي وريدات", "UserName": "eisa.wridat", "Trainees": ["اياد عيسي وريدات", "عبدالله عيسي وريدات"] },
+          { "ParentName": "محمد الخواجه", "UserName": "mohamed.elkhwaga", "Trainees": ["عبدالرحمن محمد الخواجه"] },
+          { "ParentName": "خالد فرج", "UserName": "khaled.farag", "Trainees": ["حمزه خالد فرج"] },
+          { "ParentName": "إبراهيم سعيد", "UserName": "ebrahim.saed", "Trainees": ["يوسف إبراهيم سعيد", "جنا ابراهيم سعيد"] },
+          { "ParentName": "أحمد عبدالله", "UserName": "ahmed.abdullahh", "Trainees": ["سلسبيل احمد عبدالله", "يوسف احمد عبدالله", "إبراهيم احمد عبدالله"] },
+          { "ParentName": "محمد عابد", "UserName": "mohamed.abed", "Trainees": ["احمد محمد عابد"] },
+          { "ParentName": "محمد فؤاد", "UserName": "mohamed.foaad", "Trainees": ["احمد محمد فؤاد"] },
+          { "ParentName": "اسامه القاضي", "UserName": "osama.elqady", "Trainees": ["كريم اسامه القاضي", "ياسين اسامه القاضي"] },
+          { "ParentName": "محمد صالح", "UserName": "mohamed.salehh", "Trainees": ["يوسف محمد صالح"] },
+          { "ParentName": "عمرو فرج", "UserName": "amr.faragg", "Trainees": ["محمد عمرو فرج"] },
+          { "ParentName": "شريف الشناوى", "UserName": "sherief.elshnawy", "Trainees": ["عمر شريف الشناوى"] },
+          { "ParentName": "محمد الليثي", "UserName": "mohamed.ellithy", "Trainees": ["محمود محمد الليثي", "إبراهيم محمد الليثي"] },
+          { "ParentName": "أحمد شادى", "UserName": "ahmed.shady", "Trainees": ["رودينا احمد شادى", "عبدالرحمن احمد شادى"] },
+          { "ParentName": "محمود عبد الموجود", "UserName": "mahmoud.abdelmawgod", "Trainees": ["انس محمود عبد الموجود", "ملك محمود عبدالموجود"] },
+          { "ParentName": "شريف بركات", "UserName": "sherief.barakat", "Trainees": ["تامر شريف بركات"] },
+          { "ParentName": "خالد سعيد بدوي", "UserName": "khaled.saeed", "Trainees": ["عبدالرحمن خالد سعيد بدوي"] },
+          { "ParentName": "مجدي احمد", "UserName": "magdy.ahmed", "Trainees": ["اياد مجدي احمد", "ادم مجدي احمد"] },
+          { "ParentName": "حسن القاسم", "UserName": "hassanelqassem", "Trainees": ["انس حسن القاسم"] },
+          { "ParentName": "ايمن مختار", "UserName": "ayman.mokhtar", "Trainees": ["يوسف ايمن مختار"] },
+          { "ParentName": "محمد عزت", "UserName": "mohamed.ezzat", "Trainees": ["انس محمد عزت"] },
+          { "ParentName": "وليد الحمراوى", "UserName": "walid.elhmrawy", "Trainees": ["عمار وليد الحمراوى", "عمرو وليد الحمراوى"] },
+          { "ParentName": "يحي الباسل", "UserName": "yehia.elbasel", "Trainees": ["علي يحي الباسل"] },
+          { "ParentName": "أحمد المنجي", "UserName": "ahmed.elmongy", "Trainees": ["اسر احمد المنجي"] },
+          { "ParentName": "محمد مهدى", "UserName": "mohamed.mahdy", "Trainees": ["انس محمد مهدى"] },
+          { "ParentName": "عمرو نشأت", "UserName": "amr.nashaat", "Trainees": ["مازن عمرو نشأت", "رودينا عمرو نشأت"] },
+          { "ParentName": "وائل الجمل", "UserName": "wael.gamal", "Trainees": ["كريم وائل الجمل", "جودي وائل الجمل"] },
+          { "ParentName": "محمد علي ابراهيم علي", "UserName": "mohamed.alaa", "Trainees": ["علي محمد علي ابراهيم علي", "مالك محمد علي ابراهيم علي"] },
+          { "ParentName": "محمد مصطفي", "UserName": "mostaffa", "Trainees": ["عبدالرحمن محمد مصطفي"] },
+          { "ParentName": "هشام الحباك", "UserName": "hisham.elhabak", "Trainees": ["جاسر هشام الحباك"] },
+          { "ParentName": "عز الرجال", "UserName": "ezzelrgal", "Trainees": ["اسر عز الرجال"] },
+          { "ParentName": "حسن القاسم", "UserName": "hassa.elqassem", "Trainees": ["احمد حسن القاسم"] },
+          { "ParentName": "عبد الرازق محمد", "UserName": "abdelrazek.mohamed", "Trainees": ["يوسف عبد الرازق محمد"] },
+          { "ParentName": "محمود عبد اللطيف", "UserName": "mahmoud.abdelatef", "Trainees": ["محمد محمود عبد اللطيف"] },
+          { "ParentName": "سامح مندور", "UserName": "sameh.mandor", "Trainees": ["احمد سامح مندور", "سما سامح مندور", "سمر سامح مندور"] },
+          { "ParentName": "حامد يونس", "UserName": "hamed.younes", "Trainees": ["يونس حامد يونس"] },
+          { "ParentName": "خالد ايسر", "UserName": "aisar", "Trainees": ["اسامه خالد ايسر"] },
+          { "ParentName": "يسرى عبدالقادر", "UserName": "yousri", "Trainees": ["عبدالرحمن يسرى عبدالقادر", "منه يسرى عبدالقادر", "هبه يسرى عبدالقادر"] },
+          { "ParentName": "صابر احمد", "UserName": "saber.ahmed", "Trainees": ["حنين صابر احمد"] },
+          { "ParentName": "احمد معدي", "UserName": "ahmed.mady", "Trainees": ["ميرال احمد معدي"] },
+         { "ParentName": "احمد قطب", "UserName": "ahmed.qotob", "Trainees": ["جولى احمد قطب", "روجينا احمد قطب", "محمود أحمد قطب"] },
+          { "ParentName": "محمد اكرم", "UserName": "mohamed.akram", "Trainees": ["زين محمد اكرم"] },
+          { "ParentName": "عمرو فرج", "UserName": "amrr.farag", "Trainees": ["رويدا عمرو فرج", "رقيه عمرو فرج"] },
+          { "ParentName": "محمد يسرى", "UserName": "mohamed.yousry", "Trainees": ["فرح محمد يسرى", "فريده محمد يسرى"] },
+          { "ParentName": "خالد محمد القلفاط", "UserName": "khaled.mohamedd", "Trainees": ["مريم خالد محمد"] },
+          { "ParentName": "احمد صبحي", "UserName": "ahmed.sobhy", "Trainees": ["غزل احمد صبحي", "لوجين احمد صبحي"] },
+          { "ParentName": "كريم مجدالاسلام", "UserName": "kareem.mgd", "Trainees": ["جيداء كريم مجدالاسلام"] },
+          { "ParentName": "عبدالله الغريب", "UserName": "abdullah.elghreb", "Trainees": ["رودينا عبدالله الغريب"] },
+          { "ParentName": "احمد احمد حسن السيد", "UserName": "ahmed.elsayyed", "Trainees": ["ميرا احمد احمد حسن السيد"] },
+          { "ParentName": "جلال الدين على", "UserName": "galal.ali", "Trainees": ["ياسمين جلال الدين على"] },
+          { "ParentName": "ابراهيم محمد", "UserName": "ibrahim.mohamed", "Trainees": ["رودينا ابراهيم محمد"] },
+          { "ParentName": "على عبدالرحيم", "UserName": "ali.abdelrahim", "Trainees": ["جنا على عبدالرحيم"] },
+          { "ParentName": "تامر عدلي الصاوى", "UserName": "tamer.elsawy", "Trainees": ["جيداء تامر عدلي الصاوى"] },
+          { "ParentName": "عبدالعزيز فوزى", "UserName": "abdelazzez.fawzy", "Trainees": ["ياسمين عبدالعزيز فوزى", "ريناد عبدالعزيز فوزى"] },
+          { "ParentName": "مصطفي محمد", "UserName": "mostafa.mohamedd", "Trainees": ["مرام مصطفي محمد"] },
+          { "ParentName": "محمد هجرس", "UserName": "mohamed.hagras", "Trainees": ["تاليا محمد هجرس", "تيا محمد هجرس"] },
+          { "ParentName": "ناجي رمضان", "UserName": "nagy.ramadan", "Trainees": ["سوار ناجي رمضان"] },
+          { "ParentName": "شريف بركات", "UserName": "sherief.barakatt", "Trainees": ["مريم شريف بركات"] },
+          { "ParentName": "سامح سيد", "UserName": "sameh.sayed", "Trainees": ["جودى سامح سيد"] },
+          { "ParentName": "احمد نبيل", "UserName": "ahmed.nabil", "Trainees": ["مليكه احمد نبيل", "تاليا احمد نبيل"] },
+          { "ParentName": "إيهاب محمد العطار", "UserName": "ehab.mohamed", "Trainees": ["جيداء إيهاب محمد العطار"] },
+          { "ParentName": "محمد صابر عبدالجواد", "UserName": "mohamed.saber", "Trainees": ["اسيل محمد صابر"] },
+          { "ParentName": "محمد طلعت", "UserName": "mohamed.talat", "Trainees": ["ريناد محمد طلعت"] },
+          { "ParentName": "سامح على", "UserName": "sameh.ali", "Trainees": ["اسيل سامح على"] },
+          { "ParentName": "محمود عبدالرزاق", "UserName": "mahmoud.abdelrazek", "Trainees": ["فريده محمود عبدالرزاق"] },
+          { "ParentName": "وائل محمد سوبيع", "UserName": "wael.mohamed", "Trainees": ["هنا وائل محمد سوبيع"] },
+          { "ParentName": "رامز المصري", "UserName": "ramez.elmasry", "Trainees": ["ليان رامز المصري"] },
+          { "ParentName": "السيد سلامه", "UserName": "elsayed.salama", "Trainees": ["ميرنا السيد سلامه"] },
+          { "ParentName": "حسين والى", "UserName": "hessien.wali", "Trainees": ["حلا حسين والى"] },
+          { "ParentName": "خالد ابوريشه", "UserName": "khaled.aborisha", "Trainees": ["لانا خالد ابوريشه"] },
+          { "ParentName": "حسام توكل", "UserName": "hossam.tawkll", "Trainees": ["رغد حسام توكل", "عبد الرحمن حسام توكل"] },
+          { "ParentName": "محمد عادل", "UserName": "mohamed.adel", "Trainees": ["لما محمد عادل"] },
+          { "ParentName": "ابراهيم السيد", "UserName": "ebrahim.elsayed", "Trainees": ["احمد ابراهيم  السيد"] },
+          { "ParentName": "محمد رضوان", "UserName": "mohamed.radwann", "Trainees": ["عبد الرحمن محمد رضوان"] },
+          { "ParentName": "محمد إبراهيم متولي", "UserName": "mohamed.metwally", "Trainees": ["يوسف محمد إبراهيم متولي"] },
+          { "ParentName": "إبراهيم السيد حافظ", "UserName": "ebrahim.sayed", "Trainees": ["ريمان إبراهيم السيد حافظ"] },
+          { "ParentName": "أحمد حسن معدى", "UserName": "ahmed.madi", "Trainees": ["مالك أحمد حسن معدى", "معاذ أحمد حسن معدى"] },
+          { "ParentName": "أيمن عبدالعزيز", "UserName": "ayman.abdulaziz", "Trainees": ["مالك أيمن عبدالعزيز"] },
+          { "ParentName": "بهاء الطنطاوى", "UserName": "bahaa", "Trainees": ["براء بهاء الطنطاوي"] },
+          { "ParentName": "سامح عبدالعاطي", "UserName": "sameh", "Trainees": ["يوسف سامح عبدالعاطي"] },
+          { "ParentName": "نبيل سليمان عبدالله", "UserName": "nabil.soliman", "Trainees": ["سليمان نبيل سليمان عبدالله"] },
+          { "ParentName": "مبارك مهدي ال خليفة", "UserName": "mobarak", "Trainees": ["حمد مبارك مهدي ال خليفة"] },
+          { "ParentName": "مصطفي حسن", "UserName": "mustafa.hassan", "Trainees": ["زياد مصطفي حسن"] },
+          { "ParentName": "أحمد عبدالعزيز", "UserName": "ahmed.abdelaziz", "Trainees": ["أدهم أحمد عبدالعزيز"] }
+                ];
+
+                let selectedParent = null;
+
+              function normalizeString(str) {
+            const normalizationMap = {
+                "أ": "ا", "إ": "ا", "آ": "ا", "ؤ": "و", "ئ": "ي", "ى": "ي", "ة": "ه"
+            };
+
+            // إزالة المسافات وتطبيق خريطة التطبيع
+            return str.replace(/\s+/g, "").split("").map(char => normalizationMap[char] || char).join("");
+        }
+
+
+                function showSuggestions() {
+                    const parentNameInput = document.getElementById("parentName").value.trim();
+                    const suggestionsList = document.getElementById("suggestions");
+                    const normalizedParentNameInput = normalizeString(parentNameInput.toLowerCase());
+
+                    const matches = data.filter(item => normalizeString(item.ParentName.toLowerCase()).includes(normalizedParentNameInput));
+
+                    suggestionsList.innerHTML = "";
+                    matches.forEach(match => {
+                        const li = document.createElement("li");
+                        li.textContent = match.ParentName;
+                        li.onclick = () => {
+                            document.getElementById("parentName").value = match.ParentName;
+                            suggestionsList.innerHTML = "";
+                        };
+                        suggestionsList.appendChild(li);
+                    });
+                    suggestionsList.style.display = matches.length ? "block" : "none";
+                }
+
+                function startVerification() {
+                    const parentNameInput = document.getElementById("parentName").value.trim();
+                    const normalizedParentName = normalizeString(parentNameInput.toLowerCase());
+                    selectedParent = data.find(parent => normalizeString(parent.ParentName.toLowerCase()) === normalizedParentName);
+
+                    document.getElementById("loadingSpinner").style.display = "none";
+                    document.getElementById("errorBox").style.display = "none";
+
+                    if (selectedParent) {
+                        document.getElementById("verifyBox").style.display = "block";
+                    } else {
+                        document.getElementById("errorBox").style.display = "block";
+                        document.getElementById("whatsappButton").style.display = "block"; // Show WhatsApp button
+                    }
+                }
+
+                function verifyChildName() {
+                    const childNameInput = document.getElementById("childName").value.trim();
+                    const normalizedChildName = normalizeString(childNameInput);
+
+                    if (selectedParent && selectedParent.Trainees.some(child => normalizeString(child).includes(normalizedChildName))) {
+                        document.getElementById("userName").textContent = selectedParent.UserName;
+                        document.getElementById("password").textContent = "123456789";
+                        document.getElementById("userDetails").style.display = "block";
+                        document.getElementById("result").textContent = "التحقق ناجح!";
+                        document.getElementById("result").style.backgroundColor = "#28a745";
+                        document.getElementById("result").style.display = "block";
+                        document.getElementById("copyUsernameButton").style.display = "block";
+                    } else {
+                        document.getElementById("result").textContent = "الاسم غير موجود ضمن الأبناء";
+                        document.getElementById("result").style.backgroundColor = "#dc3545";
+                        document.getElementById("result").style.display = "block";
+                        document.getElementById("whatsappButton").style.display = "block"; // Show WhatsApp button
+                        document.getElementById("whatsappContact").style.display = "block"; // Show WhatsApp contact button
+                    }
+                }
+
+                function copyUsername() {
+                    const username = document.getElementById("userName").textContent;
+                    const tempInput = document.createElement("input");
+                    document.body.appendChild(tempInput);
+                    tempInput.value = username;
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+                    alert("تم نسخ اسم المستخدم!");
+                }
+    </script>
+</body>
+</html>

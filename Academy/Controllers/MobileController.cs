@@ -23,15 +23,17 @@ namespace Academy.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly AcademyContext _context;
+        private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _hostEnvironment;
 
 
-        public MobileController(UserManager<ApplicationUser> userManager, IWebHostEnvironment hostEnvironment, SignInManager<ApplicationUser> signInManager, AcademyContext context)
+        public MobileController(UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext, IWebHostEnvironment hostEnvironment, SignInManager<ApplicationUser> signInManager, AcademyContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _context = context;
             _hostEnvironment = hostEnvironment;
+            _db = dbContext;
         }
         #region Login
         [HttpPost]
@@ -2222,7 +2224,57 @@ namespace Academy.Controllers
 
         #endregion
 
+        #region DeleteAccount
+        [HttpPost]
+        [Route("DeleteAccount")]
 
+        public IActionResult DeleteAccount(string Profile)
+        {
+            try
+            {
+                var profile = _userManager.Users.Where(e=>e.Id==Profile).FirstOrDefault();
+                if (profile == null)
+                {
+                    return Ok(new { status = false, Message = "User Not Found" });
+                }
+                if(profile.EntityName== "Parent")
+                {
+                    var children = _context.Trainees.Where(e => e.ParentId == profile.EntityId).ToList();
+                    var childrenIds = children.Select(e => e.TraineeId);
+                    _context.RemoveRange(children);
+                    var parent = _context.Parents.Where(e => e.ParentId == profile.EntityId).FirstOrDefault();
+                    if (parent != null)
+                    {
+                        _context.Remove(parent);
+                    }
+                    
+                    var childrenUsers = _db.Users.Where(e => childrenIds.Contains(e.EntityId)).ToList();
+                    _db.RemoveRange(childrenUsers);
+                }
+                if(profile.EntityName== "Trainer")
+                {
+                    var trainer = _context.Trainers.Where(e => e.TrainerId == profile.EntityId).FirstOrDefault();
+                    if (trainer != null)
+                    {
+                        _context.Remove(trainer);
+                    }
+                }
+                 _db.Users.Remove(profile);
+                _db.SaveChanges();
+                return Ok(new { status = true, Message = "Account Deleted Successfully" });
+
+
+            }
+
+            catch (Exception e)
+            {
+                return Ok(new { status = false, Message = e.Message });
+
+            }
+
+        }
+
+        #endregion
 
 
 
